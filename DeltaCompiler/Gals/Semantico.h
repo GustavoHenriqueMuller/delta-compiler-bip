@@ -15,6 +15,7 @@
 #include "../Logger/Logger.h"
 #include "../Logger/Warnings.h"
 #include "../Utils/JsonBuilder.h"
+#include "../Utils/Utils.h"
 #include "../Generator/Generator.h"
 
 #include <stack>
@@ -48,6 +49,10 @@ private:
     std::stack<Expression> expressions;
     std::stack<Operation> operations;
     int scopeCounter = 0;
+
+    // Variables for temporary data
+    int tempDataOffset = 0;
+    const int tempDataAddress = 1000;
 
     // Reading names and indexes from identifiers
     std::string identifierName;

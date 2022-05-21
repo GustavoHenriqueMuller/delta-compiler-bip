@@ -7,10 +7,7 @@ class Generator
 {
 public:
     Generator() {}
-
-    // Saving code to file
     std::string getCode();
-    void saveToFile(std::string filePath);
 
     // Generating code
     void addIdentifierDeclaration(std::string identifier, int scopeId, std::string value);

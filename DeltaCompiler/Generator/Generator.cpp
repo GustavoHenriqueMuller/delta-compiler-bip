@@ -13,13 +13,6 @@ std::string Generator::getCode() {
     return result;
 }
 
-void Generator::saveToFile(std::string filePath) {
-    std::ofstream file;
-    file.open(filePath, std::ofstream::out | std::ofstream::trunc);
-    file << this->getCode();
-    file.close();
-}
-
 void Generator::addIdentifierDeclaration(std::string identifier, int scopeId, std::string value = "0") {
     this->addToDataSection(identifier + ": " + value);
 }

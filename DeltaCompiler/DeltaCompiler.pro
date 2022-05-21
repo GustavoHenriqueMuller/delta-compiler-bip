@@ -34,4 +34,5 @@ HEADERS += \
     Model/Symbol.h \
     Model/Type.h \
     Utils/FileManager.h \
-    Utils/JsonBuilder.h
+    Utils/JsonBuilder.h \
+    Utils/Utils.h

@@ -19,6 +19,21 @@ namespace FileManager {
         file.close();
         return content.str();
     }
+
+    void saveToFile(std::string content, std::string filePath) {
+        std::ofstream file;
+        file.open(filePath, std::ofstream::out | std::ofstream::trunc);
+        file << content;
+        file.close();
+    }
+
+    std::string getAsmFilePath(std::string sourceFilePath) {
+        return sourceFilePath.replace(sourceFilePath.find_last_of('.') + 1, 6, "asm");
+    }
+
+    std::string getSimplifiedName(std::string filePath) {
+        return filePath.substr(filePath.find_last_of('/') + 1, filePath.size());
+    }
 }
 
 #endif

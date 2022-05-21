@@ -105,8 +105,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <scope>
 <function>
 <function_prototype>
-<function_argument_list>
-<function_argument>
+<function_prototype_argument_list>
 
 <function_call>
 <function_call_argument_list>
@@ -158,6 +157,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <type_primitive>
 <modifier_list>
 
+<int_literal>
 <literal>
 <left_value>
 <right_value>
@@ -179,12 +179,12 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 
 // Escopos e funções
 <scope> ::= LSC RSC | LSC <statement_list> RSC;
-<function> ::= <function_prototype> #79 #75 <scope> #50;
-<function_prototype> ::= <type> ID #73 LSP RSP | <type> ID #73 LSP <function_argument_list> RSP;
-<function_argument_list> ::= <type> ID #74 COMMA <function_argument_list> | <type> ID #74;
+<function> ::= <function_prototype> #78 #74 <scope> #50;
+<function_prototype> ::= <type> ID #72 LSP RSP | <type> ID #72 LSP <function_prototype_argument_list> RSP;
+<function_prototype_argument_list> ::= <type> ID #73 COMMA <function_prototype_argument_list> | <type> ID #73;
 
-<function_call> ::= ID #76 LSP RSP #78 | ID #76 LSP <function_call_argument_list> RSP #78;
-<function_call_argument_list> ::= <exp> #78 COMMA <function_call_argument_list> | <exp> #75;
+<function_call> ::= ID #75 LSP RSP #77 | ID #75 LSP <function_call_argument_list> RSP #77;
+<function_call_argument_list> ::= <exp> #76 COMMA <function_call_argument_list> | <exp> #76;
 
 // Statements
 <statement_list> ::= <statement> <statement_list> | <statement>;
@@ -197,22 +197,22 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <for_stmt> ::= FOR #49 LSP <for_left> END <exp> #69 END <exp> RSP <scope> #50;
 <for_left> ::= <exp> | <declaration_stmt> | <assign_stmt>;
 
-<when_stmt> ::= WHEN LSP <exp> #70 RSP LSC <is_list> RSC #72;
+<when_stmt> ::= WHEN LSP <exp> #69 RSP LSC <is_list> RSC #71;
 
-<declaration_stmt> ::= <type> <declaration_stmt_id_list> #59;
-<declaration_stmt_id_list> ::= ID #61 COMMA <declaration_stmt_id_list> | ID #61 ASSIGN #46 <exp> #63 COMMA <declaration_stmt_id_list> | ID #61 | ID #61 ASSIGN #46 <exp> #63;
+<declaration_stmt> ::= <type> <declaration_stmt_id_list> #61;
+<declaration_stmt_id_list> ::= ID #60 COMMA <declaration_stmt_id_list> | ID #60 ASSIGN #46 <exp> #62 COMMA <declaration_stmt_id_list> | ID #60 | ID #60 ASSIGN #46 <exp> #62;
 
-<assign_stmt> ::= <left_value> #64 <op_assign> <exp> #63 #62;
-<return_stmt> ::= RETURN <exp> #80;
+<assign_stmt> ::= <left_value> #63 <op_assign> <exp> #62 #61;
+<return_stmt> ::= RETURN <exp> #79;
 
 // Blocos
-<if> ::= IF LSP <exp> #67 RSP #49 <scope> #50;
+<if> ::= IF LSP <exp> #65 RSP #49 <scope> #50;
 <else_if_list> ::= <else_if> <else_if_list> | <else_if>;
-<else_if> ::= ELSEIF LSP <exp> #68 RSP #49 <scope> #50;
+<else_if> ::= ELSEIF LSP <exp> #66 RSP #49 <scope> #50;
 <else> ::= ELSE #49 <scope> #50;
 
 <is_list> ::= <is> <is_list> | <default> | <is>;
-<is> ::= IS LSP <exp> #73 RSP <scope>;
+<is> ::= IS LSP <exp> #70 RSP <scope>;
 <default> ::= DEFAULT <scope>;
 
 // Expressões
@@ -234,7 +234,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <modifier_list> ::= CONST #51 | î;
 
 <int_literal> ::= INT_DEC #1 | INT_HEX #1 | INT_BIN #1;
-<literal> ::= INT_DEC #1 | INT_HEX #1 | INT_BIN #1 | FLOAT #2 | STRING #3 | CHAR #4 | BOOLEAN #5;
+<literal> ::= <int_literal> | FLOAT #2 | STRING #3 | CHAR #4 | BOOLEAN #5;
 <left_value> ::= ID #6 | ID #7 LSB <exp> #8 RSB;
 <right_value> ::= <literal> | <function_call> | LSP <exp> RSP;
 

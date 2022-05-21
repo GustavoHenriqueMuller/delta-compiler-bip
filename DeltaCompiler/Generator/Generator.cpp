@@ -39,7 +39,7 @@ void Generator::addArrayIdentifierDeclaration(std::string identifier, int scopeI
 }
 
 std::string Generator::getFullIdentifier(std::string identifier, int scopeId) {
-    return identifier + "_" + scopeId;
+    return identifier + "_" + std::to_string(scopeId);
 }
 
 void Generator::addToDataSection(std::string string) {

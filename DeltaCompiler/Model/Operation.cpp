@@ -47,10 +47,6 @@ AttributionResult OperationManager::checkImplicitCast(Type type1, Type type2) {
         return ATT_ER;
     }
 
-    if (type1.isRef != type2.isRef) {
-        return ATT_ER;
-    }
-
     return OperationManager::ATTRIBUTION_TABLE[type1.primitive][type2.primitive];
 }
 

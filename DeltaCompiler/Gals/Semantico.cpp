@@ -188,13 +188,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
 
         /// DECLARATION
-
-        // TODO: RETIRAR 59
-        //case 59: // Reading array type
-        //    leftType.isArray = true;
-        //    break;
-
-        case 60: { // Reading array type with size initializer
+        case 59: { // Reading array type with size initializer
             Expression size = expressions.top();
 
             if (size.type.primitive != INT) {
@@ -205,7 +199,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             leftType.isArray = true;
             break;
         }
-        case 61: { // Reading id of declaration id list
+        case 60: { // Reading id of declaration id list
             Symbol* symbol = getSymbolByName(lexeme);
 
             if (symbol != nullptr) {
@@ -216,7 +210,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             scopes.back().symbolList.push_back(Symbol(leftType, lexeme));
             break;
         }
-        case 62: { // Finishing declaration
+        case 61: { // Finishing declaration
             for (const std::string &name : leftIdentifierNames) {
                 Symbol* symbol = getSymbolByName(name);
 
@@ -240,22 +234,22 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// ATTRIBUTION IN DECLARATION
-        case 63: // Attribution
+        case 62: // Attribution
             doAttribution();
             break;
 
         /// ATTRIBUTION
-        case 64: // Gets left type of attribution outside of declaration
+        case 63: // Gets left type of attribution outside of declaration
             leftIdentifierNames.push_back(identifierName);
             leftType = identifierType;
             break;
 
         /// IF, ELSEIF, WHILE, DO WHILE, FOR BLOCK
-        case 65: // Validating boolean expressions
+        case 64: // Validating boolean expressions
+        case 65:
         case 66:
         case 67:
-        case 68:
-        case 69: {
+        case 68: {
             std::string blockName;
 
             switch (action) {
@@ -285,12 +279,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// WHEN STATEMENT
-        case 70: { // Reading type of expression in "when" block
+        case 69: { // Reading type of expression in "when" block
             whenExpressionTypes.push(expressions.top().type);
             expressions.pop();
             break;
         }
-        case 71: { // Reading type of expression in "is" block
+        case 70: { // Reading type of expression in "is" block
             Expression expression = expressions.top();
             AttributionResult result = OperationManager::checkImplicitCast(expression.type, whenExpressionTypes.top());
 
@@ -301,12 +295,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             expressions.pop();
             break;
         }
-        case 72: // End of "when" block
+        case 71: // End of "when" block
             whenExpressionTypes.pop();
             break;
 
         /// FUNCTIONS
-        case 73: { // Reading function declaration identifier
+        case 72: { // Reading function declaration identifier
             Symbol* symbol = getSymbolByName(lexeme);
 
             if (symbol != nullptr) {
@@ -320,12 +314,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             functionName = lexeme;
             break;
         }
-        case 74: { // Reading function declaration parameter identifier
+        case 73: { // Reading function declaration parameter identifier
             Symbol* function = getSymbolByName(functionName);
             function->parameters.push_back(Parameter(leftType, lexeme));
             break;
         }
-        case 75: { // Creating identifiers in function scope from function parameters
+        case 74: { // Creating identifiers in function scope from function parameters
             Symbol* function = getSymbolByName(functionName);
 
             for (const Parameter &parameter : function->parameters) {
@@ -339,7 +333,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             functionName.clear();
             break;
         }
-        case 76: { // Reading function call identifier
+        case 75: { // Reading function call identifier
             Symbol* function = getSymbolByName(lexeme);
 
             if (function == nullptr) {
@@ -356,7 +350,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             expressions.push(Expression(function->type));
             break;
         }
-        case 77: { // Reading function call parameter
+        case 76: { // Reading function call parameter
             Symbol* function = getSymbolByName(functionName);
 
             if (amountFunctionParameters >= function->parameters.size()) {
@@ -376,7 +370,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             expressions.pop();
             break;
         }
-        case 78: { // Finish function call
+        case 77: { // Finish function call
             Symbol* function = getSymbolByName(functionName);
 
             if (amountFunctionParameters != function->parameters.size()) {
@@ -389,7 +383,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             functionName.clear();
             break;
         }
-        case 79: { // Create scope for function
+        case 78: { // Create scope for function
             Symbol* function = getSymbolByName(functionName);
             Scope scope = Scope(getScopeId());
 
@@ -399,7 +393,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// RETURN STATEMENT
-        case 80: { // Check for type when returning from function
+        case 79: { // Check for type when returning from function
             Expression expression = expressions.top();
             AttributionResult result = OperationManager::checkImplicitCast(expression.type, scopes.back().returnType);
 

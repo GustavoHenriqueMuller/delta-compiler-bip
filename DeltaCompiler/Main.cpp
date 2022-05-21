@@ -65,10 +65,6 @@ int main(int argc, char **argv) {
         sintatico->parse(lexico, semantico);
         semantico->popScope();
 
-        generator.addIdentifierDeclaration("x", "5");
-        generator.addIdentifierDeclaration("y", "10");
-        generator.addArrayIdentifierDeclaration("a", 4);
-
         printBar();
         std::cout << sourceCode << std::endl;
         printBar();

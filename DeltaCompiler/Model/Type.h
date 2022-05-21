@@ -20,6 +20,8 @@ public:
     bool isArray = false;
     bool isConst = false;
 
+    int arraySize = 0;
+
     Type() {}
     Type(Primitive primitive): primitive (primitive) {}
     Type(Primitive primitive, bool isArray, bool isConst): primitive(primitive), isArray(isArray), isConst(isConst) {}

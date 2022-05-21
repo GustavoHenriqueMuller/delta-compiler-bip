@@ -197,6 +197,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
             expressions.pop();
             leftType.isArray = true;
+            leftType.arraySize = std::stoi(lexeme); // TODO: FAZER FUNCIONAR COM 0x e 0b
             break;
         }
         case 60: { // Reading id of declaration id list
@@ -221,8 +222,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 symbol->isInDeclaration = false;
 
                 if (symbol->type.isArray) {
-                    // TODO: Precisa saber o tamanho do array
-                    // generator.addIdentifierDeclaration(symbol->name, scopes.back().id, "0");
+                    generator.addArrayIdentifierDeclaration(symbol->name, scopes.back().id, leftType.arraySize);
                 } else {
                     generator.addIdentifierDeclaration(symbol->name, scopes.back().id, "0");
                 }

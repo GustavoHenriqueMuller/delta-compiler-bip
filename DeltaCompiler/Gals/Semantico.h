@@ -15,12 +15,13 @@
 #include "../Logger/Logger.h"
 #include "../Logger/Warnings.h"
 #include "../Utils/JsonBuilder.h"
+#include "../Generator/Generator.h"
 
 #include <stack>
 
 class Semantico {
 public:
-    Semantico(Logger &logger);
+    Semantico(Logger &logger, Generator &generator);
 
     void executeAction(int action, const Token *token) throw (SemanticError);
     void popScope();
@@ -35,8 +36,9 @@ private:
     void saveScope(const Scope &scope);
     int getScopeId();
 
-    // Logger
+    // Logger and Generator
     Logger &logger;
+    Generator &generator;
 
     // JsonBuilder
     JsonBuilder jsonBuilder;

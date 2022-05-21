@@ -1,7 +1,7 @@
 #include "Semantico.h"
 
 void Semantico::executeAction(int action, const Token *token) throw (SemanticError) {
-    // std::cout << "Action: " << action << "\tToken: "  << token->getId() << "\tLexeme: " << token->getLexeme() << std::endl;
+    std::cout << "Action: " << action << "\tToken: "  << token->getId() << "\tLexeme: " << token->getLexeme() << std::endl;
 
     TokenId tokenId = token->getId();
     std::string lexeme = token->getLexeme();
@@ -221,6 +221,13 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 }
 
                 symbol->isInDeclaration = false;
+
+                if (symbol->type.isArray) {
+                    // TODO: Precisa saber o tamanho do array
+                    // generator.addIdentifierDeclaration(symbol->name, scopes.back().id, "0");
+                } else {
+                    generator.addIdentifierDeclaration(symbol->name, scopes.back().id, "0");
+                }
             }
 
             leftIdentifierNames.clear();
@@ -543,6 +550,6 @@ std::string Semantico::getScopesJson() {
     return jsonBuilder.build();
 }
 
-Semantico::Semantico(Logger &logger): logger(logger) {
+Semantico::Semantico(Logger &logger, Generator &generator): logger(logger), generator(generator) {
     scopes.push_back(Scope(getScopeId()));
 }

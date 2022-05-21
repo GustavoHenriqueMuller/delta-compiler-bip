@@ -8,6 +8,7 @@ SOURCES += \
     Gals/Lexico.cpp \
     Gals/Semantico.cpp \
     Gals/Sintatico.cpp \
+    Generator/Generator.cpp \
     Logger/Logger.cpp \
     Main.cpp \
     Model/Operation.cpp
@@ -22,6 +23,7 @@ HEADERS += \
     Gals/Sintatico.h \
     Gals/SyntaticError.h \
     Gals/Token.h \
+    Generator/Generator.h \
     Logger/Errors.h \
     Logger/Logger.h \
     Logger/Warnings.h \

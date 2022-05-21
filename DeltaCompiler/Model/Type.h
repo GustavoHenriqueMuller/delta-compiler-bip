@@ -19,7 +19,6 @@ public:
     Primitive primitive;
     bool isArray = false;
     bool isConst = false;
-    bool isRef = false;
 
     Type() {}
     Type(Primitive primitive): primitive (primitive) {}

@@ -186,9 +186,11 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
 
         /// DECLARATION
-        case 58: // Reading array type
-            leftType.isArray = true;
-            break;
+
+        // TODO: RETIRAR 58
+        //case 58: // Reading array type
+        //    leftType.isArray = true;
+        //    break;
 
         case 59: { // Reading array type with size initializer
             Expression size = expressions.top();
@@ -509,7 +511,6 @@ void Semantico::saveScope(const Scope &scope) {
         jsonBuilder.set("type", symbol.type.toString());
         jsonBuilder.set("isArray", symbol.type.isArray);
         jsonBuilder.set("isConst", symbol.type.isConst);
-        jsonBuilder.set("isRef", symbol.type.isRef);
         jsonBuilder.set("isInitialized", symbol.isInitialized);
         jsonBuilder.set("isUsed", symbol.isUsed);
         jsonBuilder.set("isInDeclaration", symbol.isInDeclaration);

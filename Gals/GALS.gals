@@ -1,0 +1,251 @@
+#Options
+GenerateScanner = true
+GenerateParser = true
+Language = C++
+ScannerName = Lexico
+ParserName = Sintatico
+SemanticName = Semantico
+ScannerCaseSensitive = true
+ScannerTable = Full
+Input = Stream
+Parser = SLR
+#RegularDefinitions
+LS : [^\"]|(\\\")
+LC : [^']|(\\')
+D : [0-9]
+
+DEC : [0-9]+
+HEX : 0[xX][0-9a-fA-F]+
+BIN : 0[bB][01]+
+
+CMT: (/\*([^\*]|[\r\n]|(\*+([^\*/]|[\r\n])))*\*+/)|([/][/].*)
+#Tokens
+INT_DEC : {DEC}
+INT_HEX : {HEX}
+INT_BIN : {BIN}
+FLOAT : {D}+(\.{D}+)?f?
+STRING : \"{LS}*\"
+CHAR : '{LC}?'
+BOOLEAN : (true|false)
+
+VAR_INT: int
+VAR_FLOAT: float
+VAR_DOUBLE: double
+VAR_STRING: string
+VAR_CHAR: char
+VAR_BOOLEAN: boolean
+VAR_VOID: void
+
+CONST : const
+REF: ref
+IF : if
+ELSE : else
+ELSEIF : elseif
+WHILE : while
+DO: do
+FOR : for
+WHEN : when
+IS : is
+RETURN : return
+DEFAULT : default
+
+AND : (and|&&)
+OR : (or|\|\|)
+NOT : (not|!)
+
+GREATER: >
+SMALLER: <
+GREATER_EQ: >=
+SMALLER_EQ: <=
+EQ: ==
+DIF: !=
+
+INCREMENT_ASSIGN: \+=
+DECREMENT_ASSIGN: \-=
+
+INCREMENT: \+\+
+DECREMENT: \-\-
+PLUS: \+
+MINUS: \-
+MULT: \*
+DIV: /
+MOD: %
+ASSIGN: =
+
+BIT_AND: &
+BIT_OR: \|
+BIT_XOR: \^
+BIT_NOT: ~
+BIT_RS: >>
+BIT_LS: <<
+
+LSP : \(
+RSP : \)
+LSB : \[ 
+RSB : \]
+LSC : \{
+RSC : \}
+DOT : \.
+END : ;
+COLON : :
+COMMA : ,
+
+ID : [a-zA-Z_$][a-zA-Z_0-9$]*
+
+: {CMT}
+: [\s\t\n\r ]*
+
+
+#NonTerminals
+// Escopo global
+<global>
+<global_stmt>
+
+// Escopos e funções
+<scope>
+<function>
+<function_prototype>
+<function_argument_list>
+<function_argument>
+
+<function_call>
+<function_call_argument_list>
+
+// Statements
+<statement_list>
+<statement>
+
+<if_stmt>
+<while_stmt>
+<do_while_stmt>
+
+<for_stmt>
+<for_left>
+
+<when_stmt>
+
+<declaration_stmt>
+<declaration_stmt_id_list>
+
+<assign_stmt>
+<return_stmt>
+
+// Blocos
+<if>
+<else_if>
+<else_if_list>
+<else>
+
+<is_list>
+<is>
+<default>
+
+// Expressões
+<exp>
+<exp1>
+<exp2>
+<exp3>
+<exp4>
+<exp5>
+<exp6>
+<exp7>
+<exp8>
+<exp9>
+<exp10>
+<exp11>
+
+<type>
+<type_primitive>
+<modifier_list>
+
+<literal>
+<left_value>
+<right_value>
+
+// Operadores
+<op_comp>
+<op_unary_right_mutable>
+<op_unary_left>
+<op_unary_left_mutable>
+<op_bitwise>
+<op_arit_low>
+<op_arit_high>
+<op_assign>
+
+#Grammar
+// Escopo global
+<global> ::= <global_stmt> <global> | <global_stmt>;
+<global_stmt> ::= <declaration_stmt> END | <assign_stmt> END | <function>;
+
+// Escopos e funções
+<scope> ::= LSC RSC | LSC <statement_list> RSC;
+<function> ::= <function_prototype> #75 #71 <scope> #47;
+<function_prototype> ::= <type> ID #69 LSP RSP | <type> ID #69 LSP <function_argument_list> RSP;
+<function_argument_list> ::= <type> ID #70 COMMA <function_argument_list> | <type> ID #70;
+
+<function_call> ::= ID #72 LSP RSP #74 | ID #72 LSP <function_call_argument_list> RSP #74;
+<function_call_argument_list> ::= <exp> #73 COMMA <function_call_argument_list> | <exp> #73;
+
+// Statements
+<statement_list> ::= <statement> <statement_list> | <statement>;
+<statement> ::= <if_stmt> | <while_stmt> | <do_while_stmt> END | <for_stmt> | <declaration_stmt> END | <assign_stmt> END | <return_stmt> END | <exp> END | <when_stmt>;
+
+<if_stmt> ::= <if> | <if> <else> | <if> <else_if_list> | <if> <else_if_list> <else>;
+<while_stmt> ::= WHILE LSP <exp> #66 RSP #46 <scope> #47;
+<do_while_stmt> ::= DO #46 <scope> #47 WHILE LSP <exp> #67 RSP;
+
+<for_stmt> ::= FOR #46 LSP <for_left> END <exp> #68 END <exp> RSP <scope> #47;
+<for_left> ::= <exp> | <declaration_stmt> | <assign_stmt>;
+
+<when_stmt> ::= WHEN LSP <exp> #77 RSP LSC <is_list> RSC #79;
+
+<declaration_stmt> ::= <type> <declaration_stmt_id_list> #61;
+<declaration_stmt_id_list> ::= ID #60 COMMA <declaration_stmt_id_list> | ID #60 ASSIGN #80 <exp> #62 COMMA <declaration_stmt_id_list> | ID #60 | ID #60 ASSIGN #80 <exp> #62;
+
+<assign_stmt> ::= <left_value> #63 <op_assign> <exp> #62 #61;
+<return_stmt> ::= RETURN <exp> #76;
+
+// Blocos
+<if> ::= IF LSP <exp> #64 RSP #46 <scope> #47;
+<else_if_list> ::= <else_if> <else_if_list> | <else_if>;
+<else_if> ::= ELSEIF LSP <exp> #65 RSP #46 <scope> #47;
+<else> ::= ELSE #46 <scope> #47;
+
+<is_list> ::= <is> <is_list> | <default> | <is>;
+<is> ::= IS LSP <exp> #78 RSP <scope>;
+<default> ::= DEFAULT <scope>;
+
+// Expressões
+<exp>   ::= <exp> OR #21 <exp1> #10 | <exp1>;
+<exp1>  ::= <exp1> AND #22 <exp2> #11 | <exp2>;
+<exp2>  ::= <exp2> BIT_OR #23 <exp3> #12 | <exp3>; 
+<exp3>  ::= <exp3> BIT_XOR #24 <exp4> #13 | <exp4>;
+<exp4>  ::= <exp4> BIT_AND #25 <exp5> #14 | <exp5>;
+<exp5>  ::= <exp5> <op_comp> <exp6> #15 | <exp6>;
+<exp6>  ::= <exp6> <op_bitwise> <exp7> #16 | <exp7>;
+<exp7>  ::= <exp7> <op_arit_low> <exp8> #17 | <exp8>;
+<exp8>  ::= <exp8> <op_arit_high> <exp9> #18 | <exp9> ;
+<exp9>  ::= <left_value> #9 <op_unary_right_mutable> #19 | <exp10>;
+<exp10> ::= <op_unary_left> <left_value> #9 #20 | <op_unary_left_mutable> <left_value> #9 #20 | <op_unary_left> <right_value> #20 | <exp11>;
+<exp11> ::= <literal> | <left_value> #9 | <function_call> | LSP <exp> RSP;
+
+<type> ::= <modifier_list> <type_primitive> | <modifier_list> <type_primitive> LSB #58 RSB | <modifier_list> <type_primitive> LSB <exp> #59 RSB;
+<type_primitive> ::= VAR_INT #51 | VAR_FLOAT #52 | VAR_DOUBLE #53 | VAR_STRING #54 | VAR_CHAR #55 | VAR_BOOLEAN #56 | VAR_VOID #57;
+<modifier_list> ::= CONST REF #48 | CONST #49 | REF #50 | î;
+
+<literal> ::= INT_DEC #1 | INT_HEX #1 | INT_BIN #1 | FLOAT #2 | STRING #3 | CHAR #4 | BOOLEAN #5;
+<left_value> ::= ID #6 | ID #7 LSB <exp> #8 RSB;
+<right_value> ::= <literal> | <function_call> | LSP <exp> RSP;
+
+// Operadores
+<op_comp> ::= GREATER #26 | SMALLER #27 | GREATER_EQ #28 | SMALLER_EQ #29 | EQ #30 | DIF #31;
+<op_bitwise> ::= BIT_LS #32 | BIT_RS #33;
+<op_arit_low> ::= PLUS #34 | MINUS #35;
+<op_arit_high> ::= MULT #36 | DIV #37 | MOD #38;
+<op_unary_right_mutable> ::= INCREMENT #39 | DECREMENT #40;
+<op_unary_left> ::= MINUS #41 | BIT_NOT #42 | NOT #43;
+<op_unary_left_mutable> ::= INCREMENT #44 | DECREMENT #45;
+<op_assign> ::= ASSIGN #80 | INCREMENT_ASSIGN #81 | DECREMENT_ASSIGN #82;
+
+// Exemplo com tudo para ser usado no simulador
+// -x + 8.8 - !x * 2 / ~y % 3 << 7 != y >> 3 || (x <= 3 && y > 8) | p & (h ^ g)

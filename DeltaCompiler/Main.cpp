@@ -13,11 +13,15 @@
 
 int main(int argc, char **argv) {
     if (argc == 1) {
-        std::cout << "Syntax: cp2 [filepath]." << std::endl;
+        std::cout << "Syntax: delta [filepath]." << std::endl;
         return 0;
     }
 
     std::string filepath = argv[1];
+    std::string extension = filepath.substr(filepath.find('.'), filepath.size());
+
+    std::cout << extension << std::endl;
+
     std::string sourceCode = FileManager::getFileContent(filepath);
     std::istringstream stream = std::istringstream(sourceCode);
 

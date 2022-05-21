@@ -4,13 +4,13 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-        Gals/Constants.cpp \
-        Gals/Lexico.cpp \
-        Gals/Semantico.cpp \
-        Gals/Sintatico.cpp \
-        Logger/Logger.cpp \
-        Main.cpp \
-        Model/Operation.cpp
+    Gals/Constants.cpp \
+    Gals/Lexico.cpp \
+    Gals/Semantico.cpp \
+    Gals/Sintatico.cpp \
+    Logger/Logger.cpp \
+    Main.cpp \
+    Model/Operation.cpp
 
 HEADERS += \
     Gals/AnalysisError.h \

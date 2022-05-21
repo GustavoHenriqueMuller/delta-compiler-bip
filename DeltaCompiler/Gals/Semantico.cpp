@@ -159,22 +159,10 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
 
         /// DECLARATION - MODIFIERS
-
-        // TODO: TIRAR
-        //case 51: // Reading "const ref" modifier
-        //    leftType = Type();
-        //    leftType.isConst = true;
-        //    leftType.isRef = true;
-        //    break;
         case 52: // Reading "const" modifier
             leftType = Type();
             leftType.isConst = true;
             break;
-        // TODO: TIRAR
-        //case 53: // Reading "ref" modifier
-        //    leftType = Type();
-        //    leftType.isRef = true;
-        //    break;
 
         /// DECLARATION - PRIMITIVES
         case 54:

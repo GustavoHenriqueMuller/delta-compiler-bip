@@ -22,17 +22,13 @@ public:
 
     Type() {}
     Type(Primitive primitive): primitive (primitive) {}
-    Type(Primitive primitive, bool isArray, bool isConst, bool isRef): primitive(primitive), isArray(isArray), isConst(isConst), isRef(isRef) {}
+    Type(Primitive primitive, bool isArray, bool isConst): primitive(primitive), isArray(isArray), isConst(isConst) {}
 
     std::string toString() {
         std::string result;
 
         if (isConst) {
             result += "const ";
-        }
-
-        if (isRef) {
-            result += "ref ";
         }
 
         switch (primitive) {

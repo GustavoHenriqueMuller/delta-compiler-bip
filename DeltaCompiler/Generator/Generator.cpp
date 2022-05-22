@@ -111,7 +111,7 @@ void Generator::attributeToArray(std::string identifier, int scopeId, OperationT
         addToTextSection("LD " + std::to_string(stackTop() - 2));
         addToTextSection("STO $indr");
         addToTextSection("LDV " + getFullIdentifier(identifier, scopeId));
-        addToTextSection("STO " + std::to_string(stackTop()));
+        addToTextSection("STO " + std::to_string(stackTop() - 1));
     }
 
     switch (attributionType) {

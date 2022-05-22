@@ -14,7 +14,7 @@ public:
     Logger() {}
     void addWarn(const Warning &warning);
     void logWarns();
-    void error(const AnalysisError &error);
+    void logError(const AnalysisError &logError);
 
 private:
     std::vector<Warning> warnings;

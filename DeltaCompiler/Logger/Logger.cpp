@@ -10,6 +10,6 @@ void Logger::logWarns() {
     }
 }
 
-void Logger::error(const AnalysisError &error) {
+void Logger::logError(const AnalysisError &error) {
     std::cout << "[ERROR]: " << error.getMessage() << std::endl;
 }

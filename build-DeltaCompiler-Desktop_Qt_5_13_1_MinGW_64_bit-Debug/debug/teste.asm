@@ -8,7 +8,7 @@
 	STO a_1
 	LD a_1
 	STO 1000
-	LDI 2
+	LDI 10
 	STO 1001
 	LD 1000
 	ADD 1001

@@ -19,6 +19,9 @@ public:
     void attributeToArray(std::string identifier, int scopeId, OperationType attributionType);
     void addIdentifierDeclaration(std::string identifier, int scopeId);
     void addArrayIdentifierDeclaration(std::string identifier, int scopeId, int size);
+    void addPrint();
+    void addInput(std::string identifier, int scopeId);
+    void addArrayInput(std::string identifier, int scopeId);
 
 private:
     std::string getFullIdentifier(std::string identifier, int scopeId);

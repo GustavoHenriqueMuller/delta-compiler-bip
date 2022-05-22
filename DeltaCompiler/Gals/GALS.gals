@@ -48,6 +48,8 @@ WHEN : when
 IS : is
 RETURN : return
 DEFAULT : default
+PRINT : print
+INPUT : input
 
 AND : (and|&&)
 OR : (or|\|\|)
@@ -183,7 +185,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <function_prototype> ::= <type> ID #73 LSP RSP | <type> ID #73 LSP <function_prototype_argument_list> RSP;
 <function_prototype_argument_list> ::= <type> ID #74 COMMA <function_prototype_argument_list> | <type> ID #74;
 
-<function_call> ::= ID #76 LSP RSP #78 | ID #76 LSP <function_call_argument_list> RSP #78;
+<function_call> ::= ID #76 LSP RSP #78 | ID #76 LSP <function_call_argument_list> RSP #78 | PRINT LSP <exp> RSP #81 | INPUT LSP <left_value> #9 RSP #82;
 <function_call_argument_list> ::= <exp> #77 COMMA <function_call_argument_list> | <exp> #77;
 
 // Statements

@@ -150,6 +150,27 @@ void Generator::addArrayIdentifierDeclaration(std::string identifier, int scopeI
     addToDataSection(getFullIdentifier(identifier, scopeId) + ": " + value);
 }
 
+void Generator::addPrint() {
+    addToTextSection("LD " + std::to_string(stackTop()));
+    addToTextSection("STO $out_port");
+
+    stackSize -= 1;
+}
+
+void Generator::addInput(std::string identifier, int scopeId) {
+    addToTextSection("LD $in_port");
+    addToTextSection("STO " + getFullIdentifier(identifier, scopeId));
+
+    stackSize -= 1;
+}
+
+void Generator::addArrayInput(std::string identifier, int scopeId) {
+    addToTextSection("LD $in_port");
+    addToTextSection("STOV " + getFullIdentifier(identifier, scopeId));
+
+    stackSize -= 1;
+}
+
 std::string Generator::getFullIdentifier(std::string identifier, int scopeId) {
     return identifier + "_" + std::to_string(scopeId);
 }

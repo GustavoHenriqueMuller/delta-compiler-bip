@@ -416,6 +416,24 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             expressions.pop();
             break;
         }
+
+        /// INPUT AND OUTPUT
+        case 81: { // Print
+            generator.addPrint();
+            expressions.pop();
+            break;
+        }
+
+        case 82: { // Input
+            if (identifierType.isArray) {
+                generator.addArrayInput(identifierName, scopes.back().id);
+            } else {
+                generator.addInput(identifierName, scopes.back().id);
+            }
+
+            expressions.pop();
+            break;
+        }
     }
 }
 

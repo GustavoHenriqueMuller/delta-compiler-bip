@@ -55,7 +55,7 @@ public:
         }
 
         if (isArray) {
-            result += "[]";
+            result += "[" + std::to_string(arraySize) + "]";
         }
 
         return result;

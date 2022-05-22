@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
     if (argc == 1) {
         std::cout << "Syntax: delta [options] [filepath]." << std::endl << std::endl;
         std::cout << "[options]:" << std::endl;
-        std::cout << "-watch: Prints IDE information in stdout;" << std::endl;
+        std::cout << "-watch: Prints Bhaskara (IDE) information in stdout;" << std::endl;
         std::cout << std::endl << "[filepath]: Relative or absolute path of .delta file to be compiled." << std::endl << std::endl;
         return 0;
     }
@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
         logger.logWarns();
 
         std::cout << std::endl;
-        logger.error(e);
+        logger.logError(e);
     }
 
     return 0;

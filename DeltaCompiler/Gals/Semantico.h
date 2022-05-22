@@ -58,7 +58,7 @@ private:
     // Declaration / Attribution
     std::vector<std::string> leftIdentifierNames;
     Type leftType;
-    Operation attributionOperation;
+    Operation attributionOperation; // TODO: Porque não está na stack?
 
     // Functions
     std::string functionName;

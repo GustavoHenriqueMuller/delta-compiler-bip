@@ -99,7 +99,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 16:
         case 17:
         case 18: {
-            generator.addBinaryOperation(operations.top());
+            generator.addBinaryOperation(operations.top().type);
             doOperation();
             break;
         }
@@ -237,9 +237,9 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         /// ATTRIBUTION
         case 62: // Attribution
             if (leftType.isArray) {
-                generator.attributeToArray(leftIdentifierNames.back(), scopes.back().id);
+                generator.attributeToArray(leftIdentifierNames.back(), scopes.back().id, attributionOperation.type);
             } else {
-                generator.attributeTo(leftIdentifierNames.back(), scopes.back().id);
+                generator.attributeTo(leftIdentifierNames.back(), scopes.back().id, attributionOperation.type);
             }
 
             doAttribution();

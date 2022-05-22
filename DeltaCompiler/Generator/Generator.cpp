@@ -39,10 +39,10 @@ void Generator::addArrayIdentifier(std::string identifier, int scopeId) {
     addToTextSection("STO " + std::to_string(stackTop()));
 }
 
-void Generator::addBinaryOperation(Operation operation) {
+void Generator::addBinaryOperation(OperationType operationType) {
     std::string instructionName;
 
-    switch (operation.type) {
+    switch (operationType) {
         case ADD:
             instructionName = "ADD";
             break;
@@ -75,14 +75,56 @@ void Generator::addBinaryOperation(Operation operation) {
     addToTextSection("STO " + std::to_string(stackTop()));
 }
 
-void Generator::attributeTo(std::string identifier, int scopeId) {
+void Generator::attributeTo(std::string identifier, int scopeId, OperationType attributionType) {
+    if (attributionType != ATTRIBUTION) {
+        stackSize += 1;
+        addToTextSection("LD " + std::to_string(stackTop() - 1));
+        addToTextSection("STO " + std::to_string(stackTop()));
+
+        addToTextSection("LD " + getFullIdentifier(identifier, scopeId));
+        addToTextSection("STO " + std::to_string(stackTop() - 1));
+    }
+
+    switch (attributionType) {
+        case INCREMENT_ATTRIBUTION: {
+            addBinaryOperation(ADD);
+            break;
+        }
+        case DECREMENT_ATTRIBUTION: {
+            addBinaryOperation(SUBTRACT);
+            break;
+        }
+    }
+
     stackSize -= 1;
 
     addToTextSection("LD " + std::to_string(stackTop() + 1));
     addToTextSection("STO " + getFullIdentifier(identifier, scopeId));
 }
 
-void Generator::attributeToArray(std::string identifier, int scopeId) {
+void Generator::attributeToArray(std::string identifier, int scopeId, OperationType attributionType) {
+    if (attributionType != ATTRIBUTION) {
+        stackSize += 1;
+        addToTextSection("LD " + std::to_string(stackTop() - 1));
+        addToTextSection("STO " + std::to_string(stackTop()));
+
+        addToTextSection("LD " + std::to_string(stackTop() - 2));
+        addToTextSection("STO $indr");
+        addToTextSection("LDV " + getFullIdentifier(identifier, scopeId));
+        addToTextSection("STO " + std::to_string(stackTop()));
+    }
+
+    switch (attributionType) {
+        case INCREMENT_ATTRIBUTION: {
+            addBinaryOperation(ADD);
+            break;
+        }
+        case DECREMENT_ATTRIBUTION: {
+            addBinaryOperation(SUBTRACT);
+            break;
+        }
+    }
+
     stackSize -= 2;
 
     addToTextSection("LD " + std::to_string(stackTop() + 1));

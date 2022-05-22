@@ -13,10 +13,10 @@ public:
     void addImmediate(int immediate);
     void addIdentifier(std::string identifier, int scopeId);
     void addArrayIdentifier(std::string identifier, int scopeId);
-    void addBinaryOperation(Operation operation);
+    void addBinaryOperation(OperationType operationType);
 
-    void attributeTo(std::string identifier, int scopeId);
-    void attributeToArray(std::string identifier, int scopeId);
+    void attributeTo(std::string identifier, int scopeId, OperationType attributionType);
+    void attributeToArray(std::string identifier, int scopeId, OperationType attributionType);
     void addIdentifierDeclaration(std::string identifier, int scopeId);
     void addArrayIdentifierDeclaration(std::string identifier, int scopeId, int size);
 

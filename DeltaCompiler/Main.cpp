@@ -9,8 +9,6 @@
 
 #include <iostream>
 
-// TODO: Corrigir escopo ao ler identificador (todo lugar com scopes.back().id)
-
 int main(int argc, char **argv) {
     bool watch = false;
 
@@ -55,11 +53,11 @@ int main(int argc, char **argv) {
         sintatico->parse(lexico, semantico);
         semantico->popScope();
 
-        Utils::printBar();
-        std::cout << sourceCode << std::endl;
-        Utils::printBar();
-        std::cout << generator.getCode() << std::endl;
-        Utils::printBar();
+        //Utils::printBar();
+        //std::cout << sourceCode << std::endl;
+        //Utils::printBar();
+        //std::cout << generator.getCode() << std::endl;
+        //Utils::printBar();
 
         std::string asmFilePath = FileManager::getAsmFilePath(filePath);
 

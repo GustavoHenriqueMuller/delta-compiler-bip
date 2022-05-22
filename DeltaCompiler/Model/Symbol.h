@@ -3,16 +3,18 @@
 
 #include "Type.h"
 #include "Parameter.h"
+#include "Scope.h"
 
 #include <string>
 #include <vector>
 
 class Symbol {
 public:
-    Symbol(Type type, std::string name): type(type), name(name) {}
+    Symbol(Type type, std::string name, int scopeId): type(type), name(name), scopeId(scopeId) {}
 
     Type type;
     std::string name;
+    const int scopeId;
 
     bool isInitialized = false;
     bool isUsed = false;

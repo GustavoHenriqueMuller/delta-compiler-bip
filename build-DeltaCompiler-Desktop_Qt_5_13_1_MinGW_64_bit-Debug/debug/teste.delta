@@ -1,5 +1,7 @@
+int c = 2;
+
 int main() {
-	int a = 4 + 11;
+	int a = c + 11;
 	int b = a + 19;
 
 	return 0;

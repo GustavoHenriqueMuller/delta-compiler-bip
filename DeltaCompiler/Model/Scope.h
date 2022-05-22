@@ -11,7 +11,6 @@ public:
 
     int id;
     std::vector<Symbol> symbolList;
-
     bool hasReturned = false;
     Type returnType = Type(VOI);
 };

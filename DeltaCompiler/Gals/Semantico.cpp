@@ -1,7 +1,7 @@
 #include "Semantico.h"
 
 void Semantico::executeAction(int action, const Token *token) throw (SemanticError) {
-    std::cout << "Action: " << action << "\tToken: "  << token->getId() << "\tLexeme: " << token->getLexeme() << std::endl;
+    //std::cout << "Action: " << action << "\tToken: "  << token->getId() << "\tLexeme: " << token->getLexeme() << std::endl;
 
     TokenId tokenId = token->getId();
     std::string lexeme = token->getLexeme();
@@ -72,13 +72,13 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
         /// PUSHING LEFT-VALUE AS EXPRESSION
         case 9: {
-            if (identifierType.isArray) {
-                generator.addArrayIdentifier(identifierName, scopes.back().id);
-            } else {
-                generator.addIdentifier(identifierName, scopes.back().id);
-            }
-
             Symbol* symbol = getSymbolByName(identifierName);
+
+            if (identifierType.isArray) {
+                generator.addArrayIdentifier(identifierName, symbol->scopeId);
+            } else {
+                generator.addIdentifier(identifierName, symbol->scopeId);
+            }
 
             if (!symbol->isInitialized) {
                 logger.addWarn(ReadingIdentifierWithoutInitializationWarning(symbol->name));
@@ -209,7 +209,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             }
 
             leftIdentifierNames.push_back(lexeme);
-            scopes.back().symbolList.push_back(Symbol(leftType, lexeme));
+            scopes.back().symbolList.push_back(Symbol(leftType, lexeme, scopes.back().id));
             break;
         }
         case 61: { // Finishing declaration
@@ -223,9 +223,9 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 symbol->isInDeclaration = false;
 
                 if (symbol->type.isArray) {
-                    generator.addArrayIdentifierDeclaration(symbol->name, scopes.back().id, leftType.arraySize);
+                    generator.addArrayIdentifierDeclaration(symbol->name, symbol->scopeId, leftType.arraySize);
                 } else {
-                    generator.addIdentifierDeclaration(symbol->name, scopes.back().id);
+                    generator.addIdentifierDeclaration(symbol->name, symbol->scopeId);
                 }
             }
 
@@ -235,15 +235,18 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// ATTRIBUTION
-        case 62: // Attribution
+        case 62: { // Attribution
+            Symbol* symbol = getSymbolByName(leftIdentifierNames.back());
+
             if (leftType.isArray) {
-                generator.attributeToArray(leftIdentifierNames.back(), scopes.back().id, attributionOperation.type);
+                generator.attributeToArray(symbol->name, symbol->scopeId, attributionOperation.type);
             } else {
-                generator.attributeTo(leftIdentifierNames.back(), scopes.back().id, attributionOperation.type);
+                generator.attributeTo(symbol->name, symbol->scopeId, attributionOperation.type);
             }
 
             doAttribution();
             break;
+        }
 
         case 63: // Gets left type of attribution outside of declaration
             leftIdentifierNames.push_back(identifierName);
@@ -318,7 +321,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 throw DuplicateIdentifierError(lexeme);
             }
 
-            Symbol function = Symbol(leftType, lexeme);
+            Symbol function = Symbol(leftType, lexeme, scopes.back().id);
             function.isFunction = true;
             scopes.back().symbolList.push_back(function);
 
@@ -334,7 +337,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             Symbol* function = getSymbolByName(functionName);
 
             for (const Parameter &parameter : function->parameters) {
-                Symbol symbol = Symbol(parameter.type, parameter.name);
+                Symbol symbol = Symbol(parameter.type, parameter.name, scopes.back().id);
                 symbol.isInDeclaration = false;
                 symbol.isInitialized = true;
 
@@ -425,10 +428,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         case 82: { // Input
+            Symbol* symbol = getSymbolByName(identifierName);
+
             if (identifierType.isArray) {
-                generator.addArrayInput(identifierName, scopes.back().id);
+                generator.addArrayInput(symbol->name, symbol->scopeId);
             } else {
-                generator.addInput(identifierName, scopes.back().id);
+                generator.addInput(symbol->name, symbol->scopeId);
             }
 
             expressions.pop();

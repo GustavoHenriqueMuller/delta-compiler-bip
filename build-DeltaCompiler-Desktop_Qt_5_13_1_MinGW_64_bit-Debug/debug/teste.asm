@@ -1,9 +1,14 @@
 .data
+	c_0: 0
 	a_1: 0
 	b_1: 0
 
 .text
-	LDI 4
+	LDI 2
+	STO 1000
+	LD 1000
+	STO c_0
+	LD c_0
 	STO 1000
 	LDI 11
 	STO 1001

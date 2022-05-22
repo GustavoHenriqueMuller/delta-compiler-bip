@@ -7,56 +7,66 @@
 #include <string>
 
 enum OperationType {
-    PLUS,
-    MINUS,
-    MULT,
-    DIV,
+    // Arithmetic
+    ADD,
+    SUBTRACT,
+    MULTIPLY,
+    DIVIDE,
     MOD,
-    COMP,
-    BIT,
+
+    // Relational
+    OR,
+    AND,
+    GREATER,
+    SMALLER,
+    GREATER_EQ,
+    SMALLER_EQ,
+    EQUAL,
+    DIFFERENT,
+
+    // Bit
+    BIT_OR,
+    BIT_XOR,
+    BIT_AND,
+    BIT_LS,
+    BIT_RS,
+
+    // Unary right
     INCREMENT_RIGHT,
     DECREMENT_RIGHT,
+
+    // Unary left
     MINUS_INVERSION,
     BIT_NOT,
     NOT,
     INCREMENT_LEFT,
     DECREMENT_LEFT,
+
+    // Attribution
     ATTRIBUTION,
     INCREMENT_ATTRIBUTION,
     DECREMENT_ATTRIBUTION
 };
 
-enum AttributionResult {
-    ATT_OK, // Ok
-    ATT_ER, // Error
-    ATT_PL  // Precision Loss
+enum OperationCategory {
+    CATEGORY_ARIT_LOW,
+    CATEGORY_ARIT_HIGH,
+    CATEGORY_RELATIONAL,
+    CATEGORY_BIT,
+    CATEGORY_UNARY_RIGHT_MUTABLE,
+    CATEGORY_UNARY_LEFT,
+    CATEGORY_UNARY_LEFT_MUTABLE,
+    CATEGORY_ATTRIBUTION
 };
 
 class Operation {
 public:
-    OperationType operationType;
+    OperationType type;
     std::string lexeme;
 
     Operation() {}
-    Operation(OperationType operationType, std::string lexeme): operationType(operationType), lexeme(lexeme) {}
+    Operation(OperationType type, std::string lexeme): type(type), lexeme(lexeme) {}
+    OperationCategory getOperationCategory();
 };
-
-class OperationManager {
-public:
-    static Primitive checkBinaryOperation(Type type1, Type type2, Operation operation);
-    static Primitive checkUnaryOperation(Type type1, Operation operation);
-    static AttributionResult checkImplicitCast(Type type1, Type type2);
-    static AttributionResult checkAttribution(Type type1, Type type2, Operation operation);
-
-private:
-    static Primitive OPERATION_TABLE[7][7][7];
-    static Primitive UNARY_OPERATION_TABLE[7][7];
-    static AttributionResult ATTRIBUTION_TABLE[7][7];
-};
-
-OperationType getOperationTypeFromTokenId(TokenId tokenId);
-OperationType getRightUnaryOperationTypeFromTokenId(TokenId tokenId);
-OperationType getLeftUnaryOperationTypeFromTokenId(TokenId tokenId);
-Operation getBinaryOperationFromAttributionType(OperationType attributionType);
 
 #endif // OPERATION_H

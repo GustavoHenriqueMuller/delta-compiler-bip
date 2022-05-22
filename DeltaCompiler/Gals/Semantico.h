@@ -11,6 +11,7 @@
 #include "../Model/Symbol.h"
 #include "../Model/Expression.h"
 #include "../Model/Operation.h"
+#include "../Model/OperationManager.h"
 #include "../Logger/Errors.h"
 #include "../Logger/Logger.h"
 #include "../Logger/Warnings.h"

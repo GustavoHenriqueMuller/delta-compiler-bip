@@ -40,8 +40,8 @@ enum TokenId
     t_SMALLER_EQ = 34,
     t_EQ = 35,
     t_DIF = 36,
-    t_INCREMENT_ASSIGN = 37,
-    t_DECREMENT_ASSIGN = 38,
+    t_INCREMENT_ATTRIBUTION = 37,
+    t_DECREMENT_ATTRIBUTION = 38,
     t_INCREMENT = 39,
     t_DECREMENT = 40,
     t_PLUS = 41,
@@ -49,7 +49,7 @@ enum TokenId
     t_MULT = 43,
     t_DIV = 44,
     t_MOD = 45,
-    t_ASSIGN = 46,
+    t_ATTRIBUTION = 46,
     t_BIT_AND = 47,
     t_BIT_OR = 48,
     t_BIT_XOR = 49,
@@ -86,10 +86,10 @@ const int ACCEPT = 3;
 const int GO_TO  = 4;
 const int ERROR  = 5;
 
-extern const int PARSER_TABLE[316][198][2];
+extern const int PARSER_TABLE[314][199][2];
 
 extern const int PRODUCTIONS[130][2];
 
-extern const char *PARSER_ERROR[316];
+extern const char *PARSER_ERROR[314];
 
 #endif

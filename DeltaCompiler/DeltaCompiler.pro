@@ -12,6 +12,7 @@ SOURCES += \
     Logger/Logger.cpp \
     Main.cpp \
     Model/Operation.cpp \
+    Model/OperationManager.cpp \
     Utils/Utils.cpp
 
 HEADERS += \
@@ -30,6 +31,7 @@ HEADERS += \
     Logger/Warnings.h \
     Model/Expression.h \
     Model/Operation.h \
+    Model/OperationManager.h \
     Model/Parameter.h \
     Model/Scope.h \
     Model/Symbol.h \

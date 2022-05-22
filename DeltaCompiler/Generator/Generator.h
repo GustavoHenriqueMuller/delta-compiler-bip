@@ -12,16 +12,16 @@ public:
 
     void addImmediate(int immediate);
     void addIdentifier(std::string identifier, int scopeId);
-    void addPlus();
-    void addMinus();
+    void addArrayIdentifier(std::string identifier, int scopeId);
+    void addBinaryOperation(Operation operation);
 
     void attributeTo(std::string identifier, int scopeId);
-    void addIdentifierDeclaration(std::string identifier, int scopeId, std::string value);
+    void attributeToArray(std::string identifier, int scopeId);
+    void addIdentifierDeclaration(std::string identifier, int scopeId);
     void addArrayIdentifierDeclaration(std::string identifier, int scopeId, int size);
 
 private:
     std::string getFullIdentifier(std::string identifier, int scopeId);
-    void addBinaryOperation(std::string instructionName);
     void addToDataSection(std::string string);
     void addToTextSection(std::string string);
     int stackTop();

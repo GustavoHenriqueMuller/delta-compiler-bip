@@ -14,19 +14,15 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         case 2: // Float
             expressions.push(Expression(Type(FLO)));
-            // TODO: generator.addImmediate();
             break;
         case 3: // String
             expressions.push(Expression(Type(STR)));
-            // TODO: generator.addImmediate();
             break;
         case 4: // Char
             expressions.push(Expression(Type(CHA)));
-            // TODO: generator.addImmediate();
             break;
         case 5: // Bool
             expressions.push(Expression(Type(BOO)));
-            // TODO: generator.addImmediate();
             break;
 
         /// READING ID
@@ -60,7 +56,6 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
             identifierName = lexeme;
             identifierType = symbol->type;
-            identifierType.isArray = false;
             break;
         }
 
@@ -77,6 +72,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
         /// PUSHING LEFT-VALUE AS EXPRESSION
         case 9: {
+            if (identifierType.isArray) {
+                generator.addArrayIdentifier(identifierName, scopes.back().id);
+            } else {
+                generator.addIdentifier(identifierName, scopes.back().id);
+            }
+
             Symbol* symbol = getSymbolByName(identifierName);
 
             if (!symbol->isInitialized) {
@@ -98,8 +99,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 16:
         case 17:
         case 18: {
-            // TODO: CORRIGIR
-            // generator.addBinaryOperation();
+            generator.addBinaryOperation(operations.top());
             doOperation();
             break;
         }
@@ -197,13 +197,6 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
         /// DECLARATION
         case 59: { // Reading array type with size initializer
-            Expression size = expressions.top();
-
-            if (size.type.primitive != INT) {
-                throw InvalidArraySizeInitializerError(leftType.toString());
-            }
-
-            expressions.pop();
             leftType.isArray = true;
             leftType.arraySize = Utils::lexemeToInt(lexeme);
             break;
@@ -232,7 +225,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 if (symbol->type.isArray) {
                     generator.addArrayIdentifierDeclaration(symbol->name, scopes.back().id, leftType.arraySize);
                 } else {
-                    generator.addIdentifierDeclaration(symbol->name, scopes.back().id, "0");
+                    generator.addIdentifierDeclaration(symbol->name, scopes.back().id);
                 }
             }
 
@@ -241,24 +234,33 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        /// ATTRIBUTION IN DECLARATION
+        /// ATTRIBUTION
         case 62: // Attribution
-            generator.attributeTo(leftIdentifierNames.back(), scopes.back().id);
+            if (leftType.isArray) {
+                generator.attributeToArray(leftIdentifierNames.back(), scopes.back().id);
+            } else {
+                generator.attributeTo(leftIdentifierNames.back(), scopes.back().id);
+            }
+
             doAttribution();
             break;
 
-        /// ATTRIBUTION
         case 63: // Gets left type of attribution outside of declaration
             leftIdentifierNames.push_back(identifierName);
             leftType = identifierType;
             break;
 
+        case 64: // Clears identifier names after attribution
+            leftIdentifierNames.pop_back();
+            leftType = Type();
+            break;
+
         /// IF, ELSEIF, WHILE, DO WHILE, FOR BLOCK
-        case 64: // Validating boolean expressions
-        case 65:
+        case 65: // Validating boolean expressions
         case 66:
         case 67:
-        case 68: {
+        case 68:
+        case 69: {
             std::string blockName;
 
             switch (action) {
@@ -288,12 +290,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// WHEN STATEMENT
-        case 69: { // Reading type of expression in "when" block
+        case 70: { // Reading type of expression in "when" block
             whenExpressionTypes.push(expressions.top().type);
             expressions.pop();
             break;
         }
-        case 70: { // Reading type of expression in "is" block
+        case 71: { // Reading type of expression in "is" block
             Expression expression = expressions.top();
             AttributionResult result = OperationManager::checkImplicitCast(expression.type, whenExpressionTypes.top());
 
@@ -304,12 +306,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             expressions.pop();
             break;
         }
-        case 71: // End of "when" block
+        case 72: // End of "when" block
             whenExpressionTypes.pop();
             break;
 
         /// FUNCTIONS
-        case 72: { // Reading function declaration identifier
+        case 73: { // Reading function declaration identifier
             Symbol* symbol = getSymbolByName(lexeme);
 
             if (symbol != nullptr) {
@@ -323,12 +325,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             functionName = lexeme;
             break;
         }
-        case 73: { // Reading function declaration parameter identifier
+        case 74: { // Reading function declaration parameter identifier
             Symbol* function = getSymbolByName(functionName);
             function->parameters.push_back(Parameter(leftType, lexeme));
             break;
         }
-        case 74: { // Creating identifiers in function scope from function parameters
+        case 75: { // Creating identifiers in function scope from function parameters
             Symbol* function = getSymbolByName(functionName);
 
             for (const Parameter &parameter : function->parameters) {
@@ -342,7 +344,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             functionName.clear();
             break;
         }
-        case 75: { // Reading function call identifier
+        case 76: { // Reading function call identifier
             Symbol* function = getSymbolByName(lexeme);
 
             if (function == nullptr) {
@@ -359,7 +361,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             expressions.push(Expression(function->type));
             break;
         }
-        case 76: { // Reading function call parameter
+        case 77: { // Reading function call parameter
             Symbol* function = getSymbolByName(functionName);
 
             if (amountFunctionParameters >= function->parameters.size()) {
@@ -379,7 +381,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             expressions.pop();
             break;
         }
-        case 77: { // Finish function call
+        case 78: { // Finish function call
             Symbol* function = getSymbolByName(functionName);
 
             if (amountFunctionParameters != function->parameters.size()) {
@@ -392,7 +394,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             functionName.clear();
             break;
         }
-        case 78: { // Create scope for function
+        case 79: { // Create scope for function
             Symbol* function = getSymbolByName(functionName);
             Scope scope = Scope(getScopeId());
 
@@ -402,7 +404,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// RETURN STATEMENT
-        case 79: { // Check for type when returning from function
+        case 80: { // Check for type when returning from function
             Expression expression = expressions.top();
             AttributionResult result = OperationManager::checkImplicitCast(expression.type, scopes.back().returnType);
 
@@ -419,18 +421,22 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
 void Semantico::doAttribution() {
     Symbol* symbol = getSymbolByName(leftIdentifierNames.back());
+
+    Type typeToAssign = leftType;
+    typeToAssign.isArray = false;
+
     Type expressionType = expressions.top().type;
 
     if (symbol == nullptr) {
         throw IdentifierNotFoundError(symbol->name);
     }
 
-    AttributionResult resultType = OperationManager::checkAttribution(expressionType, leftType, attributionOperation);
+    AttributionResult resultType = OperationManager::checkAttribution(expressionType, typeToAssign, attributionOperation);
 
     if (resultType == ATT_ER) {
-        throw IncompatibleAttributionTypesError(symbol->name, expressionType.toString(), leftType.toString(), attributionOperation.lexeme);
+        throw IncompatibleAttributionTypesError(symbol->name, expressionType.toString(), typeToAssign.toString(), attributionOperation.lexeme);
     } else if (resultType == ATT_PL) {
-        logger.addWarn(PrecisionLossWarning(symbol->name, leftType.toString(), expressionType.toString()));
+        logger.addWarn(PrecisionLossWarning(symbol->name, typeToAssign.toString(), expressionType.toString()));
     }
 
     if (leftType.isConst && !symbol->isInDeclaration) {
@@ -473,12 +479,10 @@ void Semantico::doUnaryOperation() {
         throw IncompatibleUnaryOperationTypeError(operation.lexeme, expression.type.toString());
     }
 
-    OperationType type = operation.operationType;
+    OperationCategory category = operation.getOperationCategory();
 
-    if (type == INCREMENT_LEFT || type == DECREMENT_LEFT || type == INCREMENT_RIGHT || type == DECREMENT_RIGHT) {
-        if (expression.type.isConst) {
-            throw ConstMutationError(identifierName);
-        }
+    if ((category == CATEGORY_UNARY_LEFT_MUTABLE || category == CATEGORY_UNARY_RIGHT_MUTABLE) && expression.type.isConst) {
+        throw ConstMutationError(identifierName);
     }
 
     expressions.push(Expression(resultType));

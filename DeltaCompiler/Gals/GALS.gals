@@ -60,8 +60,8 @@ SMALLER_EQ: <=
 EQ: ==
 DIF: !=
 
-INCREMENT_ASSIGN: \+=
-DECREMENT_ASSIGN: \-=
+INCREMENT_ATTRIBUTION: \+=
+DECREMENT_ATTRIBUTION: \-=
 
 INCREMENT: \+\+
 DECREMENT: \-\-
@@ -70,7 +70,7 @@ MINUS: \-
 MULT: \*
 DIV: /
 MOD: %
-ASSIGN: =
+ATTRIBUTION: =
 
 BIT_AND: &
 BIT_OR: \|
@@ -126,7 +126,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <declaration_stmt>
 <declaration_stmt_id_list>
 
-<assign_stmt>
+<attribution_stmt>
 <return_stmt>
 
 // Blocos
@@ -170,40 +170,40 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <op_bitwise>
 <op_arit_low>
 <op_arit_high>
-<op_assign>
+<op_attribution>
 
 #Grammar
 // Escopo global
 <global> ::= <global_stmt> <global> | <global_stmt>;
-<global_stmt> ::= <declaration_stmt> END | <assign_stmt> END | <function>;
+<global_stmt> ::= <declaration_stmt> END | <attribution_stmt> END | <function>;
 
 // Escopos e funções
 <scope> ::= LSC RSC | LSC <statement_list> RSC;
-<function> ::= <function_prototype> #78 #74 <scope> #50;
-<function_prototype> ::= <type> ID #72 LSP RSP | <type> ID #72 LSP <function_prototype_argument_list> RSP;
-<function_prototype_argument_list> ::= <type> ID #73 COMMA <function_prototype_argument_list> | <type> ID #73;
+<function> ::= <function_prototype> #79 #75 <scope> #50;
+<function_prototype> ::= <type> ID #73 LSP RSP | <type> ID #73 LSP <function_prototype_argument_list> RSP;
+<function_prototype_argument_list> ::= <type> ID #74 COMMA <function_prototype_argument_list> | <type> ID #74;
 
-<function_call> ::= ID #75 LSP RSP #77 | ID #75 LSP <function_call_argument_list> RSP #77;
-<function_call_argument_list> ::= <exp> #76 COMMA <function_call_argument_list> | <exp> #76;
+<function_call> ::= ID #76 LSP RSP #78 | ID #76 LSP <function_call_argument_list> RSP #78;
+<function_call_argument_list> ::= <exp> #77 COMMA <function_call_argument_list> | <exp> #77;
 
 // Statements
 <statement_list> ::= <statement> <statement_list> | <statement>;
-<statement> ::= <if_stmt> | <while_stmt> | <do_while_stmt> END | <for_stmt> | <declaration_stmt> END | <assign_stmt> END | <return_stmt> END | <exp> END | <when_stmt>;
+<statement> ::= <if_stmt> | <while_stmt> | <do_while_stmt> END | <for_stmt> | <declaration_stmt> END | <attribution_stmt> END | <return_stmt> END | <exp> END | <when_stmt>;
 
 <if_stmt> ::= <if> | <if> <else> | <if> <else_if_list> | <if> <else_if_list> <else>;
 <while_stmt> ::= WHILE LSP <exp> #67 RSP #49 <scope> #50;
 <do_while_stmt> ::= DO #49 <scope> #50 WHILE LSP <exp> #68 RSP;
 
 <for_stmt> ::= FOR #49 LSP <for_left> END <exp> #69 END <exp> RSP <scope> #50;
-<for_left> ::= <exp> | <declaration_stmt> | <assign_stmt>;
+<for_left> ::= <exp> | <declaration_stmt> | <attribution_stmt>;
 
-<when_stmt> ::= WHEN LSP <exp> #69 RSP LSC <is_list> RSC #71;
+<when_stmt> ::= WHEN LSP <exp> #70 RSP LSC <is_list> RSC #71;
 
 <declaration_stmt> ::= <type> <declaration_stmt_id_list> #61;
-<declaration_stmt_id_list> ::= ID #60 COMMA <declaration_stmt_id_list> | ID #60 ASSIGN #46 <exp> #62 COMMA <declaration_stmt_id_list> | ID #60 | ID #60 ASSIGN #46 <exp> #62;
+<declaration_stmt_id_list> ::= ID #60 COMMA <declaration_stmt_id_list> | ID #60 ATTRIBUTION #46 <exp> #62 COMMA <declaration_stmt_id_list> | ID #60 | ID #60 ATTRIBUTION #46 <exp> #62;
 
-<assign_stmt> ::= <left_value> #63 <op_assign> <exp> #62 #61;
-<return_stmt> ::= RETURN <exp> #79;
+<attribution_stmt> ::= <left_value> #63 <op_attribution> <exp> #62 #64;
+<return_stmt> ::= RETURN <exp> #80;
 
 // Blocos
 <if> ::= IF LSP <exp> #65 RSP #49 <scope> #50;
@@ -212,7 +212,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <else> ::= ELSE #49 <scope> #50;
 
 <is_list> ::= <is> <is_list> | <default> | <is>;
-<is> ::= IS LSP <exp> #70 RSP <scope>;
+<is> ::= IS LSP <exp> #71 RSP <scope>;
 <default> ::= DEFAULT <scope>;
 
 // Expressões
@@ -233,8 +233,8 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <type_primitive> ::= VAR_INT #52 | VAR_FLOAT #53 | VAR_DOUBLE #54 | VAR_STRING #55 | VAR_CHAR #56 | VAR_BOOLEAN #57 | VAR_VOID #58;
 <modifier_list> ::= CONST #51 | î;
 
-<int_literal> ::= INT_DEC #1 | INT_HEX #1 | INT_BIN #1;
-<literal> ::= <int_literal> | FLOAT #2 | STRING #3 | CHAR #4 | BOOLEAN #5;
+<int_literal> ::= INT_DEC | INT_HEX | INT_BIN;
+<literal> ::= <int_literal> #1 | FLOAT #2 | STRING #3 | CHAR #4 | BOOLEAN #5;
 <left_value> ::= ID #6 | ID #7 LSB <exp> #8 RSB;
 <right_value> ::= <literal> | <function_call> | LSP <exp> RSP;
 
@@ -246,7 +246,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <op_unary_right_mutable> ::= INCREMENT #39 | DECREMENT #40;
 <op_unary_left> ::= MINUS #41 | BIT_NOT #42 | NOT #43;
 <op_unary_left_mutable> ::= INCREMENT #44 | DECREMENT #45;
-<op_assign> ::= ASSIGN #46 | INCREMENT_ASSIGN #47 | DECREMENT_ASSIGN #48;
+<op_attribution> ::= ATTRIBUTION #46 | INCREMENT_ATTRIBUTION #47 | DECREMENT_ATTRIBUTION #48;
 
 // Exemplo com tudo para ser usado no simulador
 // -x + 8.8 - !x * 2 / ~y % 3 << 7 != y >> 3 || (x <= 3 && y > 8) | p & (h ^ g)

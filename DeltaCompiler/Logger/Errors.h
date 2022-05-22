@@ -58,13 +58,6 @@ public:
 };
 
 
-class InvalidArraySizeInitializerError : public SemanticError {
-public:
-    InvalidArraySizeInitializerError(const std::string &type)
-      : SemanticError("Size initializer of " + type + " array must be 'int'", -1) { }
-};
-
-
 class InvalidExpressionForBlockError : public SemanticError {
 public:
     InvalidExpressionForBlockError(const std::string &typeString, const std::string &blockName, const std::string &expectedType)

@@ -50,10 +50,6 @@ private:
     std::stack<Operation> operations;
     int scopeCounter = 0;
 
-    // Variables for temporary data
-    int tempDataOffset = 0;
-    const int tempDataAddress = 1000;
-
     // Reading names and indexes from identifiers
     std::string identifierName;
     Type identifierType;

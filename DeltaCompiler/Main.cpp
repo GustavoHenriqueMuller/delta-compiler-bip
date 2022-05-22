@@ -66,12 +66,11 @@ int main(int argc, char **argv) {
         std::string asmFilePath = FileManager::getAsmFilePath(filePath);
 
         if (watch) {
-            std::cout << std::endl;
             std::cout << "[SCOPES]: " << semantico->getScopesJson() << std::endl;
             std::cout << "[ASM_PATH]: " << asmFilePath << std::endl;
+            std::cout << std::endl;
         }
 
-        std::cout << std::endl;
         logger.logWarns();
         FileManager::saveToFile(generator.getCode(), asmFilePath);
 

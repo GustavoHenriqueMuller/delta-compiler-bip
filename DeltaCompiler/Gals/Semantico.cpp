@@ -10,18 +10,23 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         /// PUSHING LITERALS
         case 1: // Int
             expressions.push(Expression(Type(INT)));
+            generator.addImmediate(Utils::lexemeToInt(lexeme));
             break;
         case 2: // Float
             expressions.push(Expression(Type(FLO)));
+            // TODO: generator.addImmediate();
             break;
         case 3: // String
             expressions.push(Expression(Type(STR)));
+            // TODO: generator.addImmediate();
             break;
         case 4: // Char
             expressions.push(Expression(Type(CHA)));
+            // TODO: generator.addImmediate();
             break;
         case 5: // Bool
             expressions.push(Expression(Type(BOO)));
+            // TODO: generator.addImmediate();
             break;
 
         /// READING ID
@@ -92,9 +97,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 15:
         case 16:
         case 17:
-        case 18:
+        case 18: {
+            // TODO: CORRIGIR
+            // generator.addBinaryOperation();
             doOperation();
             break;
+        }
 
         /// DOING UNARY OPERATION
         case 19:
@@ -197,7 +205,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
             expressions.pop();
             leftType.isArray = true;
-            leftType.arraySize = std::stoi(lexeme); // TODO: FAZER FUNCIONAR COM 0x e 0b
+            leftType.arraySize = Utils::lexemeToInt(lexeme);
             break;
         }
         case 60: { // Reading id of declaration id list
@@ -235,6 +243,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
         /// ATTRIBUTION IN DECLARATION
         case 62: // Attribution
+            generator.attributeTo(leftIdentifierNames.back(), scopes.back().id);
             doAttribution();
             break;
 

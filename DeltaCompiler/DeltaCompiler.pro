@@ -11,7 +11,8 @@ SOURCES += \
     Generator/Generator.cpp \
     Logger/Logger.cpp \
     Main.cpp \
-    Model/Operation.cpp
+    Model/Operation.cpp \
+    Utils/Utils.cpp
 
 HEADERS += \
     Gals/AnalysisError.h \

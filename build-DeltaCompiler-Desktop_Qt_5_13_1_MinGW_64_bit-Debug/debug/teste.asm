@@ -1,7 +1,17 @@
 .data
-	a: 0
-	b: 0
-	c: 0
-	testeArray: 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	global_0: 0
+	a_1: 0
 
 .text
+	LDI 7
+	STO 1000
+	LDI 4
+	STO 1001
+	LD 1000
+	SUB 1001
+	STO 1000
+	LD 1000
+	STO a_1
+	LDI 0
+	STO 1000
+	HLT 0

@@ -1,6 +1,7 @@
+string global;
+
 int main() {
-	int a, b, c = 5;
-	char[10] testeArray;
+	int a = 7 - 4;
 
 	return 0;
 }

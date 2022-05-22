@@ -525,8 +525,10 @@ void Semantico::saveScope(const Scope &scope) {
         jsonBuilder.set("scope", scope.id);
         jsonBuilder.set("name", symbol.name);
         jsonBuilder.set("type", symbol.type.toString());
+
         jsonBuilder.set("isArray", symbol.type.isArray);
         jsonBuilder.set("arraySize", symbol.type.arraySize);
+
         jsonBuilder.set("isConst", symbol.type.isConst);
         jsonBuilder.set("isInitialized", symbol.isInitialized);
         jsonBuilder.set("isUsed", symbol.isUsed);

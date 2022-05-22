@@ -1,8 +1,6 @@
 int main() {
-	int a;
-	
-	input(a);
-	print(a + 0xa);
+	int a = 4 + 11;
+	int b = a + 19;
 
 	return 0;
 }

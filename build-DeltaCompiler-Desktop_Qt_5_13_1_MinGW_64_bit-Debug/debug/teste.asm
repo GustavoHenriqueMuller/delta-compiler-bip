@@ -1,20 +1,26 @@
 .data
 	a_1: 0
+	b_1: 0
 
 .text
-	LD a_1
+	LDI 4
 	STO 1000
-	LD $in_port
-	STO a_1
-	LD a_1
-	STO 1000
-	LDI 10
+	LDI 11
 	STO 1001
 	LD 1000
 	ADD 1001
 	STO 1000
 	LD 1000
-	STO $out_port
+	STO a_1
+	LD a_1
+	STO 1000
+	LDI 19
+	STO 1001
+	LD 1000
+	ADD 1001
+	STO 1000
+	LD 1000
+	STO b_1
 	LDI 0
 	STO 1000
 	HLT 0

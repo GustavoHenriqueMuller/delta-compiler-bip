@@ -9,9 +9,7 @@
 
 #include <iostream>
 
-void printBar() {
-    std::cout << std::string(40, '_') << std::endl << std::endl;
-}
+// TODO: Corrigir escopo ao ler identificador (todo lugar com scopes.back().id)
 
 int main(int argc, char **argv) {
     bool watch = false;
@@ -57,18 +55,17 @@ int main(int argc, char **argv) {
         sintatico->parse(lexico, semantico);
         semantico->popScope();
 
-        printBar();
+        Utils::printBar();
         std::cout << sourceCode << std::endl;
-        printBar();
+        Utils::printBar();
         std::cout << generator.getCode() << std::endl;
-        printBar();
+        Utils::printBar();
 
         std::string asmFilePath = FileManager::getAsmFilePath(filePath);
 
         if (watch) {
             std::cout << "[SCOPES]: " << semantico->getScopesJson() << std::endl;
-            std::cout << "[ASM_PATH]: " << asmFilePath << std::endl;
-            std::cout << std::endl;
+            std::cout << "[ASM_PATH]: " << asmFilePath << std::endl << std::endl;
         }
 
         logger.logWarns();

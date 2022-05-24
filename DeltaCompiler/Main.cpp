@@ -10,12 +10,13 @@
 #include <iostream>
 
 int main(int argc, char **argv) {
-    bool watch = false;
+    bool watch = false, debug = false;
 
     if (argc == 1) {
         std::cout << "Syntax: delta [options] [filepath]." << std::endl << std::endl;
         std::cout << "[options]" << std::endl;
         std::cout << "-watch: Prints Bhaskara (IDE) information in stdout;" << std::endl;
+        std::cout << "-debug: Prints debugging information in stdout;" << std::endl;
         std::cout << std::endl << "[filepath]: Relative or absolute path of .delta file to be compiled." << std::endl << std::endl;
         return 0;
     }
@@ -25,6 +26,8 @@ int main(int argc, char **argv) {
 
         if (argument == "-watch") {
             watch = true;
+        } else if (argument == "-debug") {
+            debug = true;
         } else {
             std::cout << "Error: Invalid argument '" + argument + "'." << std::endl;
             return 0;
@@ -48,18 +51,20 @@ int main(int argc, char **argv) {
 	try {
         Lexico* lexico = new Lexico(stream);
         Sintatico* sintatico = new Sintatico();
-        Semantico* semantico = new Semantico(logger, generator);
+        Semantico* semantico = new Semantico(logger, generator, debug);
 
         sintatico->parse(lexico, semantico);
         semantico->popScope();
 
-        Utils::printBar();
-        std::cout << sourceCode << std::endl;
-        Utils::printBar();
-        std::cout << generator.getCode() << std::endl;
-        Utils::printBar();
-
         std::string asmFilePath = FileManager::getAsmFilePath(filePath);
+
+        if (debug) {
+            Utils::printBar();
+            std::cout << sourceCode << std::endl;
+            Utils::printBar();
+            std::cout << generator.getCode() << std::endl;
+            Utils::printBar();
+        }
 
         if (watch) {
             std::cout << "[SCOPES]: " << semantico->getScopesJson() << std::endl;

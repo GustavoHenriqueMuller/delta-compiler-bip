@@ -74,7 +74,11 @@
 	STO $indr
 	LD 1001
 	STOV c_1
-	LDI 12
+	LDI 1
+	STO 1000
+	LD 1000
+	STO $indr
+	LDV b_1
 	STO 1000
 	LD 1000
 	STO d_1
@@ -111,18 +115,6 @@
 	STO 1000
 	LD 1000
 	STO f_1
-	LD f_1
-	STO 1000
-	LD 1000
-	STO $out_port
-	LD d_1
-	STO 1000
-	LD $in_port
-	STO d_1
-	LD d_1
-	STO 1000
-	LD 1000
-	STO $out_port
 	LDI 0
 	STO 1000
 	HLT 0

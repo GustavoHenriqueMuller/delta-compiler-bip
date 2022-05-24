@@ -1,7 +1,9 @@
 #include "Semantico.h"
 
 void Semantico::executeAction(int action, const Token *token) throw (SemanticError) {
-    std::cout << "Action: " << action << "\tToken: "  << token->getId() << "\tLexeme: " << token->getLexeme() << std::endl;
+    if (debug) {
+        std::cout << "Action: " << action << "\tToken: "  << token->getId() << "\tLexeme: " << token->getLexeme() << std::endl;
+    }
 
     TokenId tokenId = token->getId();
     std::string lexeme = token->getLexeme();
@@ -572,6 +574,6 @@ std::string Semantico::getScopesJson() {
     return jsonBuilder.build();
 }
 
-Semantico::Semantico(Logger &logger, Generator &generator): logger(logger), generator(generator) {
+Semantico::Semantico(Logger &logger, Generator &generator, bool debug): logger(logger), generator(generator), debug(debug) {
     scopes.push_back(Scope(getScopeId()));
 }

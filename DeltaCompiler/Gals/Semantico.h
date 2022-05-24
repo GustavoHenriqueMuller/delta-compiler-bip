@@ -23,7 +23,7 @@
 
 class Semantico {
 public:
-    Semantico(Logger &logger, Generator &generator);
+    Semantico(Logger &logger, Generator &generator, bool debug);
 
     void executeAction(int action, const Token *token) throw (SemanticError);
     void popScope();
@@ -41,6 +41,7 @@ private:
     // Logger and Generator
     Logger &logger;
     Generator &generator;
+    const bool debug;
 
     // JsonBuilder
     JsonBuilder jsonBuilder;

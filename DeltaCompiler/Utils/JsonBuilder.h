@@ -6,19 +6,17 @@
 #include <iostream>
 #include <algorithm>
 
-using namespace std;
-
 class JsonBuilder {
 
 private:
-    stringstream payload;
+    std::stringstream payload;
 
 public:
     JsonBuilder() { }
 
-    string build() {
+    std::string build() {
         this->payload << "]";
-        string temp = this->replace(this->payload.str(), ",}", "}");
+        std::string temp = this->replace(this->payload.str(), ",}", "}");
         return "[" + this->replace(temp, ",]", "]");
     }
 
@@ -31,39 +29,39 @@ public:
     }
 
     template<class T>
-    void set(string key, T value) {
+    void set(std::string key, T value) {
         this->payload << this->attribute(key) << this->quotes(value) << ",";
     }
 
 private:
     template<class T>
-    string quotes(T key) {
-        return "\"" + to_string(key) + "\"";
+    std::string quotes(T key) {
+        return "\"" + std::to_string(key) + "\"";
     }
 
-    string quotes(bool key) {
-        return "\"" + to_string(int(key)) + "\"";
+    std::string quotes(bool key) {
+        return "\"" + std::to_string(int(key)) + "\"";
     }
 
-    string quotes(string key) {
+    std::string quotes(std::string key) {
         return "\"" + key + "\"";
     }
 
-    string quotes(const char *key) {
-        return "\"" + string(key) + "\"";
+    std::string quotes(const char *key) {
+        return "\"" + std::string(key) + "\"";
     }
 
-    string quotes(char key) {
-        return "\"" + string(1, key) + "\"";
+    std::string quotes(char key) {
+        return "\"" + std::string(1, key) + "\"";
     }
 
-    string attribute(string key) {
+    std::string attribute(std::string key) {
         return this->quotes(key) + ":";
     }
 
-    string replace(string text, const string& target, const string& newString) {
-        size_t startPos = 0;
-        while((startPos = text.find(target, startPos)) != string::npos) {
+    std::string replace(std::string text, const std::string& target, const std::string& newString) {
+        std::size_t startPos = 0;
+        while((startPos = text.find(target, startPos)) != std::string::npos) {
             text.replace(startPos, target.length(), newString);
             startPos += newString.length();
         }

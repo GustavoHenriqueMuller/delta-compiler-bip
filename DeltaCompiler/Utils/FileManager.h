@@ -32,7 +32,14 @@ namespace FileManager {
     }
 
     std::string getSimplifiedName(std::string filePath) {
-        return filePath.substr(filePath.find_last_of('/') + 1, filePath.size());
+        std::size_t barIndex = filePath.find_last_of('/');
+        std::size_t invertedBarIndex = filePath.find_last_of('\\');
+
+        if (barIndex != std::string::npos) {
+            return filePath.substr(barIndex + 1, filePath.size());
+        } else if (invertedBarIndex != std::string::npos) {
+            return filePath.substr(invertedBarIndex + 1, filePath.size());
+        }
     }
 }
 

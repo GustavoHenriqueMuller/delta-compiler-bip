@@ -345,6 +345,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 scopes.back().symbolList.push_back(symbol);
             }
 
+            function->isInDeclaration = false;
             functionName.clear();
             break;
         }

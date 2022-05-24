@@ -39,6 +39,8 @@ namespace FileManager {
             return filePath.substr(barIndex + 1, filePath.size());
         } else if (invertedBarIndex != std::string::npos) {
             return filePath.substr(invertedBarIndex + 1, filePath.size());
+        } else {
+            return filePath;
         }
     }
 }

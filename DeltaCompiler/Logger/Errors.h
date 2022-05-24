@@ -33,8 +33,8 @@ public:
 
 class IncompatibleAttributionTypesError : public SemanticError {
 public:
-    IncompatibleAttributionTypesError(const std::string &assignedName, const std::string &type1String, const std::string &type2String, const std::string &attributionLexeme)
-      : SemanticError("Cannot attribute value of type '" + type1String + "' to identifer '" + assignedName + "' of type '" + type2String + "' for attribution operator '" + attributionLexeme + "'", -1) { }
+    IncompatibleAttributionTypesError(const std::string &identifier, const std::string &expressionType, const std::string &identifierType, const std::string &attributionLexeme)
+      : SemanticError("Cannot attribute value of type '" + expressionType + "' to identifer '" + identifier + "' of type '" + identifierType + "' for attribution operator '" + attributionLexeme + "'", -1) { }
 };
 
 

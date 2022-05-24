@@ -69,4 +69,9 @@ public:
     OperationCategory getOperationCategory();
 };
 
+OperationType getOperationTypeFromTokenId(TokenId tokenId);
+OperationType getRightUnaryOperationTypeFromTokenId(TokenId tokenId);
+OperationType getLeftUnaryOperationTypeFromTokenId(TokenId tokenId);
+Operation getBinaryOperationFromAttributionType(OperationType attributionType);
+
 #endif // OPERATION_H

@@ -33,7 +33,7 @@ public:
 
 class PrecisionLossWarning : public Warning {
 public:
-    PrecisionLossWarning(const std::string &identifier, const std::string &typeIdentifier, const std::string &typeExpression)
+    PrecisionLossWarning(const std::string &identifier, const std::string &typeExpression, const std::string &typeIdentifier)
       : Warning("Precision loss while assigning '" + typeExpression + "' to '" + identifier + "' of type '" + typeIdentifier + "'", -1) { }
 };
 

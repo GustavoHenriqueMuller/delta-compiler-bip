@@ -2,6 +2,7 @@
 #define GENERATOR_H
 
 #include "../Model/Operation.h"
+#include "../Model/Symbol.h"
 
 #include <string>
 
@@ -11,22 +12,23 @@ public:
     std::string getCode();
 
     void addImmediate(int immediate);
-    void addIdentifier(std::string identifier, int scopeId);
-    void addArrayIdentifier(std::string identifier, int scopeId);
-    void addBinaryOperation(OperationType operationType);
+    void addIdentifier(const Symbol &symbol);
+    void addArrayIdentifier(const Symbol &symbol);
+    void addBinaryOperation(Operation operation);
 
-    void attributeTo(std::string identifier, int scopeId, OperationType attributionType);
-    void attributeToArray(std::string identifier, int scopeId, OperationType attributionType);
-    void addIdentifierDeclaration(std::string identifier, int scopeId);
-    void addArrayIdentifierDeclaration(std::string identifier, int scopeId, int size);
+    void attributeTo(const Symbol &symbol, OperationType attributionType);
+    void attributeToArray(const Symbol &symbol, OperationType attributionType);
+    void addIdentifierDeclaration(const Symbol &symbol);
+    void addArrayIdentifierDeclaration(const Symbol &symbol);
     void addPrint();
-    void addInput(std::string identifier, int scopeId);
-    void addArrayInput(std::string identifier, int scopeId);
+    void addInput(const Symbol &symbol);
+    void addArrayInput(const Symbol &symbol);
 
 private:
-    std::string getFullIdentifier(std::string identifier, int scopeId);
+    std::string getFullIdentifier(const Symbol &symbol);
     void addToDataSection(std::string string);
-    void addToTextSection(std::string string);
+    void addInstruction(std::string instruction, std::string parameter);
+    void addInstruction(std::string instruction, int parameter);
     int stackTop();
 
     std::string dataSection;

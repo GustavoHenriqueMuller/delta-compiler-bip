@@ -1,8 +1,12 @@
-int c = 2;
-
 int main() {
-	int a = c + 11;
-	int b = a + 19;
+	int[5] a, b, c;
+	b[1] = 9;
+	a[0 + 1 - 3 + 3] = b[0 + 1] + 2;
+	c[1] = a[0 + 1] + 3;
+	
+	int d = 12, e = d + 9 + 2 - 1, f = d + e + 1;
+	
+	print(f);
 
 	return 0;
 }

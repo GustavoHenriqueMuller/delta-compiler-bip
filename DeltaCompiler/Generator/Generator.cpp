@@ -18,31 +18,31 @@ std::string Generator::getCode() {
 void Generator::addImmediate(int immediate) {
     stackSize += 1;
 
-    addToTextSection("LDI " + std::to_string(immediate));
-    addToTextSection("STO " + std::to_string(stackTop()));
+    addInstruction("LDI", immediate);
+    addInstruction("STO", stackTop());
 }
 
-void Generator::addIdentifier(std::string identifier, int scopeId) {
+void Generator::addIdentifier(const Symbol &symbol) {
     stackSize += 1;
 
-    addToTextSection("LD " + getFullIdentifier(identifier, scopeId));
-    addToTextSection("STO " + std::to_string(stackTop()));
+    addInstruction("LD", getFullIdentifier(symbol));
+    addInstruction("STO", stackTop());
 }
 
-void Generator::addArrayIdentifier(std::string identifier, int scopeId) {
-    addToTextSection("LD " + std::to_string(stackTop()));
-    addToTextSection("STO $indr");
+void Generator::addArrayIdentifier(const Symbol &symbol) {
+    addInstruction("LD", stackTop());
+    addInstruction("STO", "$indr");
     stackSize -= 1;
 
     stackSize += 1;
-    addToTextSection("LDV " + getFullIdentifier(identifier, scopeId));
-    addToTextSection("STO " + std::to_string(stackTop()));
+    addInstruction("LDV", getFullIdentifier(symbol));
+    addInstruction("STO", stackTop());
 }
 
-void Generator::addBinaryOperation(OperationType operationType) {
+void Generator::addBinaryOperation(Operation operation) {
     std::string instructionName;
 
-    switch (operationType) {
+    switch (operation.type) {
         case ADD:
             instructionName = "ADD";
             break;
@@ -66,121 +66,107 @@ void Generator::addBinaryOperation(OperationType operationType) {
             break;
     }
 
-    addToTextSection("LD " + std::to_string(stackTop() - 1));
-    addToTextSection(instructionName + " " + std::to_string(stackTop()));
+    addInstruction("LD", stackTop() - 1);
+    addInstruction(instructionName, stackTop());
     stackSize -= 2;
 
     stackSize += 1;
-    addToTextSection("STO " + std::to_string(stackTop()));
+    addInstruction("STO", stackTop());
 }
 
-void Generator::attributeTo(std::string identifier, int scopeId, OperationType attributionType) {
+void Generator::attributeTo(const Symbol &symbol, OperationType attributionType) {
     if (attributionType != ATTRIBUTION) {
         stackSize += 1;
-        addToTextSection("LD " + std::to_string(stackTop() - 1));
-        addToTextSection("STO " + std::to_string(stackTop()));
+        addInstruction("LD", stackTop() - 1);
+        addInstruction("STO", stackTop());
 
-        addToTextSection("LD " + getFullIdentifier(identifier, scopeId));
-        addToTextSection("STO " + std::to_string(stackTop() - 1));
+        addInstruction("LD", getFullIdentifier(symbol));
+        addInstruction("STO", stackTop() - 1);
 
-        switch (attributionType) {
-            case INCREMENT_ATTRIBUTION: {
-                addBinaryOperation(ADD);
-                break;
-            }
-            case DECREMENT_ATTRIBUTION: {
-                addBinaryOperation(SUBTRACT);
-                break;
-            }
-        }
+        addBinaryOperation(getBinaryOperationFromAttributionType(attributionType));
     }
 
-    addToTextSection("LD " + std::to_string(stackTop()));
-    addToTextSection("STO " + getFullIdentifier(identifier, scopeId));
+    addInstruction("LD", stackTop());
+    addInstruction("STO", getFullIdentifier(symbol));
     stackSize -= 1;
 }
 
-void Generator::attributeToArray(std::string identifier, int scopeId, OperationType attributionType) {
+void Generator::attributeToArray(const Symbol &symbol, OperationType attributionType) {
     if (attributionType != ATTRIBUTION) {
-        addToTextSection("LD " + std::to_string(stackTop()));
+        addInstruction("LD", stackTop());
 
         stackSize += 1;
-        addToTextSection("STO " + std::to_string(stackTop()));
+        addInstruction("STO", stackTop());
 
-        addToTextSection("LD " + std::to_string(stackTop() - 2));
-        addToTextSection("STO $indr");
-        addToTextSection("LDV " + getFullIdentifier(identifier, scopeId));
-        addToTextSection("STO " + std::to_string(stackTop() - 1));
+        addInstruction("LD ", stackTop() - 2);
+        addInstruction("STO", "$indr");
+        addInstruction("LDV", getFullIdentifier(symbol));
+        addInstruction("STO", stackTop() - 1);
 
-        switch (attributionType) {
-            case INCREMENT_ATTRIBUTION: {
-                addBinaryOperation(ADD);
-                break;
-            }
-            case DECREMENT_ATTRIBUTION: {
-                addBinaryOperation(SUBTRACT);
-                break;
-            }
-        }
+        addBinaryOperation(getBinaryOperationFromAttributionType(attributionType));
     }
 
-    addToTextSection("LD " + std::to_string(stackTop() - 1));
-    addToTextSection("STO $indr");
+    addInstruction("LD", stackTop() - 1);
+    addInstruction("STO", "$indr");
 
-    addToTextSection("LD " + std::to_string(stackTop()));
-    addToTextSection("STOV " + getFullIdentifier(identifier, scopeId));
+    addInstruction("LD", stackTop());
+    addInstruction("STOV", getFullIdentifier(symbol));
     stackSize -= 2;
 }
 
-void Generator::addIdentifierDeclaration(std::string identifier, int scopeId) {
-    addToDataSection(getFullIdentifier(identifier, scopeId) + ": 0");
+void Generator::addIdentifierDeclaration(const Symbol &symbol) {
+    addToDataSection(getFullIdentifier(symbol) + ": 0");
 }
 
-void Generator::addArrayIdentifierDeclaration(std::string identifier, int scopeId, int size) {
+void Generator::addArrayIdentifierDeclaration(const Symbol &symbol) {
     std::string value;
 
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < symbol.type.arraySize; i++) {
         value += "0";
 
-        if (i < size - 1) {
+        if (i < symbol.type.arraySize - 1) {
             value += ", ";
         }
     }
 
-    addToDataSection(getFullIdentifier(identifier, scopeId) + ": " + value);
+    addToDataSection(getFullIdentifier(symbol) + ": " + value);
 }
 
 void Generator::addPrint() {
-    addToTextSection("LD " + std::to_string(stackTop()));
-    addToTextSection("STO $out_port");
+    addInstruction("LD", stackTop());
+    addInstruction("STO", "$out_port");
 
     stackSize -= 1;
 }
 
-void Generator::addInput(std::string identifier, int scopeId) {
-    addToTextSection("LD $in_port");
-    addToTextSection("STO " + getFullIdentifier(identifier, scopeId));
+void Generator::addInput(const Symbol &symbol) {
+    addInstruction("LD", "$in_port");
+    addInstruction("STO", getFullIdentifier(symbol));
 
     stackSize -= 1;
 }
 
-void Generator::addArrayInput(std::string identifier, int scopeId) {
-    addToTextSection("LD $in_port");
-    addToTextSection("STOV " + getFullIdentifier(identifier, scopeId));
+void Generator::addArrayInput(const Symbol &symbol) {
+    addInstruction("LD", "$in_port");
+    addInstruction("STOV", getFullIdentifier(symbol));
 
     stackSize -= 1;
 }
 
-std::string Generator::getFullIdentifier(std::string identifier, int scopeId) {
-    return identifier + "_" + std::to_string(scopeId);
+std::string Generator::getFullIdentifier(const Symbol &symbol) {
+    return symbol.name + "_" + std::to_string(symbol.scopeId);
 }
 
 void Generator::addToDataSection(std::string string) {
     dataSection += "\t" + string + "\n";
 }
 
-void Generator::addToTextSection(std::string string) {
-    textSection += "\t" + string + "\n";
+void Generator::addInstruction(std::string instruction, std::string parameter) {
+    textSection += "\t" + instruction + " " + parameter + "\n";
+}
+
+void Generator::addInstruction(std::string instruction, int parameter) {
+    textSection += "\t" + instruction + " " + std::to_string(parameter) + "\n";
 }
 
 int Generator::stackTop() {

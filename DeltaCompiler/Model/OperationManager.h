@@ -22,9 +22,4 @@ private:
     static AttributionResult ATTRIBUTION_TABLE[7][7];
 };
 
-OperationType getOperationTypeFromTokenId(TokenId tokenId);
-OperationType getRightUnaryOperationTypeFromTokenId(TokenId tokenId);
-OperationType getLeftUnaryOperationTypeFromTokenId(TokenId tokenId);
-Operation getBinaryOperationFromAttributionType(OperationType attributionType);
-
 #endif // OPERATION_MANAGER_H

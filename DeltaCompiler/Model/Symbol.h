@@ -3,7 +3,6 @@
 
 #include "Type.h"
 #include "Parameter.h"
-#include "Scope.h"
 
 #include <string>
 #include <vector>

@@ -1,7 +1,7 @@
 #include "Semantico.h"
 
 void Semantico::executeAction(int action, const Token *token) throw (SemanticError) {
-    //std::cout << "Action: " << action << "\tToken: "  << token->getId() << "\tLexeme: " << token->getLexeme() << std::endl;
+    std::cout << "Action: " << action << "\tToken: "  << token->getId() << "\tLexeme: " << token->getLexeme() << std::endl;
 
     TokenId tokenId = token->getId();
     std::string lexeme = token->getLexeme();
@@ -67,6 +67,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 throw InvalidArrayIndexError(identifierName, index.type.toString());
             }
 
+            identifierType.isArray = false;
             break;
         }
 
@@ -74,10 +75,10 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 9: {
             Symbol* symbol = getSymbolByName(identifierName);
 
-            if (identifierType.isArray) {
-                generator.addArrayIdentifier(identifierName, symbol->scopeId);
+            if (symbol->type.isArray) {
+                generator.addArrayIdentifier(*symbol);
             } else {
-                generator.addIdentifier(identifierName, symbol->scopeId);
+                generator.addIdentifier(*symbol);
             }
 
             if (!symbol->isInitialized) {
@@ -99,7 +100,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 16:
         case 17:
         case 18: {
-            generator.addBinaryOperation(operations.top().type);
+            generator.addBinaryOperation(operations.top());
             doOperation();
             break;
         }
@@ -223,14 +224,13 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 symbol->isInDeclaration = false;
 
                 if (symbol->type.isArray) {
-                    generator.addArrayIdentifierDeclaration(symbol->name, symbol->scopeId, leftType.arraySize);
+                    generator.addArrayIdentifierDeclaration(*symbol);
                 } else {
-                    generator.addIdentifierDeclaration(symbol->name, symbol->scopeId);
+                    generator.addIdentifierDeclaration(*symbol);
                 }
             }
 
             leftIdentifierNames.clear();
-            leftType = Type();
             break;
         }
 
@@ -238,10 +238,10 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 62: { // Attribution
             Symbol* symbol = getSymbolByName(leftIdentifierNames.back());
 
-            if (leftType.isArray) {
-                generator.attributeToArray(symbol->name, symbol->scopeId, attributionOperation.type);
+            if (symbol->type.isArray) {
+                generator.attributeToArray(*symbol, attributionOperation.type);
             } else {
-                generator.attributeTo(symbol->name, symbol->scopeId, attributionOperation.type);
+                generator.attributeTo(*symbol, attributionOperation.type);
             }
 
             doAttribution();
@@ -255,7 +255,6 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
         case 64: // Clears identifier names after attribution
             leftIdentifierNames.pop_back();
-            leftType = Type();
             break;
 
         /// IF, ELSEIF, WHILE, DO WHILE, FOR BLOCK
@@ -430,10 +429,10 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 82: { // Input
             Symbol* symbol = getSymbolByName(identifierName);
 
-            if (identifierType.isArray) {
-                generator.addArrayInput(symbol->name, symbol->scopeId);
+            if (symbol->type.isArray) {
+                generator.addArrayInput(*symbol);
             } else {
-                generator.addInput(symbol->name, symbol->scopeId);
+                generator.addInput(*symbol);
             }
 
             expressions.pop();
@@ -445,10 +444,8 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 void Semantico::doAttribution() {
     Symbol* symbol = getSymbolByName(leftIdentifierNames.back());
 
-    Type typeToAssign = leftType;
-    typeToAssign.isArray = false;
-
     Type expressionType = expressions.top().type;
+    Type typeToAssign = leftType;
 
     if (symbol == nullptr) {
         throw IdentifierNotFoundError(symbol->name);
@@ -459,7 +456,7 @@ void Semantico::doAttribution() {
     if (resultType == ATT_ER) {
         throw IncompatibleAttributionTypesError(symbol->name, expressionType.toString(), typeToAssign.toString(), attributionOperation.lexeme);
     } else if (resultType == ATT_PL) {
-        logger.addWarn(PrecisionLossWarning(symbol->name, typeToAssign.toString(), expressionType.toString()));
+        logger.addWarn(PrecisionLossWarning(symbol->name, expressionType.toString(), typeToAssign.toString()));
     }
 
     if (leftType.isConst && !symbol->isInDeclaration) {

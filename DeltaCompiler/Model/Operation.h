@@ -8,10 +8,10 @@
 
 enum OperationType {
     // Arithmetic
-    ADD,
-    SUBTRACT,
-    MULTIPLY,
-    DIVIDE,
+    ADDITION,
+    SUBTRACTION,
+    MULTIPLICATION,
+    DIVISION,
     MOD,
 
     // Relational
@@ -61,12 +61,12 @@ enum OperationCategory {
 
 class Operation {
 public:
-    OperationType type;
-    std::string lexeme;
-
     Operation() {}
     Operation(OperationType type, std::string lexeme): type(type), lexeme(lexeme) {}
     OperationCategory getOperationCategory();
+
+    OperationType type;
+    std::string lexeme;
 };
 
 OperationType getOperationTypeFromTokenId(TokenId tokenId);

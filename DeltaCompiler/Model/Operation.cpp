@@ -3,13 +3,13 @@
 OperationCategory Operation::getOperationCategory() {
     switch (type) {
         // Arit low
-        case ADD:
-        case SUBTRACT:
+        case ADDITION:
+        case SUBTRACTION:
             return CATEGORY_ARIT_LOW;
 
         // Arit high
-        case MULTIPLY:
-        case DIVIDE:
+        case MULTIPLICATION:
+        case DIVISION:
         case MOD:
             return CATEGORY_ARIT_HIGH;
 
@@ -60,13 +60,13 @@ OperationType getOperationTypeFromTokenId(TokenId tokenId) {
     switch (tokenId) {
         // Arithmetic
         case t_PLUS:
-            return ADD;
+            return ADDITION;
         case t_MINUS:
-            return SUBTRACT;
+            return SUBTRACTION;
         case t_MULT:
-            return MULTIPLY;
+            return MULTIPLICATION;
         case t_DIV:
-            return DIVIDE;
+            return DIVISION;
         case t_MOD:
             return MOD;
 
@@ -129,8 +129,8 @@ OperationType getLeftUnaryOperationTypeFromTokenId(TokenId tokenId) {
 Operation getBinaryOperationFromAttributionType(OperationType attributionType) {
     switch (attributionType) {
         case INCREMENT_ATTRIBUTION:
-            return Operation(ADD, "+");
+            return Operation(ADDITION, "+");
         case DECREMENT_ATTRIBUTION:
-            return Operation(SUBTRACT, "-");
+            return Operation(SUBTRACTION, "-");
     }
 }

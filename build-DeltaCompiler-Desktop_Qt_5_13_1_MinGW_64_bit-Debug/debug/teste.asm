@@ -115,6 +115,14 @@
 	STO 1000
 	LD 1000
 	STO $out_port
+	LD d_1
+	STO 1000
+	LD $in_port
+	STO d_1
+	LD d_1
+	STO 1000
+	LD 1000
+	STO $out_port
 	LDI 0
 	STO 1000
 	HLT 0

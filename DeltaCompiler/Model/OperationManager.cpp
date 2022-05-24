@@ -41,10 +41,10 @@ Primitive OperationManager::checkBinaryOperation(Type type1, Type type2, Operati
     switch (category) {
         case CATEGORY_ARIT_LOW: {
             switch (operation.type) {
-                case ADD:
+                case ADDITION:
                     operationIndex = 0;
                     break;
-                case SUBTRACT:
+                case SUBTRACTION:
                     operationIndex = 1;
                     break;
             }
@@ -52,10 +52,10 @@ Primitive OperationManager::checkBinaryOperation(Type type1, Type type2, Operati
         }
         case CATEGORY_ARIT_HIGH: {
             switch (operation.type) {
-                case MULTIPLY:
+                case MULTIPLICATION:
                     operationIndex = 2;
                     break;
-                case DIVIDE:
+                case DIVISION:
                     operationIndex = 3;
                     break;
                 case MOD:

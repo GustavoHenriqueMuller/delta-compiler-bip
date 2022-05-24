@@ -43,10 +43,10 @@ void Generator::addBinaryOperation(Operation operation) {
     std::string instructionName;
 
     switch (operation.type) {
-        case ADD:
+        case ADDITION:
             instructionName = "ADD";
             break;
-        case SUBTRACT:
+        case SUBTRACTION:
             instructionName = "SUB";
             break;
         case BIT_OR:

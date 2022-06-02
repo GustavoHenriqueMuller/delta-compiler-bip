@@ -25,6 +25,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         case 5: // Bool
             expressions.push(Expression(Type(BOOLEAN)));
+            generator.addImmediate(Utils::lexemeToBoolean(lexeme));
             break;
 
         /// READING ID

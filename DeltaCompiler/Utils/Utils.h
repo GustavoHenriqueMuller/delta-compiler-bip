@@ -6,7 +6,8 @@
 
 namespace Utils {
     void printBar();
-    int lexemeToInt(std::string lexeme);
+    int lexemeToInt(const std::string &lexeme);
+    bool lexemeToBoolean(const std::string &lexeme);
 }
 
 #endif // UTILS_H

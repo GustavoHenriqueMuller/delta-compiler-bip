@@ -10,6 +10,8 @@
 
 #include <iostream>
 
+// TODO: Corrigir valores com "-" na frente
+
 int main(int argc, char **argv) {
     ConsoleParser consoleParser;
 

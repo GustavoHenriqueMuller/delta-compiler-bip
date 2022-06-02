@@ -1,6 +1,5 @@
 int main() {
-    int[5] pog;
-	pog[2] = input();
+    int pog = -4;
 
     return 0;
 }

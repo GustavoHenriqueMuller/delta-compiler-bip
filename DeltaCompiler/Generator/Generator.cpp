@@ -39,6 +39,18 @@ void Generator::addArrayIdentifier(const Symbol &symbol) {
     addInstruction("STO", stackTop());
 }
 
+/*
+ *
+    OR,
+    AND,
+    GREATER,
+    SMALLER,
+    GREATER_EQ,
+    SMALLER_EQ,
+    EQUAL,
+    DIFFERENT,
+*/
+
 void Generator::addBinaryOperation(Operation operation) {
     std::string instructionName;
 
@@ -50,12 +62,14 @@ void Generator::addBinaryOperation(Operation operation) {
             instructionName = "SUB";
             break;
         case BIT_OR:
+        case OR: // TODO: Não pode fazer!
             instructionName = "OR";
             break;
         case BIT_XOR:
             instructionName = "XOR";
             break;
         case BIT_AND:
+        case AND: // TODO: Não pode fazer!
             instructionName = "AND";
             break;
         case BIT_LS:
@@ -63,6 +77,14 @@ void Generator::addBinaryOperation(Operation operation) {
             break;
         case BIT_RS:
             instructionName = "SRL";
+            break;
+        case GREATER:
+        case SMALLER:
+        case GREATER_EQ:
+        case SMALLER_EQ:
+        case EQUAL:
+        case DIFFERENT:
+            // TODO: Operadores relacionais
             break;
     }
 

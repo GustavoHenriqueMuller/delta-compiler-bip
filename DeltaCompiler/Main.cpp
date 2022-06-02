@@ -10,10 +10,6 @@
 
 #include <iostream>
 
-// TODO: Agora que tem o lexema de expressões, melhorar mensagens de erros
-// TODO: Agora que tem o lexema de expressões, melhorar mensagens de erros
-// TODO: Talvez tirar lexema de expressão, gambiarra
-
 int main(int argc, char **argv) {
     ConsoleParser consoleParser;
 

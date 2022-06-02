@@ -1,6 +1,6 @@
 int main() {
     int[5] pog;
-	print(pog[0]);
+	pog[2] = input();
 
     return 0;
 }

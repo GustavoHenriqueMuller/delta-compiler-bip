@@ -139,18 +139,11 @@ void Generator::addPrint() {
     stackSize -= 1;
 }
 
-void Generator::addInput(const Symbol &symbol) {
+void Generator::addInput() {
+    stackSize += 1;
+
     addInstruction("LD", "$in_port");
-    addInstruction("STO", getFullIdentifier(symbol));
-
-    stackSize -= 1;
-}
-
-void Generator::addArrayInput(const Symbol &symbol) {
-    addInstruction("LD", "$in_port");
-    addInstruction("STOV", getFullIdentifier(symbol));
-
-    stackSize -= 1;
+    addInstruction("STO", stackTop());
 }
 
 std::string Generator::getFullIdentifier(const Symbol &symbol) {

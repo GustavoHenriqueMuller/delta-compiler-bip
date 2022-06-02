@@ -21,8 +21,7 @@ public:
     void addIdentifierDeclaration(const Symbol &symbol);
     void addArrayIdentifierDeclaration(const Symbol &symbol);
     void addPrint();
-    void addInput(const Symbol &symbol);
-    void addArrayInput(const Symbol &symbol);
+    void addInput();
 
 private:
     std::string getFullIdentifier(const Symbol &symbol);

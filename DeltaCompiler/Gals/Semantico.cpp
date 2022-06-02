@@ -442,26 +442,8 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         case 83: { // Input
-            // PROBLEMA: Se eu chamo "input(a)", o valor no topo da stack é uma cópia do valor de "a" e não o seu endereço.
-            // Isso não tem significado para a função "input". Deveria ser o endereço de memória de "a".
-            // Para corrigir esse problema, poderíamos implementar um operador de endereço. Ele seria um operador unário
-            // a esquerda que atua em left-values mutáveis. Logo, poderíamos usá-lo "input(*a)" e o topo da stack seria
-            // o endereço de a, que a função de input escreveria o valor. Podemos fazer com que o resultado desse operador
-            // fosse um valor inteiro como qualquer outro (ao invés de gerar um novo tipo ponteiro), para evitar complexidade.
-
-            if (expressions.top().type.isArray) {
-                throw InvalidFunctionParameterError("input", 0, Type(VOID), expressions.top().type);
-            }
-
-            Symbol* symbol = getSymbolByName("pog");
-
-            if (symbol->type.isArray) {
-                generator.addArrayInput(*symbol);
-            } else {
-                generator.addInput(*symbol);
-            }
-
-            expressions.pop();
+            expressions.push(Expression(INT));
+            generator.addInput();
             break;
         }
     }

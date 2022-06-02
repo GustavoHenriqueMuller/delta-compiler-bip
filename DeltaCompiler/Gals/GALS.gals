@@ -185,7 +185,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <function_prototype> ::= <type> ID #74 LSP RSP | <type> ID #74 LSP <function_prototype_argument_list> RSP;
 <function_prototype_argument_list> ::= <type> ID #75 COMMA <function_prototype_argument_list> | <type> ID #75;
 
-<function_call> ::= ID #77 LSP RSP #79 | ID #77 LSP <function_call_argument_list> RSP #79 | PRINT LSP <exp> RSP #82 | INPUT LSP <left_value> #9 RSP #83;
+<function_call> ::= ID #77 LSP RSP #79 | ID #77 LSP <function_call_argument_list> RSP #79 | PRINT LSP <exp> RSP #82 | INPUT LSP RSP #83;
 <function_call_argument_list> ::= <exp> #78 COMMA <function_call_argument_list> | <exp> #78;
 
 // Statements

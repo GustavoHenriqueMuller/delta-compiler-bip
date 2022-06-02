@@ -181,40 +181,40 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 
 // Escopos e funções
 <scope> ::= LSC RSC | LSC <statement_list> RSC;
-<function> ::= <function_prototype> #79 #75 <scope> #50;
-<function_prototype> ::= <type> ID #73 LSP RSP | <type> ID #73 LSP <function_prototype_argument_list> RSP;
-<function_prototype_argument_list> ::= <type> ID #74 COMMA <function_prototype_argument_list> | <type> ID #74;
+<function> ::= <function_prototype> #80 #76 <scope> #50;
+<function_prototype> ::= <type> ID #74 LSP RSP | <type> ID #74 LSP <function_prototype_argument_list> RSP;
+<function_prototype_argument_list> ::= <type> ID #75 COMMA <function_prototype_argument_list> | <type> ID #75;
 
-<function_call> ::= ID #76 LSP RSP #78 | ID #76 LSP <function_call_argument_list> RSP #78 | PRINT LSP <exp> RSP #81 | INPUT LSP <left_value> #9 RSP #82;
-<function_call_argument_list> ::= <exp> #77 COMMA <function_call_argument_list> | <exp> #77;
+<function_call> ::= ID #77 LSP RSP #79 | ID #77 LSP <function_call_argument_list> RSP #79 | PRINT LSP <exp> RSP #82 | INPUT LSP <left_value> #9 RSP #83;
+<function_call_argument_list> ::= <exp> #78 COMMA <function_call_argument_list> | <exp> #78;
 
 // Statements
 <statement_list> ::= <statement> <statement_list> | <statement>;
 <statement> ::= <if_stmt> | <while_stmt> | <do_while_stmt> END | <for_stmt> | <declaration_stmt> END | <attribution_stmt> END | <return_stmt> END | <exp> END | <when_stmt>;
 
 <if_stmt> ::= <if> | <if> <else> | <if> <else_if_list> | <if> <else_if_list> <else>;
-<while_stmt> ::= WHILE LSP <exp> #67 RSP #49 <scope> #50;
-<do_while_stmt> ::= DO #49 <scope> #50 WHILE LSP <exp> #68 RSP;
+<while_stmt> ::= WHILE LSP <exp> #68 RSP #49 <scope> #50;
+<do_while_stmt> ::= DO #49 <scope> #50 WHILE LSP <exp> #69 RSP;
 
-<for_stmt> ::= FOR #49 LSP <for_left> END <exp> #69 END <exp> RSP <scope> #50;
+<for_stmt> ::= FOR #49 LSP <for_left> END <exp> #70 END <exp> RSP <scope> #50;
 <for_left> ::= <exp> | <declaration_stmt> | <attribution_stmt>;
 
-<when_stmt> ::= WHEN LSP <exp> #70 RSP LSC <is_list> RSC #71;
+<when_stmt> ::= WHEN LSP <exp> #71 RSP LSC <is_list> RSC #73;
 
-<declaration_stmt> ::= <type> <declaration_stmt_id_list> #61;
-<declaration_stmt_id_list> ::= ID #60 COMMA <declaration_stmt_id_list> | ID #60 ATTRIBUTION #46 <exp> #62 COMMA <declaration_stmt_id_list> | ID #60 | ID #60 ATTRIBUTION #46 <exp> #62;
+<declaration_stmt> ::= <type> <declaration_stmt_id_list> #62;
+<declaration_stmt_id_list> ::= ID #61 COMMA <declaration_stmt_id_list> | ID #61 ATTRIBUTION #46 <exp> #63 COMMA <declaration_stmt_id_list> | ID #61 | ID #61 ATTRIBUTION #46 <exp> #63;
 
-<attribution_stmt> ::= <left_value> #63 <op_attribution> <exp> #62 #64;
-<return_stmt> ::= RETURN <exp> #80;
+<attribution_stmt> ::= <left_value> #64 <op_attribution> <exp> #63 #65;
+<return_stmt> ::= RETURN <exp> #81;
 
 // Blocos
-<if> ::= IF LSP <exp> #65 RSP #49 <scope> #50;
+<if> ::= IF LSP <exp> #66 RSP #49 <scope> #50;
 <else_if_list> ::= <else_if> <else_if_list> | <else_if>;
-<else_if> ::= ELSEIF LSP <exp> #66 RSP #49 <scope> #50;
+<else_if> ::= ELSEIF LSP <exp> #67 RSP #49 <scope> #50;
 <else> ::= ELSE #49 <scope> #50;
 
 <is_list> ::= <is> <is_list> | <default> | <is>;
-<is> ::= IS LSP <exp> #71 RSP <scope>;
+<is> ::= IS LSP <exp> #72 RSP <scope>;
 <default> ::= DEFAULT <scope>;
 
 // Expressões
@@ -231,9 +231,9 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <exp10> ::= <op_unary_left> <left_value> #9 #20 | <op_unary_left_mutable> <left_value> #9 #20 | <op_unary_left> <right_value> #20 | <exp11>;
 <exp11> ::= <literal> | <left_value> #9 | <function_call> | LSP <exp> RSP;
 
-<type> ::= <modifier_list> <type_primitive> | <modifier_list> <type_primitive> LSB <int_literal> #59 RSB;
-<type_primitive> ::= VAR_INT #52 | VAR_FLOAT #53 | VAR_DOUBLE #54 | VAR_STRING #55 | VAR_CHAR #56 | VAR_BOOLEAN #57 | VAR_VOID #58;
-<modifier_list> ::= CONST #51 | î;
+<type> ::= <modifier_list> <type_primitive> | <modifier_list> <type_primitive> LSB <int_literal> #60 RSB;
+<type_primitive> ::= VAR_INT #53 | VAR_FLOAT #54 | VAR_DOUBLE #55 | VAR_STRING #56 | VAR_CHAR #57 | VAR_BOOLEAN #58 | VAR_VOID #59;
+<modifier_list> ::= CONST #52 | î;
 
 <int_literal> ::= INT_DEC | INT_HEX | INT_BIN;
 <literal> ::= <int_literal> #1 | FLOAT #2 | STRING #3 | CHAR #4 | BOOLEAN #5;

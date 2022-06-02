@@ -1,12 +1,12 @@
 #include "Semantico.h"
 
 void Semantico::executeAction(int action, const Token *token) throw (SemanticError) {
-    if (debug) {
-        std::cout << "Action: " << action << "\tToken: "  << token->getId() << "\tLexeme: " << token->getLexeme() << std::endl;
-    }
-
     TokenId tokenId = token->getId();
     std::string lexeme = token->getLexeme();
+
+    if (consoleParser.getDebug()) {
+        std::cout << "Action: " << action << "\tToken: "  << tokenId << "\tLexeme: " << lexeme << std::endl;
+    }
 
     switch (action) {
         /// PUSHING LITERALS
@@ -15,16 +15,16 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             generator.addImmediate(Utils::lexemeToInt(lexeme));
             break;
         case 2: // Float
-            expressions.push(Expression(Type(FLO)));
+            expressions.push(Expression(Type(FLOAT)));
             break;
         case 3: // String
-            expressions.push(Expression(Type(STR)));
+            expressions.push(Expression(Type(STRING)));
             break;
         case 4: // Char
-            expressions.push(Expression(Type(CHA)));
+            expressions.push(Expression(Type(CHAR)));
             break;
         case 5: // Bool
-            expressions.push(Expression(Type(BOO)));
+            expressions.push(Expression(Type(BOOLEAN)));
             break;
 
         /// READING ID
@@ -35,12 +35,8 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 throw IdentifierNotFoundError(lexeme);
             }
 
-            if (symbol->type.isArray) {
-                throw MissingArrayIndexError(lexeme);
-            }
-
-            identifierName = lexeme;
-            identifierType = symbol->type;
+            identifierNames.push(lexeme);
+            identifierTypes.push(symbol->type);
             break;
         }
 
@@ -56,8 +52,8 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 throw ReadingNonArrayAsArrayError(lexeme);
             }
 
-            identifierName = lexeme;
-            identifierType = symbol->type;
+            identifierNames.push(lexeme);
+            identifierTypes.push(symbol->type);
             break;
         }
 
@@ -66,16 +62,17 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             Expression index = expressions.top();
 
             if (index.type.primitive != INT) {
-                throw InvalidArrayIndexError(identifierName, index.type.toString());
+                throw InvalidArrayIndexError(identifierNames.top(), index.type);
             }
 
-            identifierType.isArray = false;
+            identifierTypes.top().isArray = false;
+            identifierTypes.top().arraySize = 0;
             break;
         }
 
         /// PUSHING LEFT-VALUE AS EXPRESSION
         case 9: {
-            Symbol* symbol = getSymbolByName(identifierName);
+            Symbol* symbol = getSymbolByName(identifierNames.top());
 
             if (symbol->type.isArray) {
                 generator.addArrayIdentifier(*symbol);
@@ -87,7 +84,10 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 logger.addWarn(ReadingIdentifierWithoutInitializationWarning(symbol->name));
             }
 
-            expressions.push(Expression(identifierType));
+            expressions.push(Expression(identifierTypes.top()));
+            identifierNames.pop();
+            identifierTypes.pop();
+
             symbol->isUsed = true;
             break;
         }
@@ -101,11 +101,10 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 15:
         case 16:
         case 17:
-        case 18: {
+        case 18:
             generator.addBinaryOperation(operations.top());
             doOperation();
             break;
-        }
 
         /// DOING UNARY OPERATION
         case 19:
@@ -170,41 +169,44 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
 
         /// DECLARATION - MODIFIERS
-        case 51: // Reading "const" modifier
+        case 51: // Cleaning type
             leftType = Type();
+            break;
+
+        case 52: // Reading "const" modifier
             leftType.isConst = true;
             break;
 
         /// DECLARATION - PRIMITIVES
-        case 52:
+        case 53:
             leftType.primitive = INT;
             break;
-        case 53:
-            leftType.primitive = FLO;
-            break;
         case 54:
-            leftType.primitive = DOU;
+            leftType.primitive = FLOAT;
             break;
         case 55:
-            leftType.primitive = STR;
+            leftType.primitive = DOUBLE;
             break;
         case 56:
-            leftType.primitive = CHA;
+            leftType.primitive = STRING;
             break;
         case 57:
-            leftType.primitive = BOO;
+            leftType.primitive = CHAR;
             break;
         case 58:
-            leftType.primitive = VOI;
+            leftType.primitive = BOOLEAN;
+            break;
+        case 59:
+            leftType.primitive = VOID;
             break;
 
         /// DECLARATION
-        case 59: { // Reading array type with size initializer
+        case 60: // Reading array type with size initializer
             leftType.isArray = true;
             leftType.arraySize = Utils::lexemeToInt(lexeme);
             break;
-        }
-        case 60: { // Reading id of declaration id list
+
+        case 61: { // Reading id of declaration id list
             Symbol* symbol = getSymbolByName(lexeme);
 
             if (symbol != nullptr) {
@@ -215,7 +217,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             scopes.back().symbolList.push_back(Symbol(leftType, lexeme, scopes.back().id));
             break;
         }
-        case 61: { // Finishing declaration
+        case 62: { // Finishing declaration
             for (const std::string &name : leftIdentifierNames) {
                 Symbol* symbol = getSymbolByName(name);
 
@@ -233,11 +235,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             }
 
             leftIdentifierNames.clear();
+            leftType = Type();
             break;
         }
 
         /// ATTRIBUTION
-        case 62: { // Attribution
+        case 63: { // Attribution
             Symbol* symbol = getSymbolByName(leftIdentifierNames.back());
 
             if (symbol->type.isArray) {
@@ -250,43 +253,46 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 63: // Gets left type of attribution outside of declaration
-            leftIdentifierNames.push_back(identifierName);
-            leftType = identifierType;
+        case 64: // Gets left type of attribution outside of declaration
+            leftIdentifierNames.push_back(identifierNames.top());
+            leftType = identifierTypes.top();
+
+            identifierNames.pop();
+            identifierTypes.pop();
             break;
 
-        case 64: // Clears identifier names after attribution
+        case 65: // Clears identifier names after attribution outside of declaration
             leftIdentifierNames.pop_back();
             break;
 
         /// IF, ELSEIF, WHILE, DO WHILE, FOR BLOCK
-        case 65: // Validating boolean expressions
-        case 66:
+        case 66: // Validating boolean expressions
         case 67:
         case 68:
-        case 69: {
+        case 69:
+        case 70: {
             std::string blockName;
 
             switch (action) {
-                case 65:
+                case 66:
                     blockName = "if";
                     break;
-                case 66:
+                case 67:
                     blockName = "elseif";
                     break;
-                case 67:
+                case 68:
                     blockName = "while";
                     break;
-                case 68:
+                case 69:
                     blockName = "do while";
                     break;
-                case 69:
+                case 70:
                     blockName = "for";
                     break;
             }
 
-            if (OperationManager::checkImplicitCast(expressions.top().type, Type(BOO)) == ATT_ER) {
-                throw InvalidExpressionForBlockError(expressions.top().type.toString(), blockName, Type(BOO).toString());
+            if (OperationManager::checkImplicitCast(expressions.top().type, Type(BOOLEAN)) == ATT_ER) {
+                throw InvalidExpressionForBlockError(expressions.top().type, blockName, Type(BOOLEAN));
             }
 
             expressions.pop();
@@ -294,28 +300,28 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// WHEN STATEMENT
-        case 70: { // Reading type of expression in "when" block
+        case 71: { // Reading type of expression in "when" block
             whenExpressionTypes.push(expressions.top().type);
             expressions.pop();
             break;
         }
-        case 71: { // Reading type of expression in "is" block
+        case 72: { // Reading type of expression in "is" block
             Expression expression = expressions.top();
             AttributionResult result = OperationManager::checkImplicitCast(expression.type, whenExpressionTypes.top());
 
             if (result == ATT_ER) {
-                throw InvalidExpressionForBlockError(expression.type.toString(), "is", whenExpressionTypes.top().toString());
+                throw InvalidExpressionForBlockError(expression.type, "is", whenExpressionTypes.top());
             }
 
             expressions.pop();
             break;
         }
-        case 72: // End of "when" block
+        case 73: // End of "when" block
             whenExpressionTypes.pop();
             break;
 
         /// FUNCTIONS
-        case 73: { // Reading function declaration identifier
+        case 74: { // Reading function declaration identifier
             Symbol* symbol = getSymbolByName(lexeme);
 
             if (symbol != nullptr) {
@@ -329,12 +335,14 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             functionName = lexeme;
             break;
         }
-        case 74: { // Reading function declaration parameter identifier
+        case 75: { // Reading function declaration parameter identifier
             Symbol* function = getSymbolByName(functionName);
             function->parameters.push_back(Parameter(leftType, lexeme));
+
+            leftType = Type();
             break;
         }
-        case 75: { // Creating identifiers in function scope from function parameters
+        case 76: { // Creating identifiers in function scope from function parameters
             Symbol* function = getSymbolByName(functionName);
 
             for (const Parameter &parameter : function->parameters) {
@@ -349,7 +357,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             functionName.clear();
             break;
         }
-        case 76: { // Reading function call identifier
+        case 77: { // Reading function call identifier
             Symbol* function = getSymbolByName(lexeme);
 
             if (function == nullptr) {
@@ -366,7 +374,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             expressions.push(Expression(function->type));
             break;
         }
-        case 77: { // Reading function call parameter
+        case 78: { // Reading function call parameter
             Symbol* function = getSymbolByName(functionName);
 
             if (amountFunctionParameters >= function->parameters.size()) {
@@ -379,14 +387,14 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             AttributionResult result = OperationManager::checkImplicitCast(functionParameterType, expression.type);
 
             if (result == ATT_ER) {
-                throw InvalidFunctionParameterError(function->name, amountFunctionParameters + 1, functionParameterType.toString(), expression.type.toString());
+                throw InvalidFunctionParameterError(function->name, amountFunctionParameters + 1, functionParameterType, expression.type);
             }
 
             amountFunctionParameters++;
             expressions.pop();
             break;
         }
-        case 78: { // Finish function call
+        case 79: { // Finish function call
             Symbol* function = getSymbolByName(functionName);
 
             if (amountFunctionParameters != function->parameters.size()) {
@@ -399,7 +407,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             functionName.clear();
             break;
         }
-        case 79: { // Create scope for function
+        case 80: { // Create scope for function
             Symbol* function = getSymbolByName(functionName);
             Scope scope = Scope(getScopeId());
 
@@ -409,12 +417,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// RETURN STATEMENT
-        case 80: { // Check for type when returning from function
+        case 81: { // Check for type when returning from function
             Expression expression = expressions.top();
             AttributionResult result = OperationManager::checkImplicitCast(expression.type, scopes.back().returnType);
 
             if (result == ATT_ER) {
-                throw InvalidFunctionReturnTypeError(expression.type.toString(), scopes.back().returnType.toString());
+                throw InvalidFunctionReturnTypeError(expression.type, scopes.back().returnType);
             }
 
             scopes.back().hasReturned = true;
@@ -423,14 +431,29 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// INPUT AND OUTPUT
-        case 81: { // Print
+        case 82: { // Print
+            if (expressions.top().type.isArray) {
+                throw InvalidFunctionParameterError("print", 0, Type(VOID), expressions.top().type);
+            }
+
             generator.addPrint();
             expressions.pop();
             break;
         }
 
-        case 82: { // Input
-            Symbol* symbol = getSymbolByName(identifierName);
+        case 83: { // Input
+            // PROBLEMA: Se eu chamo "input(a)", o valor no topo da stack é uma cópia do valor de "a" e não o seu endereço.
+            // Isso não tem significado para a função "input". Deveria ser o endereço de memória de "a".
+            // Para corrigir esse problema, poderíamos implementar um operador de endereço. Ele seria um operador unário
+            // a esquerda que atua em left-values mutáveis. Logo, poderíamos usá-lo "input(*a)" e o topo da stack seria
+            // o endereço de a, que a função de input escreveria o valor. Podemos fazer com que o resultado desse operador
+            // fosse um valor inteiro como qualquer outro (ao invés de gerar um novo tipo ponteiro), para evitar complexidade.
+
+            if (expressions.top().type.isArray) {
+                throw InvalidFunctionParameterError("input", 0, Type(VOID), expressions.top().type);
+            }
+
+            Symbol* symbol = getSymbolByName("pog");
 
             if (symbol->type.isArray) {
                 generator.addArrayInput(*symbol);
@@ -454,16 +477,16 @@ void Semantico::doAttribution() {
         throw IdentifierNotFoundError(symbol->name);
     }
 
+    if (leftType.isConst && !symbol->isInDeclaration) {
+        throw ConstMutationError(symbol->name);
+    }
+
     AttributionResult resultType = OperationManager::checkAttribution(expressionType, typeToAssign, attributionOperation);
 
     if (resultType == ATT_ER) {
-        throw IncompatibleAttributionTypesError(symbol->name, expressionType.toString(), typeToAssign.toString(), attributionOperation.lexeme);
+        throw IncompatibleAttributionTypesError(symbol->name, expressionType, typeToAssign, attributionOperation);
     } else if (resultType == ATT_PL) {
-        logger.addWarn(PrecisionLossWarning(symbol->name, expressionType.toString(), typeToAssign.toString()));
-    }
-
-    if (leftType.isConst && !symbol->isInDeclaration) {
-        throw ConstMutationError(symbol->name);
+        logger.addWarn(PrecisionLossWarning(symbol->name, expressionType, typeToAssign));
     }
 
     symbol->isInitialized = true;
@@ -483,7 +506,7 @@ void Semantico::doOperation() {
     Type resultType = OperationManager::checkBinaryOperation(a.type, b.type, operation);
 
     if (resultType.primitive == ERR) {
-        throw IncompatibleOperationTypesError(operation.lexeme, a.type.toString(), b.type.toString());
+        throw IncompatibleOperationTypesError(operation, a.type, b.type);
     } else {
         expressions.push(Expression(resultType));
     }
@@ -499,23 +522,23 @@ void Semantico::doUnaryOperation() {
     Type resultType = OperationManager::checkUnaryOperation(expression.type, operation);
 
     if (resultType.primitive == ERR) {
-        throw IncompatibleUnaryOperationTypeError(operation.lexeme, expression.type.toString());
+        throw IncompatibleUnaryOperationTypeError(operation.lexeme, expression.type);
     }
 
     OperationCategory category = operation.getOperationCategory();
 
     if ((category == CATEGORY_UNARY_LEFT_MUTABLE || category == CATEGORY_UNARY_RIGHT_MUTABLE) && expression.type.isConst) {
-        throw ConstMutationError(identifierName);
+        throw ConstMutationError(identifierNames.top());
     }
 
     expressions.push(Expression(resultType));
 }
 
-Symbol* Semantico::getSymbolByName(std::string name) {
-    for (int i = scopes.size() - 1; i >= 0; i--) {
-        for (int j = 0; j < scopes[i].symbolList.size(); j++) {
-            if (scopes[i].symbolList[j].name == name) {
-                return &scopes[i].symbolList[j];
+Symbol* Semantico::getSymbolByName(const std::string &name) {
+    for (Scope &scope : scopes) {
+        for (Symbol &symbol : scope.symbolList) {
+            if (symbol.name == name) {
+                return &symbol;
             }
         }
     }
@@ -557,13 +580,13 @@ int Semantico::getScopeId() {
 }
 
 void Semantico::popScope() {
-    if (!scopes.back().hasReturned && scopes.back().returnType.primitive != VOI) {
-        throw MissingReturnStatementError(scopes.back().returnType.toString());
+    if (!scopes.back().hasReturned && scopes.back().returnType.primitive != VOID) {
+        throw MissingReturnStatementError(scopes.back().returnType);
     }
 
-    for (int i = 0; i < scopes.back().symbolList.size(); i++) {
-        if (!scopes.back().symbolList[i].isUsed) {
-            logger.addWarn(UnusedIdentifierWarning(scopes.back().symbolList[i].name));
+    for (const Symbol &symbol : scopes.back().symbolList) {
+        if (!symbol.isUsed) {
+            logger.addWarn(UnusedIdentifierWarning(symbol.name));
         }
     }
 
@@ -575,6 +598,8 @@ std::string Semantico::getScopesJson() {
     return jsonBuilder.build();
 }
 
-Semantico::Semantico(Logger &logger, Generator &generator, bool debug): logger(logger), generator(generator), debug(debug) {
+Semantico::Semantico(Logger &logger, Generator &generator, ConsoleParser &consoleParser):
+    logger(logger), generator(generator), consoleParser(consoleParser)
+{
     scopes.push_back(Scope(getScopeId()));
 }

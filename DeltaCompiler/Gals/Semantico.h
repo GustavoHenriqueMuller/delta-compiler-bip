@@ -18,13 +18,13 @@
 #include "../Utils/JsonBuilder.h"
 #include "../Utils/Utils.h"
 #include "../Generator/Generator.h"
+#include "../ConsoleParser/ConsoleParser.h"
 
 #include <stack>
 
 class Semantico {
 public:
-    Semantico(Logger &logger, Generator &generator, bool debug);
-
+    Semantico(Logger &logger, Generator &generator, ConsoleParser &consoleParser);
     void executeAction(int action, const Token *token) throw (SemanticError);
     void popScope();
     std::string getScopesJson();
@@ -33,7 +33,7 @@ private:
     void doAttribution();
     void doOperation();
     void doUnaryOperation();
-    Symbol* getSymbolByName(std::string name);
+    Symbol* getSymbolByName(const std::string &name);
 
     void saveScope(const Scope &scope);
     int getScopeId();
@@ -41,7 +41,7 @@ private:
     // Logger and Generator
     Logger &logger;
     Generator &generator;
-    const bool debug;
+    ConsoleParser &consoleParser;
 
     // JsonBuilder
     JsonBuilder jsonBuilder;
@@ -50,11 +50,11 @@ private:
     std::vector<Scope> scopes;
     std::stack<Expression> expressions;
     std::stack<Operation> operations;
-    int scopeCounter = 0;
+    unsigned int scopeCounter = 0;
 
     // Reading names and indexes from identifiers
-    std::string identifierName;
-    Type identifierType;
+    std::stack<std::string> identifierNames;
+    std::stack<Type> identifierTypes;
 
     // Declaration / Attribution
     std::vector<std::string> leftIdentifierNames;
@@ -63,7 +63,7 @@ private:
 
     // Functions
     std::string functionName;
-    int amountFunctionParameters = 0;
+    unsigned int amountFunctionParameters = 0;
 
     // "When-is" statement
     std::stack<Type> whenExpressionTypes;

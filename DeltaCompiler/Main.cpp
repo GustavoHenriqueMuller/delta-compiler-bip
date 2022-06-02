@@ -6,43 +6,25 @@
 #include "Utils/FileManager.h"
 #include "Logger/Logger.h"
 #include "Generator/Generator.h"
+#include "ConsoleParser/ConsoleParser.h"
 
 #include <iostream>
 
+// TODO: Agora que tem o lexema de expressões, melhorar mensagens de erros
+// TODO: Agora que tem o lexema de expressões, melhorar mensagens de erros
+// TODO: Talvez tirar lexema de expressão, gambiarra
+
 int main(int argc, char **argv) {
-    bool watch = false, debug = false;
+    ConsoleParser consoleParser;
 
-    if (argc == 1) {
-        std::cout << "Syntax: delta [options] [filepath]." << std::endl << std::endl;
-        std::cout << "[options]" << std::endl;
-        std::cout << "-watch: Prints Bhaskara (IDE) information in stdout;" << std::endl;
-        std::cout << "-debug: Prints debugging information in stdout;" << std::endl;
-        std::cout << std::endl << "[filepath]: Relative or absolute path of .delta file to be compiled." << std::endl << std::endl;
-        return 0;
+    try {
+        consoleParser.parse(argc, argv);
+    } catch (std::runtime_error& error) {
+        std::cout << "Error: " << error.what() << std::endl << std::endl;
+        return 1;
     }
 
-    for (int i = 1; i < argc - 1; i++) {
-        std::string argument(argv[i]);
-
-        if (argument == "-watch") {
-            watch = true;
-        } else if (argument == "-debug") {
-            debug = true;
-        } else {
-            std::cout << "Error: Invalid argument '" + argument + "'." << std::endl;
-            return 0;
-        }
-    }
-
-    std::string filePath = argv[argc - 1];
-    std::string extension = filePath.substr(filePath.find_last_of('.') + 1, filePath.size());
-
-    if (extension != "delta") {
-        std::cout << "Error: File extension must be 'delta', got '" + extension + "'." << std::endl;
-        return 0;
-    }
-
-    std::string sourceCode = FileManager::getFileContent(filePath);
+    std::string sourceCode = FileManager::getFileContent(consoleParser.getFilePath());
     std::istringstream stream = std::istringstream(sourceCode);
 
     Logger logger;
@@ -51,14 +33,14 @@ int main(int argc, char **argv) {
 	try {
         Lexico* lexico = new Lexico(stream);
         Sintatico* sintatico = new Sintatico();
-        Semantico* semantico = new Semantico(logger, generator, debug);
+        Semantico* semantico = new Semantico(logger, generator, consoleParser);
 
         sintatico->parse(lexico, semantico);
         semantico->popScope();
 
-        std::string asmFilePath = FileManager::getAsmFilePath(filePath);
+        std::string asmFilePath = FileManager::getAsmFilePath(consoleParser.getFilePath());
 
-        if (debug) {
+        if (consoleParser.getDebug()) {
             Utils::printBar();
             std::cout << sourceCode << std::endl;
             Utils::printBar();
@@ -66,7 +48,7 @@ int main(int argc, char **argv) {
             Utils::printBar();
         }
 
-        if (watch) {
+        if (consoleParser.getWatch()) {
             std::cout << "[SCOPES]: " << semantico->getScopesJson() << std::endl;
             std::cout << "[ASM_PATH]: " << asmFilePath << std::endl << std::endl;
         }
@@ -75,7 +57,7 @@ int main(int argc, char **argv) {
         FileManager::saveToFile(generator.getCode(), asmFilePath);
 
         std::cout << std::endl;
-        std::cout << "File '" << FileManager::getSimplifiedName(filePath) << "' compiled successfully." << std::endl;
+        std::cout << "File '" << FileManager::getSimplifiedName(consoleParser.getFilePath()) << "' compiled successfully." << std::endl;
         std::cout << "File '" << FileManager::getSimplifiedName(asmFilePath) << "' created." << std::endl << std::endl;
     } catch (AnalysisError e) {
         std::cout << std::endl;

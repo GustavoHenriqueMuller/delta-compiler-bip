@@ -7,8 +7,9 @@
 
 class Expression {
 public:
-    Type type;
     Expression(Type type): type(type) {}
+
+    Type type;
 };
 
 #endif // EXPRESSION_H

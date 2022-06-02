@@ -1,6 +1,8 @@
 #ifndef WARNINGS_H
 #define WARNINGS_H
 
+#include "../Model/Type.h"
+
 #include <string>
 
 class Warning {
@@ -33,8 +35,8 @@ public:
 
 class PrecisionLossWarning : public Warning {
 public:
-    PrecisionLossWarning(const std::string &identifier, const std::string &typeExpression, const std::string &typeIdentifier)
-      : Warning("Precision loss while assigning '" + typeExpression + "' to '" + identifier + "' of type '" + typeIdentifier + "'", -1) { }
+    PrecisionLossWarning(const std::string &identifier, const Type &typeExpression, const Type &typeIdentifier)
+      : Warning("Precision loss while assigning '" + typeExpression.toString() + "' to '" + identifier + "' of type '" + typeIdentifier.toString() + "'", -1) { }
 };
 
 #endif // WARNINGS_H

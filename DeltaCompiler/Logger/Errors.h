@@ -1,6 +1,8 @@
 #ifndef ERRORS_H
 #define ERRORS_H
 
+#include "../Model/Type.h"
+#include "../Model/Operation.h"
 #include "../Gals/SemanticError.h"
 
 class ConstMutationError : public SemanticError {
@@ -33,42 +35,42 @@ public:
 
 class IncompatibleAttributionTypesError : public SemanticError {
 public:
-    IncompatibleAttributionTypesError(const std::string &identifier, const std::string &expressionType, const std::string &identifierType, const std::string &attributionLexeme)
-      : SemanticError("Cannot attribute value of type '" + expressionType + "' to identifer '" + identifier + "' of type '" + identifierType + "' for attribution operator '" + attributionLexeme + "'", -1) { }
+    IncompatibleAttributionTypesError(const std::string &identifier, const Type &expressionType, const Type &identifierType, const Operation &attribution)
+      : SemanticError("Cannot attribute value of type '" + expressionType.toString() + "' to identifer '" + identifier + "' of type '" + identifierType.toString() + "' for attribution operator '" + attribution.lexeme + "'", -1) { }
 };
 
 
 class IncompatibleOperationTypesError : public SemanticError {
 public:
-    IncompatibleOperationTypesError(const std::string &op, const std::string &type1String, const std::string &type2String)
-      : SemanticError("Incompatible types for '" + op + "' operator: '" + type1String + "' and '" + type2String +  "'", -1) { }
+    IncompatibleOperationTypesError(const Operation &op, const Type &type1, const Type &type2)
+      : SemanticError("Incompatible types for '" + op.lexeme + "' operator: '" + type1.toString() + "' and '" + type2.toString() +  "'", -1) { }
 };
 
 class IncompatibleUnaryOperationTypeError : public SemanticError {
 public:
-    IncompatibleUnaryOperationTypeError(const std::string &op, const std::string &typeString)
-      : SemanticError("Incompatible type for '" + op + "' unary operator: '" + typeString + "'", -1) { }
+    IncompatibleUnaryOperationTypeError(const std::string &op, const Type &type)
+      : SemanticError("Incompatible type for '" + op + "' unary operator: '" + type.toString() + "'", -1) { }
 };
 
 
 class InvalidArrayIndexError : public SemanticError {
 public:
-    InvalidArrayIndexError(const std::string &arrayName, const std::string &indexType)
-      : SemanticError("Invalid index type for array '" + arrayName + "': '" + indexType + "', expected 'int'", -1) { }
+    InvalidArrayIndexError(const std::string &arrayName, const Type &indexType)
+      : SemanticError("Invalid index type for array '" + arrayName + "': '" + indexType.toString() + "', expected 'int'", -1) { }
 };
 
 
 class InvalidExpressionForBlockError : public SemanticError {
 public:
-    InvalidExpressionForBlockError(const std::string &typeString, const std::string &blockName, const std::string &expectedType)
-      : SemanticError("Invalid expression type '" + typeString + "' for '" + blockName + "' block, expected '" + expectedType + "'", -1) { }
+    InvalidExpressionForBlockError(const Type &type, const std::string &blockName, const Type &expectedType)
+      : SemanticError("Invalid expression type '" + type.toString() + "' for '" + blockName + "' block, expected '" + expectedType.toString() + "'", -1) { }
 };
 
 
 class InvalidFunctionParameterError : public SemanticError {
 public:
-    InvalidFunctionParameterError(const std::string &functionName, int paramPos, const std::string &paramType, const std::string &givenType)
-      : SemanticError("Expected '" + paramType + "' for function '" + functionName + "' at parameter " + std::to_string(paramPos) + ", got '" + givenType + "'", -1) { }
+    InvalidFunctionParameterError(const std::string &functionName, int paramPos, const Type &paramType, const Type &givenType)
+      : SemanticError("Expected '" + paramType.toString() + "' for function '" + functionName + "' at parameter " + std::to_string(paramPos) + ", got '" + givenType.toString() + "'", -1) { }
 };
 
 
@@ -81,8 +83,8 @@ public:
 
 class InvalidFunctionReturnTypeError : public SemanticError {
 public:
-    InvalidFunctionReturnTypeError(const std::string &returnType, const std::string &givenReturnType)
-      : SemanticError("Expected return of type '" + returnType + "', got '" + givenReturnType + "'", -1) { }
+    InvalidFunctionReturnTypeError(const Type &returnType, const Type &givenReturnType)
+      : SemanticError("Expected return of type '" + returnType.toString() + "', got '" + givenReturnType.toString() + "'", -1) { }
 };
 
 
@@ -102,8 +104,8 @@ public:
 
 class MissingReturnStatementError : public SemanticError {
 public:
-    MissingReturnStatementError(const std::string &type)
-      : SemanticError("Missing return statement, expected '" + type + "' return") { }
+    MissingReturnStatementError(const Type &type)
+      : SemanticError("Missing return statement, expected '" + type.toString() + "' return") { }
 };
 
 

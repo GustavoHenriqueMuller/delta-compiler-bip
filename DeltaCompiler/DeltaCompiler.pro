@@ -4,6 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+    ConsoleParser/ConsoleParser.cpp \
     Gals/Constants.cpp \
     Gals/Lexico.cpp \
     Gals/Semantico.cpp \
@@ -16,6 +17,7 @@ SOURCES += \
     Utils/Utils.cpp
 
 HEADERS += \
+    ConsoleParser/ConsoleParser.h \
     Gals/AnalysisError.h \
     Gals/Constants.h \
     Gals/LexicalError.h \

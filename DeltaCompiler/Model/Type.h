@@ -5,12 +5,12 @@
 
 enum Primitive {
     INT,
-    FLO,
-    DOU,
-    STR,
-    CHA,
-    BOO,
-    VOI,
+    FLOAT,
+    DOUBLE,
+    STRING,
+    CHAR,
+    BOOLEAN,
+    VOID,
     ERR
 };
 
@@ -26,7 +26,7 @@ public:
     Type(Primitive primitive): primitive (primitive) {}
     Type(Primitive primitive, bool isArray, bool isConst): primitive(primitive), isArray(isArray), isConst(isConst) {}
 
-    std::string toString() {
+    std::string toString() const {
         std::string result;
 
         if (isConst) {
@@ -37,19 +37,19 @@ public:
             case INT:
                 result += "int";
                 break;
-            case FLO:
+            case FLOAT:
                 result += "float";
                 break;
-            case STR:
+            case STRING:
                 result += "string";
                 break;
-            case CHA:
+            case CHAR:
                 result += "char";
                 break;
-            case BOO:
+            case BOOLEAN:
                 result += "boolean";
                 break;
-            case VOI:
+            case VOID:
                 result += "void";
                 break;
         }

@@ -1,26 +1,28 @@
 #include "OperationManager.h"
 
-Primitive OperationManager::OPERATION_TABLE[7][7][7] = {
-    //              INT                           FLOAT                         DOUBLE                        STRING                        CHAR                          BOOLEAN                       VOID
-    //              PLU MIN MUL DIV MOD REL BIT   PLU MIN MUL DIV MOD REL BIT   PLU MIN MUL DIV MOD REL BIT   PLU MIN MUL DIV MOD REL BIT   PLU MIN MUL DIV MOD REL BIT   PLU MIN MUL DIV MOD REL BIT   PLU MIN MUL DIV MOD REL BIT
-    /* INT     */ {{INT,INT,INT,FLO,INT,BOO,INT},{FLO,FLO,FLO,FLO,ERR,BOO,ERR},{FLO,FLO,FLO,FLO,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,ERR,ERR}},
-    /* FLOAT   */ {{FLO,FLO,FLO,FLO,ERR,BOO,ERR},{FLO,FLO,FLO,FLO,ERR,BOO,ERR},{FLO,FLO,FLO,FLO,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,ERR,ERR}},
-    /* DOUBLE  */ {{DOU,DOU,DOU,DOU,ERR,BOO,ERR},{DOU,DOU,DOU,DOU,ERR,BOO,ERR},{DOU,DOU,DOU,DOU,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,ERR,ERR}},
-    /* STRING  */ {{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{FLO,FLO,FLO,FLO,ERR,BOO,ERR},{STR,ERR,ERR,ERR,ERR,BOO,ERR},{STR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,ERR,ERR}},
-    /* CHAR    */ {{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{FLO,FLO,FLO,FLO,ERR,BOO,ERR},{STR,ERR,ERR,ERR,ERR,BOO,ERR},{STR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,ERR,ERR}},
-    /* BOOLEAN */ {{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{FLO,FLO,FLO,FLO,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,BOO,ERR},{ERR,ERR,ERR,ERR,ERR,ERR,ERR}},
-    /* VOID    */ {{ERR,ERR,ERR,ERR,ERR,ERR,ERR},{ERR,ERR,ERR,ERR,ERR,ERR,ERR},{ERR,ERR,ERR,ERR,ERR,ERR,ERR},{ERR,ERR,ERR,ERR,ERR,ERR,ERR},{ERR,ERR,ERR,ERR,ERR,ERR,ERR},{ERR,ERR,ERR,ERR,ERR,ERR,ERR},{ERR,ERR,ERR,ERR,ERR,ERR,ERR}}
+#include <iostream>
+
+OperationManager::PrimitiveReduced OperationManager::OPERATION_TABLE[7][7][7] = {
+    //              INT                                         FLOAT                                       DOUBLE                                      STRING                                      CHAR                                        BOOLEAN                                     VOID
+    //              ADD   MIN   MUL   DIV   MOD   REL   BIT     ADD   MIN   MUL   DIV   MOD   REL   BIT     ADD   MIN   MUL   DIV   MOD   REL   BIT     ADD   MIN   MUL   DIV   MOD   REL   BIT     ADD   MIN   MUL   DIV   MOD   REL   BIT     ADD   MIN   MUL   DIV   MOD   REL   BIT     ADD   MIN   MUL   DIV   MOD   REL   BIT
+    /* INT     */ {{R_INT,R_INT,R_INT,R_FLO,R_INT,R_BOO,R_INT},{R_FLO,R_FLO,R_FLO,R_FLO,R_ERR,R_BOO,R_ERR},{R_FLO,R_FLO,R_FLO,R_FLO,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR}},
+    /* FLOAT   */ {{R_FLO,R_FLO,R_FLO,R_FLO,R_ERR,R_BOO,R_ERR},{R_FLO,R_FLO,R_FLO,R_FLO,R_ERR,R_BOO,R_ERR},{R_FLO,R_FLO,R_FLO,R_FLO,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR}},
+    /* DOUBLE  */ {{R_DOU,R_DOU,R_DOU,R_DOU,R_ERR,R_BOO,R_ERR},{R_DOU,R_DOU,R_DOU,R_DOU,R_ERR,R_BOO,R_ERR},{R_DOU,R_DOU,R_DOU,R_DOU,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR}},
+    /* STRING  */ {{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_FLO,R_FLO,R_FLO,R_FLO,R_ERR,R_BOO,R_ERR},{R_STR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_STR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR}},
+    /* CHAR    */ {{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_FLO,R_FLO,R_FLO,R_FLO,R_ERR,R_BOO,R_ERR},{R_STR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_STR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR}},
+    /* BOOLEAN */ {{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_FLO,R_FLO,R_FLO,R_FLO,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR}},
+    /* VOID    */ {{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR},{R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR}}
 };
 
-Primitive OperationManager::UNARY_OPERATION_TABLE[7][7] = {
+OperationManager::PrimitiveReduced OperationManager::UNARY_OPERATION_TABLE[7][7] = {
     //             IR  DR  MI  BN  NO  IL  DL
-    /* INT     */ {INT,INT,INT,INT,BOO,INT,INT},
-    /* DOUBLE  */ {DOU,DOU,DOU,ERR,BOO,DOU,DOU},
-    /* FLOAT   */ {FLO,FLO,FLO,ERR,BOO,FLO,FLO},
-    /* STRING  */ {ERR,ERR,ERR,ERR,BOO,ERR,ERR},
-    /* CHAR    */ {ERR,ERR,ERR,ERR,BOO,ERR,ERR},
-    /* BOOLEAN */ {ERR,ERR,ERR,BOO,BOO,ERR,ERR},
-    /* VOID    */ {ERR,ERR,ERR,ERR,ERR,ERR,ERR}
+    /* INT     */ {R_INT,R_INT,R_INT,R_INT,R_BOO,R_INT,R_INT},
+    /* DOUBLE  */ {R_DOU,R_DOU,R_DOU,R_ERR,R_BOO,R_DOU,R_DOU},
+    /* FLOAT   */ {R_FLO,R_FLO,R_FLO,R_ERR,R_BOO,R_FLO,R_FLO},
+    /* STRING  */ {R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR,R_ERR},
+    /* CHAR    */ {R_ERR,R_ERR,R_ERR,R_ERR,R_BOO,R_ERR,R_ERR},
+    /* BOOLEAN */ {R_ERR,R_ERR,R_ERR,R_BOO,R_BOO,R_ERR,R_ERR},
+    /* VOID    */ {R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR}
 };
 
 AttributionResult OperationManager::ATTRIBUTION_TABLE[7][7] = {
@@ -74,15 +76,15 @@ Primitive OperationManager::checkBinaryOperation(Type type1, Type type2, Operati
         }
     }
 
-    return OperationManager::OPERATION_TABLE[type1.primitive][type2.primitive][operationIndex];
+    return (Primitive) OperationManager::OPERATION_TABLE[type1.primitive][type2.primitive][operationIndex];
 }
 
 Primitive OperationManager::checkUnaryOperation(Type type1, Operation operation) {
-    return OperationManager::UNARY_OPERATION_TABLE[type1.primitive][operation.type - 18];
+    return (Primitive) OperationManager::UNARY_OPERATION_TABLE[type1.primitive][operation.type - 18];
 }
 
 AttributionResult OperationManager::checkImplicitCast(Type type1, Type type2) {
-    if (type1.isArray != type2.isArray) {
+    if (type1.isArray != type2.isArray || type1.arraySize != type2.arraySize) {
         return ATT_ER;
     }
 
@@ -96,12 +98,12 @@ AttributionResult OperationManager::checkAttribution(Type type1, Type type2, Ope
     if (attributionType == INCREMENT_ATTRIBUTION || attributionType == DECREMENT_ATTRIBUTION) {
         Primitive result = checkBinaryOperation(type1, type2, getBinaryOperationFromAttributionType(attributionType));
 
-        if (result == ERR) {
+        if (result == R_ERR) {
             return ATT_ER;
         } else {
             rightType.primitive = result;
         }
     }
 
-    return checkImplicitCast(type1, rightType);
+    return checkImplicitCast(rightType, type1);
 }

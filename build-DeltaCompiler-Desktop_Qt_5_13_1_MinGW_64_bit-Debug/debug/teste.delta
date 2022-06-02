@@ -1,5 +1,6 @@
 int main() {
     int[5] pog;
+	print(pog[0]);
 
     return 0;
 }

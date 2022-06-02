@@ -17,8 +17,19 @@ public:
     static AttributionResult checkAttribution(Type type1, Type type2, Operation operation);
 
 private:
-    static Primitive OPERATION_TABLE[7][7][7];
-    static Primitive UNARY_OPERATION_TABLE[7][7];
+    enum PrimitiveReduced {
+        R_INT,
+        R_FLO,
+        R_DOU,
+        R_STR,
+        R_CHA,
+        R_BOO,
+        R_VOI,
+        R_ERR
+    };
+
+    static PrimitiveReduced OPERATION_TABLE[7][7][7];
+    static PrimitiveReduced UNARY_OPERATION_TABLE[7][7];
     static AttributionResult ATTRIBUTION_TABLE[7][7];
 };
 

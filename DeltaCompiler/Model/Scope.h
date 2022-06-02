@@ -12,7 +12,7 @@ public:
     int id;
     std::vector<Symbol> symbolList;
     bool hasReturned = false;
-    Type returnType = Type(VOI);
+    Type returnType = Type(VOID);
 };
 
 #endif // SCOPE_H

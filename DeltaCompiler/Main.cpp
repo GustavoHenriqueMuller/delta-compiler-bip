@@ -10,7 +10,8 @@
 
 #include <iostream>
 
-// TODO: Corrigir valores com "-" na frente
+// TODO: Implementar operadores unários
+// TODO: Pushar void em função print (retorno)
 
 int main(int argc, char **argv) {
     ConsoleParser consoleParser;

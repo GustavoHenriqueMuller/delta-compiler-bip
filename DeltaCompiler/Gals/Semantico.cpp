@@ -110,6 +110,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         /// DOING UNARY OPERATION
         case 19:
         case 20:
+            generator.addUnaryOperation(operations.top());
             doUnaryOperation();
             break;
 

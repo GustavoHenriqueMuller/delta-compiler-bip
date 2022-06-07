@@ -51,7 +51,7 @@ void Generator::addArrayIdentifier(const Symbol &symbol) {
     DIFFERENT,
 */
 
-void Generator::addBinaryOperation(Operation operation) {
+void Generator::addBinaryOperation(const Operation &operation) {
     std::string instructionName;
 
     switch (operation.type) {
@@ -94,6 +94,27 @@ void Generator::addBinaryOperation(Operation operation) {
 
     stackSize += 1;
     addInstruction("STO", stackTop());
+}
+
+/*
+        case INCREMENT_RIGHT:
+        case DECREMENT_RIGHT:
+            return CATEGORY_UNARY_RIGHT_MUTABLE;
+
+        // Unary left
+        case MINUS_INVERSION:
+        case BIT_NOT:
+        case NOT:
+            return CATEGORY_UNARY_LEFT;
+
+        // Unary left mutable
+        case INCREMENT_LEFT:
+        case DECREMENT_LEFT:
+            return CATEGORY_UNARY_LEFT_MUTABLE;
+*/
+
+void Generator::addUnaryOperation(const Operation &operation) {
+    // operation.type
 }
 
 void Generator::attributeTo(const Symbol &symbol, OperationType attributionType) {

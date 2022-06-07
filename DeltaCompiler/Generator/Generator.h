@@ -14,7 +14,8 @@ public:
     void addImmediate(int immediate);
     void addIdentifier(const Symbol &symbol);
     void addArrayIdentifier(const Symbol &symbol);
-    void addBinaryOperation(Operation operation);
+    void addBinaryOperation(const Operation &operation);
+    void addUnaryOperation(const Operation &operation);
 
     void attributeTo(const Symbol &symbol, OperationType attributionType);
     void attributeToArray(const Symbol &symbol, OperationType attributionType);

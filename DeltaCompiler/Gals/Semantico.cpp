@@ -439,13 +439,15 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             }
 
             generator.addPrint();
+
             expressions.pop();
+            expressions.push(Expression(VOID));
             break;
         }
 
         case 83: { // Input
-            expressions.push(Expression(INT));
             generator.addInput();
+            expressions.push(Expression(INT));
             break;
         }
     }

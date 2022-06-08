@@ -15,9 +15,5 @@ int Utils::lexemeToInt(const std::string &lexeme) {
 }
 
 bool Utils::lexemeToBoolean(const std::string &lexeme) {
-    if (lexeme == "true") {
-        return true;
-    } else if (lexeme == "false") {
-        return false;
-    }
+    return lexeme == "true";
 }

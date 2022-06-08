@@ -10,8 +10,7 @@
 
 #include <iostream>
 
-// TODO: Implementar operadores unários
-// TODO: Pushar void em função print (retorno)
+// TODO: Operadores unários
 
 int main(int argc, char **argv) {
     ConsoleParser consoleParser;
@@ -19,7 +18,7 @@ int main(int argc, char **argv) {
     try {
         consoleParser.parse(argc, argv);
     } catch (std::runtime_error& error) {
-        std::cout << "Error: " << error.what() << std::endl << std::endl;
+        std::cout << error.what() << std::endl << std::endl;
         return 1;
     }
 

@@ -63,7 +63,7 @@ class Operation {
 public:
     Operation() {}
     Operation(OperationType type, std::string lexeme): type(type), lexeme(lexeme) {}
-    OperationCategory getOperationCategory();
+    OperationCategory getOperationCategory() const;
 
     OperationType type;
     std::string lexeme;

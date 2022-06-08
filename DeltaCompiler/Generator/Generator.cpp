@@ -6,6 +6,8 @@ std::string Generator::getCode() {
     std::string result;
 
     result += ".data\n";
+    result += "\tz: 0\n";
+    result += "\tn: 0\n";
     result += dataSection;
     result += "\n";
     result += ".text\n";
@@ -39,82 +41,111 @@ void Generator::addArrayIdentifier(const Symbol &symbol) {
     addInstruction("STO", stackTop());
 }
 
-/*
- *
-    OR,
-    AND,
-    GREATER,
-    SMALLER,
-    GREATER_EQ,
-    SMALLER_EQ,
-    EQUAL,
-    DIFFERENT,
-*/
-
 void Generator::addBinaryOperation(const Operation &operation) {
-    std::string instructionName;
+    switch (operation.getOperationCategory()) {
+        case CATEGORY_ARIT_HIGH:
+        case CATEGORY_ARIT_LOW:
+        case CATEGORY_BIT: {
+            std::string instructionName = getInstructionNameFromOperation(operation);
 
-    switch (operation.type) {
-        case ADDITION:
-            instructionName = "ADD";
+            addInstruction("LD", stackTop() - 1);
+            addInstruction(instructionName, stackTop());
+            stackSize -= 2;
+
+            stackSize += 1;
+            addInstruction("STO", stackTop());
             break;
-        case SUBTRACTION:
-            instructionName = "SUB";
+        }
+
+        case CATEGORY_RELATIONAL: {
+            switch (operation.type) {
+                case OR:
+                case AND: {
+                    std::string instructionName = getInstructionNameFromOperation(operation);
+                    addInstruction("LD", stackTop() - 1);
+                    addInstruction(instructionName, stackTop());
+                    addInstruction("STO", stackTop());
+
+                    setIsZero();
+
+                    addInstruction("LD", "z");
+                    addInstruction("XORI", 1);
+
+                    stackSize -= 1;
+                    addInstruction("STO", stackTop());
+                    break;
+                }
+
+                default: {
+                    addInstruction("LD", stackTop() - 1);
+                    addInstruction("SUB", stackTop());
+                    addInstruction("STO", stackTop());
+
+                    case GREATER: // $n == 0 && $z == 0
+                        setIsNegative();
+                        setIsZero();
+
+                        addInstruction("LD", "n");
+                        addInstruction("XORI", 1);
+
+                        stackSize += 1;
+                        addInstruction("STO", stackTop());
+
+                        addInstruction("LD", "z");
+                        addInstruction("XORI", 1);
+                        addInstruction("AND", stackTop());
+                        stackSize -= 1;
+                        break;
+                    case SMALLER: // $n == 1
+                        setIsNegative();
+
+                        addInstruction("LD", "n");
+                        break;
+                    case GREATER_EQ: // $n == 0 || $z == 1
+                        setIsNegative();
+                        setIsZero();
+
+                        addInstruction("LD", "n");
+                        addInstruction("XORI", 1);
+
+                        stackSize += 1;
+                        addInstruction("STO", stackTop());
+
+                        addInstruction("LD", "z");
+                        addInstruction("OR", stackTop());
+                        stackSize -= 1;
+                        break;
+                    case SMALLER_EQ: // $n == 1 || $z == 1
+                        setIsNegative();
+                        setIsZero();
+
+                        addInstruction("LD", "n");
+                        addInstruction("OR", "z");
+                        break;
+                    case EQUAL: // $z == 1
+                        setIsZero();
+
+                        addInstruction("LD", "z");
+                        break;
+                    case DIFFERENT: // $z == 0
+                        setIsZero();
+
+                        addInstruction("LD", "z");
+                        addInstruction("XORI", 1);
+                        break;
+                }
+
+                stackSize -= 2;
+                addInstruction("STO", stackTop());
+            }
+
             break;
-        case BIT_OR:
-        case OR: // TODO: Não pode fazer!
-            instructionName = "OR";
-            break;
-        case BIT_XOR:
-            instructionName = "XOR";
-            break;
-        case BIT_AND:
-        case AND: // TODO: Não pode fazer!
-            instructionName = "AND";
-            break;
-        case BIT_LS:
-            instructionName = "SLL";
-            break;
-        case BIT_RS:
-            instructionName = "SRL";
-            break;
-        case GREATER:
-        case SMALLER:
-        case GREATER_EQ:
-        case SMALLER_EQ:
-        case EQUAL:
-        case DIFFERENT:
-            // TODO: Operadores relacionais
-            break;
+        }
     }
-
-    addInstruction("LD", stackTop() - 1);
-    addInstruction(instructionName, stackTop());
-    stackSize -= 2;
-
-    stackSize += 1;
-    addInstruction("STO", stackTop());
 }
 
-/*
-        case INCREMENT_RIGHT:
-        case DECREMENT_RIGHT:
-            return CATEGORY_UNARY_RIGHT_MUTABLE;
-
-        // Unary left
-        case MINUS_INVERSION:
-        case BIT_NOT:
-        case NOT:
-            return CATEGORY_UNARY_LEFT;
-
-        // Unary left mutable
-        case INCREMENT_LEFT:
-        case DECREMENT_LEFT:
-            return CATEGORY_UNARY_LEFT_MUTABLE;
-*/
-
 void Generator::addUnaryOperation(const Operation &operation) {
-    // operation.type
+    // TODO
 }
 
 void Generator::attributeTo(const Symbol &symbol, OperationType attributionType) {
@@ -189,6 +220,55 @@ void Generator::addInput() {
     addInstruction("STO", stackTop());
 }
 
+void Generator::setIsNegative() {
+    addInstruction("LD", stackTop());
+    addInstruction("SRL", 10);
+    addInstruction("ANDI", 1);
+    addInstruction("STO", "n");
+}
+
+void Generator::setIsZero() {
+    addInstruction("LD", stackTop());
+    addInstruction("SRL", 10);
+    addInstruction("ANDI", 1);
+
+    stackSize += 1;
+    addInstruction("STO", stackTop());
+
+    addInstruction("LD", stackTop() - 1);
+    addInstruction("NOT");
+    addInstruction("ADDI", 1);
+    addInstruction("SRL", 10);
+    addInstruction("ANDI", 1);
+
+    addInstruction("OR", stackTop());
+    stackSize -= 1;
+
+    addInstruction("XORI", 1);
+    addInstruction("STO", "z");
+}
+
+std::string Generator::getInstructionNameFromOperation(const Operation &operation) {
+    switch (operation.type) {
+        case ADDITION:
+            return "ADD";
+        case SUBTRACTION:
+            return "SUB";
+        case OR:
+        case BIT_OR:
+            return "OR";
+        case BIT_XOR:
+            return "XOR";
+        case AND:
+        case BIT_AND:
+            return "AND";
+        case BIT_LS:
+            return "SLL";
+        case BIT_RS:
+            return "SRL";
+    }
+}
+
 std::string Generator::getFullIdentifier(const Symbol &symbol) {
     return symbol.name + "_" + std::to_string(symbol.scopeId);
 }
@@ -203,6 +283,10 @@ void Generator::addInstruction(std::string instruction, std::string parameter) {
 
 void Generator::addInstruction(std::string instruction, int parameter) {
     textSection += "\t" + instruction + " " + std::to_string(parameter) + "\n";
+}
+
+void Generator::addInstruction(std::string instruction) {
+    textSection += "\t" + instruction + " 0\n";
 }
 
 int Generator::stackTop() {

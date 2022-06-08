@@ -1,6 +1,6 @@
 #include "Operation.h"
 
-OperationCategory Operation::getOperationCategory() {
+OperationCategory Operation::getOperationCategory() const {
     switch (type) {
         // Arit low
         case ADDITION:

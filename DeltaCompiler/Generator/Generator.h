@@ -25,10 +25,14 @@ public:
     void addInput();
 
 private:
+    void setIsNegative();
+    void setIsZero();
+    std::string getInstructionNameFromOperation(const Operation &operation);
     std::string getFullIdentifier(const Symbol &symbol);
     void addToDataSection(std::string string);
     void addInstruction(std::string instruction, std::string parameter);
     void addInstruction(std::string instruction, int parameter);
+    void addInstruction(std::string instruction);
     int stackTop();
 
     std::string dataSection;

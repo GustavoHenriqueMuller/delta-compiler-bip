@@ -25,7 +25,7 @@ OperationManager::PrimitiveReduced OperationManager::UNARY_OPERATION_TABLE[7][7]
     /* VOID    */ {R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR,R_ERR}
 };
 
-AttributionResult OperationManager::ATTRIBUTION_TABLE[7][7] = {
+AssignmentResult OperationManager::ASSIGNMENT_TABLE[7][7] = {
     //             INT    FLOAT  DOUBLE STRING CHAR   BOOL   VOID
     /* INT     */ {ATT_OK,ATT_OK,ATT_OK,ATT_ER,ATT_ER,ATT_OK,ATT_ER},
     /* DOUBLE  */ {ATT_PL,ATT_OK,ATT_OK,ATT_ER,ATT_ER,ATT_ER,ATT_ER},
@@ -83,20 +83,20 @@ Primitive OperationManager::checkUnaryOperation(Type type1, Operation operation)
     return (Primitive) OperationManager::UNARY_OPERATION_TABLE[type1.primitive][operation.type - 18];
 }
 
-AttributionResult OperationManager::checkImplicitCast(Type type1, Type type2) {
+AssignmentResult OperationManager::checkImplicitCast(Type type1, Type type2) {
     if (type1.isArray != type2.isArray || type1.arraySize != type2.arraySize) {
         return ATT_ER;
     }
 
-    return OperationManager::ATTRIBUTION_TABLE[type1.primitive][type2.primitive];
+    return OperationManager::ASSIGNMENT_TABLE[type1.primitive][type2.primitive];
 }
 
-AttributionResult OperationManager::checkAttribution(Type type1, Type type2, Operation operation) {
+AssignmentResult OperationManager::checkAssignment(Type type1, Type type2, Operation operation) {
     Type rightType = type2;
     OperationType attributionType = operation.type;
 
-    if (attributionType == INCREMENT_ATTRIBUTION || attributionType == DECREMENT_ATTRIBUTION) {
-        Primitive result = checkBinaryOperation(type1, type2, getBinaryOperationFromAttributionType(attributionType));
+    if (attributionType == INCREMENT_ASSIGNMENT || attributionType == DECREMENT_ASSIGNMENT) {
+        Primitive result = checkBinaryOperation(type1, type2, getBinaryOperationFromAssignmentType(attributionType));
 
         if (result == R_ERR) {
             return ATT_ER;

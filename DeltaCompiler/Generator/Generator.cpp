@@ -168,8 +168,8 @@ void Generator::addBranchIfTrue(const std::string &label) {
     stackSize -= 1;
 }
 
-void Generator::attributeTo(const Symbol &symbol, OperationType attributionType) {
-    if (attributionType != ATTRIBUTION) {
+void Generator::assignTo(const Symbol &symbol, OperationType assignmentOperation) {
+    if (assignmentOperation != ASSIGNMENT) {
         stackSize += 1;
         addInstruction("LD", stackTop() - 1);
         addInstruction("STO", stackTop());
@@ -177,7 +177,7 @@ void Generator::attributeTo(const Symbol &symbol, OperationType attributionType)
         addInstruction("LD", getFullIdentifier(symbol));
         addInstruction("STO", stackTop() - 1);
 
-        addBinaryOperation(getBinaryOperationFromAttributionType(attributionType));
+        addBinaryOperation(getBinaryOperationFromAssignmentType(assignmentOperation));
     }
 
     addInstruction("LD", stackTop());
@@ -185,8 +185,8 @@ void Generator::attributeTo(const Symbol &symbol, OperationType attributionType)
     stackSize -= 1;
 }
 
-void Generator::attributeToArray(const Symbol &symbol, OperationType attributionType) {
-    if (attributionType != ATTRIBUTION) {
+void Generator::assignToArray(const Symbol &symbol, OperationType assignmentOperation) {
+    if (assignmentOperation != ASSIGNMENT) {
         addInstruction("LD", stackTop());
 
         stackSize += 1;
@@ -197,7 +197,7 @@ void Generator::attributeToArray(const Symbol &symbol, OperationType attribution
         addInstruction("LDV", getFullIdentifier(symbol));
         addInstruction("STO", stackTop() - 1);
 
-        addBinaryOperation(getBinaryOperationFromAttributionType(attributionType));
+        addBinaryOperation(getBinaryOperationFromAssignmentType(assignmentOperation));
     }
 
     addInstruction("LD", stackTop() - 1);

@@ -30,7 +30,7 @@ public:
     std::string getScopesJson();
 
 private:
-    void doAttribution();
+    void doAssignment();
     void doOperation();
     void doUnaryOperation();
     Symbol* getSymbolByName(const std::string &name);
@@ -56,10 +56,10 @@ private:
     std::stack<std::string> identifierNames;
     std::stack<Type> identifierTypes;
 
-    // Declaration / Attribution
+    // Declaration / Assignment
     std::vector<std::string> leftIdentifierNames;
     Type leftType;
-    Operation attributionOperation;
+    Operation assignmentOperation;
 
     // Functions
     std::string functionName;

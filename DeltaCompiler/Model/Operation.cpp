@@ -48,11 +48,19 @@ OperationCategory Operation::getOperationCategory() const {
         case DECREMENT_LEFT:
             return CATEGORY_UNARY_LEFT_MUTABLE;
 
-        // Attribution
-        case ATTRIBUTION:
-        case INCREMENT_ATTRIBUTION:
-        case DECREMENT_ATTRIBUTION:
-            return CATEGORY_ATTRIBUTION;
+        // Assignment
+        case ASSIGNMENT:
+        case INCREMENT_ASSIGNMENT:
+        case DECREMENT_ASSIGNMENT:
+        case MULTIPLICATION_ASSIGNMENT:
+        case DIVISION_ASSIGNMENT:
+        case MOD_ASSIGNMENT:
+        case BIT_OR_ASSIGNMENT:
+        case BIT_XOR_ASSIGNMENT:
+        case BIT_AND_ASSIGNMENT:
+        case BIT_LS_ASSIGNMENT:
+        case BIT_RS_ASSIGNMENT:
+            return CATEGORY_ASSIGNMENT;
     }
 }
 
@@ -126,11 +134,27 @@ OperationType getLeftUnaryOperationTypeFromTokenId(TokenId tokenId) {
     }
 }
 
-Operation getBinaryOperationFromAttributionType(OperationType attributionType) {
+Operation getBinaryOperationFromAssignmentType(OperationType attributionType) {
     switch (attributionType) {
-        case INCREMENT_ATTRIBUTION:
+        case INCREMENT_ASSIGNMENT:
             return Operation(ADDITION, "+");
-        case DECREMENT_ATTRIBUTION:
+        case DECREMENT_ASSIGNMENT:
             return Operation(SUBTRACTION, "-");
+        case MULTIPLICATION_ASSIGNMENT:
+            return Operation(MULTIPLICATION, "*");
+        case DIVISION_ASSIGNMENT:
+            return Operation(DIVISION, "/");
+        case MOD_ASSIGNMENT:
+            return Operation(MOD, "%");
+        case BIT_OR_ASSIGNMENT:
+            return Operation(BIT_OR, "|");
+        case BIT_XOR_ASSIGNMENT:
+            return Operation(BIT_XOR, "^");
+        case BIT_AND_ASSIGNMENT:
+            return Operation(BIT_AND, "&");
+        case BIT_LS_ASSIGNMENT:
+            return Operation(BIT_LS, "<<");
+        case BIT_RS_ASSIGNMENT:
+            return Operation(BIT_RS, ">>");
     }
 }

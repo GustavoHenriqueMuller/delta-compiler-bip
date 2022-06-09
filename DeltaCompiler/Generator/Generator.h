@@ -21,8 +21,8 @@ public:
     void addBranchIfFalse(const std::string &label);
     void addBranchIfTrue(const std::string &label);
 
-    void attributeTo(const Symbol &symbol, OperationType attributionType);
-    void attributeToArray(const Symbol &symbol, OperationType attributionType);
+    void assignTo(const Symbol &symbol, OperationType assignmentType);
+    void assignToArray(const Symbol &symbol, OperationType assignmentType);
     void addIdentifierDeclaration(const Symbol &symbol);
     void addArrayIdentifierDeclaration(const Symbol &symbol);
     void addPrint();

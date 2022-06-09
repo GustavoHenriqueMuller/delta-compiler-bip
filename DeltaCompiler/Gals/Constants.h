@@ -42,36 +42,44 @@ enum TokenId
     t_SMALLER_EQ = 36,
     t_EQ = 37,
     t_DIF = 38,
-    t_INCREMENT_ATTRIBUTION = 39,
-    t_DECREMENT_ATTRIBUTION = 40,
-    t_INCREMENT = 41,
-    t_DECREMENT = 42,
-    t_PLUS = 43,
-    t_MINUS = 44,
-    t_MULT = 45,
-    t_DIV = 46,
-    t_MOD = 47,
-    t_ATTRIBUTION = 48,
-    t_BIT_AND = 49,
-    t_BIT_OR = 50,
-    t_BIT_XOR = 51,
-    t_BIT_NOT = 52,
-    t_BIT_RS = 53,
-    t_BIT_LS = 54,
-    t_LSP = 55,
-    t_RSP = 56,
-    t_LSB = 57,
-    t_RSB = 58,
-    t_LSC = 59,
-    t_RSC = 60,
-    t_DOT = 61,
-    t_END = 62,
-    t_COLON = 63,
-    t_COMMA = 64,
-    t_ID = 65
+    t_INCREMENT_ASSIGNMENT = 39,
+    t_DECREMENT_ASSIGNMENT = 40,
+    t_MULTIPLICATION_ASSIGNMENT = 41,
+    t_DIVSION_ASSIGNMENT = 42,
+    t_MOD_ASSIGNMENT = 43,
+    t_BIT_OR_ASSIGNMENT = 44,
+    t_BIT_XOR_ASSIGNMENT = 45,
+    t_BIT_AND_ASSIGNMENT = 46,
+    t_BIT_LS_ASSIGNMENT = 47,
+    t_BIT_RS_ASSIGNMENT = 48,
+    t_INCREMENT = 49,
+    t_DECREMENT = 50,
+    t_PLUS = 51,
+    t_MINUS = 52,
+    t_MULT = 53,
+    t_DIV = 54,
+    t_MOD = 55,
+    t_ASSIGNMENT = 56,
+    t_BIT_AND = 57,
+    t_BIT_OR = 58,
+    t_BIT_XOR = 59,
+    t_BIT_NOT = 60,
+    t_BIT_RS = 61,
+    t_BIT_LS = 62,
+    t_LSP = 63,
+    t_RSP = 64,
+    t_LSB = 65,
+    t_RSB = 66,
+    t_LSC = 67,
+    t_RSC = 68,
+    t_DOT = 69,
+    t_END = 70,
+    t_COLON = 71,
+    t_COMMA = 72,
+    t_ID = 73
 };
 
-const int STATES_COUNT = 152;
+const int STATES_COUNT = 160;
 
 extern int SCANNER_TABLE[STATES_COUNT][256];
 
@@ -79,7 +87,7 @@ extern int TOKEN_STATE[STATES_COUNT];
 
 extern const char *SCANNER_ERROR[STATES_COUNT];
 
-const int FIRST_SEMANTIC_ACTION = 120;
+const int FIRST_SEMANTIC_ACTION = 128;
 
 const int SHIFT  = 0;
 const int REDUCE = 1;
@@ -88,10 +96,10 @@ const int ACCEPT = 3;
 const int GO_TO  = 4;
 const int ERROR  = 5;
 
-extern const int PARSER_TABLE[331][212][2];
+extern const int PARSER_TABLE[347][228][2];
 
-extern const int PRODUCTIONS[132][2];
+extern const int PRODUCTIONS[140][2];
 
-extern const char *PARSER_ERROR[331];
+extern const char *PARSER_ERROR[347];
 
 #endif

@@ -43,9 +43,17 @@ enum OperationType {
     DECREMENT_LEFT,
 
     // Attribution
-    ATTRIBUTION,
-    INCREMENT_ATTRIBUTION,
-    DECREMENT_ATTRIBUTION
+    ASSIGNMENT,
+    INCREMENT_ASSIGNMENT,
+    DECREMENT_ASSIGNMENT,
+    MULTIPLICATION_ASSIGNMENT,
+    DIVISION_ASSIGNMENT,
+    MOD_ASSIGNMENT,
+    BIT_OR_ASSIGNMENT,
+    BIT_XOR_ASSIGNMENT,
+    BIT_AND_ASSIGNMENT,
+    BIT_LS_ASSIGNMENT,
+    BIT_RS_ASSIGNMENT
 };
 
 enum OperationCategory {
@@ -56,7 +64,7 @@ enum OperationCategory {
     CATEGORY_UNARY_RIGHT_MUTABLE,
     CATEGORY_UNARY_LEFT,
     CATEGORY_UNARY_LEFT_MUTABLE,
-    CATEGORY_ATTRIBUTION
+    CATEGORY_ASSIGNMENT
 };
 
 class Operation {
@@ -72,6 +80,6 @@ public:
 OperationType getOperationTypeFromTokenId(TokenId tokenId);
 OperationType getRightUnaryOperationTypeFromTokenId(TokenId tokenId);
 OperationType getLeftUnaryOperationTypeFromTokenId(TokenId tokenId);
-Operation getBinaryOperationFromAttributionType(OperationType attributionType);
+Operation getBinaryOperationFromAssignmentType(OperationType attributionType);
 
 #endif // OPERATION_H

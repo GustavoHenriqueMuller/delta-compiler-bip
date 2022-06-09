@@ -10,6 +10,7 @@
 
 #include <iostream>
 
+// TODO: Mais tipos de assign
 // TODO: Operadores unários
 
 int main(int argc, char **argv) {

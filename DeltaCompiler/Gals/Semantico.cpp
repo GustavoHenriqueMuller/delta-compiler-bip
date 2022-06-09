@@ -75,6 +75,11 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 9: {
             Symbol* symbol = getSymbolByName(identifierNames.top());
 
+            // TODO: Criar nova ação que é que nem essa 9, mas em vez de adicionar um identifier na stack, adiciona o endereço dele.
+            // TODO: Criar nova ação que é que nem essa 9, mas em vez de adicionar um identifier na stack, adiciona o endereço dele.
+            // TODO: Criar nova ação que é que nem essa 9, mas em vez de adicionar um identifier na stack, adiciona o endereço dele.
+            // TODO: Criar nova ação que é que nem essa 9, mas em vez de adicionar um identifier na stack, adiciona o endereço dele.
+
             if (symbol->type.isArray) {
                 generator.addArrayIdentifier(*symbol);
             } else {

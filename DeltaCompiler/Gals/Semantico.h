@@ -67,6 +67,11 @@ private:
 
     // "When-is" statement
     std::stack<Type> whenExpressionTypes;
+
+    // Structures
+    std::stack<int> structureIds;
+    int currentStructureId = 0;
+    int currentIfId = 0;
 };
 
 #endif

@@ -1,25 +1,74 @@
 .data
-	a_1: 0
-	b_1: 0, 0, 0, 0, 0
+	i_1: 0
+	j_1: 0
 
 .text
-	LDI 4
+	LDI 0
 	STO 1000
 	LD 1000
-	STO a_1
-	LD a_1
+	STO i_1
+	LDI 0
 	STO 1000
-	LDI 0
+	LD 1000
+	STO j_1
+while_start_0:
+	LD i_1
+	STO 1000
+	LDI 10
 	STO 1001
-	LD a_1
-	STO 1002
+	LD 1000
+	SUB 1001
+	STO 1001
 	LD 1001
-	ADD 1002
+	SRL 10
+	ANDI 1
+	STO 1000
+	LD 1000
+	BEQ while_end_0
+	LDI 0
+	STO 1000
+	LD 1000
+	STO j_1
+while_start_1:
+	LD j_1
+	STO 1000
+	LDI 20
+	STO 1001
+	LD 1000
+	SUB 1001
 	STO 1001
 	LD 1001
-	STO $indr
-	LDV b_1
+	SRL 10
+	ANDI 1
+	STO 1000
+	LD 1000
+	BEQ while_end_1
+	LDI 1
+	STO 1000
+	LD 1000
 	STO 1001
+	LD j_1
+	STO 1000
+	LD 1000
+	ADD 1001
+	STO 1000
+	LD 1000
+	STO j_1
+	JMP while_start_1
+while_end_1:
+	LDI 1
+	STO 1000
+	LD 1000
+	STO 1001
+	LD i_1
+	STO 1000
+	LD 1000
+	ADD 1001
+	STO 1000
+	LD 1000
+	STO i_1
+	JMP while_start_0
+while_end_0:
 	LDI 0
-	STO 1002
+	STO 1000
 	HLT 0

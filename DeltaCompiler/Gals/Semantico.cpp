@@ -477,46 +477,65 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
         /// CODE GENERATION OF WHILE
         case 92: { // Creating start label of while
-            generator.addLabel("while_inicio");
+            generator.addLabel("while_start_" + std::to_string(currentStructureId));
+
+            structureIds.push(currentStructureId);
+            currentStructureId++;
             break;
         }
 
         case 93: { // Checking expression of while
-            generator.addBranchIfFalse("while_final");
+            generator.addBranchIfFalse("while_end_" + std::to_string(structureIds.top()));
             break;
         }
 
         case 94: { // Creating end label of while
-            generator.addJump("while_inicio");
-            generator.addLabel("while_final");
+            generator.addJump("while_start_" + std::to_string(structureIds.top()));
+            generator.addLabel("while_end_" + std::to_string(structureIds.top()));
+
+            structureIds.pop();
             break;
         }
 
         /// CODE GENERATION OF DO-WHILE
         case 95: { // Creating start label of do-while
-            generator.addLabel("do_while_inicio");
+            generator.addLabel("do_while_start_" + std::to_string(currentStructureId));
+
+            structureIds.push(currentStructureId);
+            currentStructureId++;
             break;
         }
 
         case 96: { // Checking expression of do-while
-            generator.addBranchIfTrue("do_while_inicio");
+            generator.addBranchIfTrue("do_while_start_" + std::to_string(structureIds.top()));
+            structureIds.pop();
             break;
         }
 
         /// CODE GENERATION OF FOR
         case 97: { // Creating start label of for
-            generator.addLabel("for_inicio");
+            generator.addLabel("for_start_" + std::to_string(currentStructureId));
+
+            structureIds.push(currentStructureId);
+            currentStructureId++;
             break;
         }
 
         case 98: { // Checking expression of for
-            generator.addBranchIfFalse("for_final");
+            generator.addBranchIfFalse("for_end_" + std::to_string(structureIds.top()));
             break;
         }
 
         case 99: { // Creating end label of for
-            generator.addJump("for_inicio");
-            generator.addLabel("for_final");
+            generator.addJump("for_start_" + std::to_string(structureIds.top()));
+            generator.addLabel("for_end_" + std::to_string(structureIds.top()));
+
+            structureIds.pop();
+            break;
+        }
+
+        /// CODE GENERATION OF IF / ELSE-IF / ELSE
+        case 100: { // Checking expression for if
             break;
         }
     }

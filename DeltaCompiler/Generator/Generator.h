@@ -19,6 +19,7 @@ public:
     void addLabel(const std::string &label);
     void addJump(const std::string &label);
     void addBranchIfFalse(const std::string &label);
+    void addBranchIfTrue(const std::string &label);
 
     void attributeTo(const Symbol &symbol, OperationType attributionType);
     void attributeToArray(const Symbol &symbol, OperationType attributionType);

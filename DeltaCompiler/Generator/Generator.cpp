@@ -161,6 +161,13 @@ void Generator::addBranchIfFalse(const std::string &label) {
     stackSize -= 1;
 }
 
+void Generator::addBranchIfTrue(const std::string &label) {
+    addInstruction("LD", stackTop());
+    addInstruction("BNE", label);
+
+    stackSize -= 1;
+}
+
 void Generator::attributeTo(const Symbol &symbol, OperationType attributionType) {
     if (attributionType != ATTRIBUTION) {
         stackSize += 1;

@@ -82,7 +82,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             }
 
             if (!symbol->isInitialized) {
-                logger.addWarn(ReadingIdentifierWithoutInitializationWarning(symbol->name));
+                logger.addWarning(ReadingIdentifierWithoutInitializationWarning(symbol->name));
             }
 
             expressions.push(Expression(identifierTypes.top()));
@@ -451,13 +451,13 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        /// CODE GENERATION OF STRUCTURES
+        /// CODE GENERATION OF WHILE
         case 84: { // Creating start label of while
             generator.addLabel("while_inicio");
             break;
         }
 
-        case 85: { // Validating expression
+        case 85: { // Validating expression of while
             generator.addBranchIfFalse("while_final");
             break;
         }
@@ -465,6 +465,34 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 86: { // Creating end label of while
             generator.addJump("while_inicio");
             generator.addLabel("while_final");
+            break;
+        }
+
+        /// CODE GENERATION OF DO-WHILE
+        case 87: { // Creating start label of do-while
+            generator.addLabel("do_while_inicio");
+            break;
+        }
+
+        case 88: { // Validating expression of do-while
+            generator.addBranchIfTrue("do_while_inicio");
+            break;
+        }
+
+        /// CODE GENERATION OF FOR
+        case 89: { // Creating start label of for
+            generator.addLabel("for_inicio");
+            break;
+        }
+
+        case 90: { // Validating expression of for
+            generator.addBranchIfFalse("for_final");
+            break;
+        }
+
+        case 91: { // Creating end label of for
+            generator.addJump("for_inicio");
+            generator.addLabel("for_final");
             break;
         }
     }
@@ -489,7 +517,7 @@ void Semantico::doAttribution() {
     if (resultType == ATT_ER) {
         throw IncompatibleAttributionTypesError(symbol->name, expressionType, typeToAssign, attributionOperation);
     } else if (resultType == ATT_PL) {
-        logger.addWarn(PrecisionLossWarning(symbol->name, expressionType, typeToAssign));
+        logger.addWarning(PrecisionLossWarning(symbol->name, expressionType, typeToAssign));
     }
 
     symbol->isInitialized = true;
@@ -589,7 +617,7 @@ void Semantico::popScope() {
 
     for (const Symbol &symbol : scopes.back().symbolList) {
         if (!symbol.isUsed) {
-            logger.addWarn(UnusedIdentifierWarning(symbol.name));
+            logger.addWarning(UnusedIdentifierWarning(symbol.name));
         }
     }
 

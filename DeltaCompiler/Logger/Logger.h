@@ -12,8 +12,8 @@
 class Logger {
 public:
     Logger() {}
-    void addWarn(const Warning &warning);
-    void logWarns();
+    void addWarning(const Warning &warning);
+    void logWarnings();
     void logError(const AnalysisError &logError);
 
 private:

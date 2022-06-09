@@ -1,15 +1,15 @@
 .data
-	a_1: 0
+	i_2: 0
 
 .text
-	LDI 5
+	LDI 0
 	STO 1000
 	LD 1000
-	STO a_1
-while_inicio:
-	LD a_1
+	STO i_2
+for_inicio:
+	LD i_2
 	STO 1000
-	LDI 10
+	LDI 5
 	STO 1001
 	LD 1000
 	SUB 1001
@@ -19,20 +19,11 @@ while_inicio:
 	ANDI 1
 	STO 1000
 	LD 1000
-	BEQ while_final
-	LDI 1
+	BEQ for_final
+	LD i_2
 	STO 1000
-	LD 1000
-	STO 1001
-	LD a_1
-	STO 1000
-	LD 1000
-	ADD 1001
-	STO 1000
-	LD 1000
-	STO a_1
-	JMP while_inicio
-while_final:
+	JMP for_inicio
+for_final:
 	LDI 0
-	STO 1000
+	STO 1001
 	HLT 0

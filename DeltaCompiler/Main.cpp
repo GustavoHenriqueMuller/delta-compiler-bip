@@ -12,6 +12,7 @@
 
 // TODO: Criar nova ação que é que nem essa 9, mas em vez de adicionar um identifier na stack, adiciona o endereço dele.
 // TODO: Mais tipos de assign
+// TODO: Fazer assigns serem expressões (talvez?)
 // TODO: Operadores unários
 
 int main(int argc, char **argv) {
@@ -53,7 +54,7 @@ int main(int argc, char **argv) {
             std::cout << "[ASM_PATH]: " << asmFilePath << std::endl << std::endl;
         }
 
-        logger.logWarns();
+        logger.logWarnings();
         FileManager::saveToFile(generator.getCode(), asmFilePath);
 
         std::cout << std::endl;
@@ -61,7 +62,7 @@ int main(int argc, char **argv) {
         std::cout << "File '" << FileManager::getSimplifiedName(asmFilePath) << "' created." << std::endl << std::endl;
     } catch (AnalysisError e) {
         std::cout << std::endl;
-        logger.logWarns();
+        logger.logWarnings();
 
         std::cout << std::endl;
         logger.logError(e);

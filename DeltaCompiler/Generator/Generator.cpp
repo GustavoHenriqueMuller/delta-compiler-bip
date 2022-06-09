@@ -6,8 +6,6 @@ std::string Generator::getCode() {
     std::string result;
 
     result += ".data\n";
-    result += "\tz: 0\n";
-    result += "\tn: 0\n";
     result += dataSection;
     result += "\n";
     result += ".text\n";
@@ -62,16 +60,21 @@ void Generator::addBinaryOperation(const Operation &operation) {
                 case OR:
                 case AND: {
                     std::string instructionName = getInstructionNameFromOperation(operation);
+                    pushIsZero(stackTop() - 1);
+                    pushIsZero(stackTop() - 1);
+
                     addInstruction("LD", stackTop() - 1);
-                    addInstruction(instructionName, stackTop());
+                    addInstruction("XORI", 1);
+                    addInstruction("STO", stackTop() - 1);
+
+                    addInstruction("LD", stackTop());
+                    addInstruction("XORI", 1);
                     addInstruction("STO", stackTop());
 
-                    setIsZero();
+                    addInstruction("LD", stackTop() - 1);
+                    addInstruction(instructionName, stackTop());
 
-                    addInstruction("LD", "z");
-                    addInstruction("XORI", 1);
-
-                    stackSize -= 1;
+                    stackSize -= 3;
                     addInstruction("STO", stackTop());
                     break;
                 }
@@ -82,8 +85,8 @@ void Generator::addBinaryOperation(const Operation &operation) {
                     addInstruction("STO", stackTop());
 
                     case GREATER: // $n == 0 && $z == 0
-                        setIsNegative();
-                        setIsZero();
+                        //pushIsNegative();
+                        //pushIsZero();
 
                         addInstruction("LD", "n");
                         addInstruction("XORI", 1);
@@ -97,13 +100,13 @@ void Generator::addBinaryOperation(const Operation &operation) {
                         stackSize -= 1;
                         break;
                     case SMALLER: // $n == 1
-                        setIsNegative();
+                        //pushIsNegative();
 
                         addInstruction("LD", "n");
                         break;
                     case GREATER_EQ: // $n == 0 || $z == 1
-                        setIsNegative();
-                        setIsZero();
+                        //pushIsNegative();
+                        //pushIsZero();
 
                         addInstruction("LD", "n");
                         addInstruction("XORI", 1);
@@ -116,19 +119,19 @@ void Generator::addBinaryOperation(const Operation &operation) {
                         stackSize -= 1;
                         break;
                     case SMALLER_EQ: // $n == 1 || $z == 1
-                        setIsNegative();
-                        setIsZero();
+                        //pushIsNegative();
+                        //pushIsZero();
 
                         addInstruction("LD", "n");
                         addInstruction("OR", "z");
                         break;
                     case EQUAL: // $z == 1
-                        setIsZero();
+                        //pushIsZero();
 
                         addInstruction("LD", "z");
                         break;
                     case DIFFERENT: // $z == 0
-                        setIsZero();
+                        //pushIsZero();
 
                         addInstruction("LD", "z");
                         addInstruction("XORI", 1);
@@ -220,22 +223,24 @@ void Generator::addInput() {
     addInstruction("STO", stackTop());
 }
 
-void Generator::setIsNegative() {
-    addInstruction("LD", stackTop());
+void Generator::pushIsNegative(int address) {
+    addInstruction("LD", address);
     addInstruction("SRL", 10);
     addInstruction("ANDI", 1);
-    addInstruction("STO", "n");
+
+    stackSize += 1;
+    addInstruction("STO", stackTop());
 }
 
-void Generator::setIsZero() {
-    addInstruction("LD", stackTop());
+void Generator::pushIsZero(int address) {
+    addInstruction("LD", address);
     addInstruction("SRL", 10);
     addInstruction("ANDI", 1);
 
     stackSize += 1;
     addInstruction("STO", stackTop());
 
-    addInstruction("LD", stackTop() - 1);
+    addInstruction("LD", address);
     addInstruction("NOT");
     addInstruction("ADDI", 1);
     addInstruction("SRL", 10);
@@ -245,7 +250,9 @@ void Generator::setIsZero() {
     stackSize -= 1;
 
     addInstruction("XORI", 1);
-    addInstruction("STO", "z");
+
+    stackSize += 1;
+    addInstruction("STO", stackTop());
 }
 
 std::string Generator::getInstructionNameFromOperation(const Operation &operation) {

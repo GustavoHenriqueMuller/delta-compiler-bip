@@ -25,8 +25,8 @@ public:
     void addInput();
 
 private:
-    void setIsNegative();
-    void setIsZero();
+    void pushIsNegative(int address);
+    void pushIsZero(int address);
     std::string getInstructionNameFromOperation(const Operation &operation);
     std::string getFullIdentifier(const Symbol &symbol);
     void addToDataSection(std::string string);

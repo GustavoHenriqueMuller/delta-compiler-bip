@@ -200,7 +200,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <statement_list> ::= <statement> <statement_list> | <statement>;
 <statement> ::= <if_stmt> | <while_stmt> | <do_while_stmt> END | <for_stmt> | <declaration_stmt> END | <assignment_stmt> END | <return_stmt> END | <exp> END | <when_stmt>;
 
-<if_stmt> ::= <if> | <if> <else> | <if> <else_if_list> | <if> <else_if_list> <else>;
+<if_stmt> ::= <if> #104 | <if> <else> #104 | <if> <else_if_list> #104 | <if> <else_if_list> <else> #104;
 <while_stmt> ::= WHILE #92 LSP <exp> #76 #93 RSP #57 <scope> #94 #58;
 <do_while_stmt> ::= DO #95 #49 <scope> #58 WHILE LSP <exp> #96 #77 RSP;
 
@@ -216,9 +216,9 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <return_stmt> ::= RETURN <exp> #89;
 
 // Structure
-<if> ::= IF LSP <exp> #74 RSP #57 <scope> #58;
+<if> ::= IF LSP <exp> #74 #100 RSP #57 <scope> #101 #58;
 <else_if_list> ::= <else_if> <else_if_list> | <else_if>;
-<else_if> ::= ELSEIF LSP <exp> #75 RSP #57 <scope> #58;
+<else_if> ::= ELSEIF LSP <exp> #102 #75 RSP #57 <scope> #103 #58;
 <else> ::= ELSE #57 <scope> #58;
 
 <is_list> ::= <is> <is_list> | <default> | <is>;

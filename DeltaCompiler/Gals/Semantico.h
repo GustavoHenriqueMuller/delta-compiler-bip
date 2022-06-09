@@ -70,8 +70,8 @@ private:
 
     // Structures
     std::stack<int> structureIds;
+    std::stack<int> elseIfIds;
     int currentStructureId = 0;
-    int currentIfId = 0;
 };
 
 #endif

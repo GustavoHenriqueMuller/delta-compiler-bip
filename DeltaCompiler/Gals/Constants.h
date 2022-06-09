@@ -64,8 +64,8 @@ enum TokenId
     t_BIT_OR = 58,
     t_BIT_XOR = 59,
     t_BIT_NOT = 60,
-    t_BIT_RS = 61,
-    t_BIT_LS = 62,
+    t_BIT_LS = 61,
+    t_BIT_RS = 62,
     t_LSP = 63,
     t_RSP = 64,
     t_LSB = 65,
@@ -96,10 +96,10 @@ const int ACCEPT = 3;
 const int GO_TO  = 4;
 const int ERROR  = 5;
 
-extern const int PARSER_TABLE[347][228][2];
+extern const int PARSER_TABLE[355][233][2];
 
 extern const int PRODUCTIONS[140][2];
 
-extern const char *PARSER_ERROR[347];
+extern const char *PARSER_ERROR[355];
 
 #endif

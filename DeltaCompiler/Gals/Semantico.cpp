@@ -534,8 +534,40 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        /// CODE GENERATION OF IF / ELSE-IF / ELSE
+        /// CODE GENERATION OF IF / ELSE IF / ELSE
         case 100: { // Checking expression for if
+            generator.addBranchIfFalse("if_end_" + std::to_string(currentStructureId));
+
+            elseIfIds.push(0);
+            structureIds.push(currentStructureId);
+            currentStructureId++;
+            break;
+        }
+
+        case 101: { // Adds label at end of if
+            generator.addJump("if_stmt_end_" + std::to_string(structureIds.top()));
+            generator.addLabel("if_end_" + std::to_string(structureIds.top()));
+            break;
+        }
+
+        case 102: { // Checking expression for else if
+            generator.addBranchIfFalse("else_if_end_" + std::to_string(elseIfIds.top()));
+            break;
+        }
+
+        case 103: { // Adds label at end of else if
+            generator.addJump("if_stmt_end_" + std::to_string(structureIds.top()));
+            generator.addLabel("else_if_end_" + std::to_string(elseIfIds.top()));
+
+            elseIfIds.top() += 1;
+            break;
+        }
+
+        case 104: { // Adds label for end of entire if statement
+            generator.addLabel("if_stmt_end_" + std::to_string(structureIds.top()));
+
+            structureIds.pop();
+            elseIfIds.pop();
             break;
         }
     }

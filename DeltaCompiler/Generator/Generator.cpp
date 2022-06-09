@@ -56,90 +56,86 @@ void Generator::addBinaryOperation(const Operation &operation) {
         }
 
         case CATEGORY_RELATIONAL: {
-            switch (operation.type) {
-                case OR:
-                case AND: {
-                    std::string instructionName = getInstructionNameFromOperation(operation);
-                    pushIsZero(stackTop() - 1);
-                    pushIsZero(stackTop() - 1);
+            if (operation.type == OR || operation.type == AND) {
+                std::string instructionName = getInstructionNameFromOperation(operation);
+                pushIsZero(stackTop() - 1);
+                pushIsZero(stackTop() - 1);
 
-                    addInstruction("LD", stackTop() - 1);
-                    addInstruction("XORI", 1);
-                    addInstruction("STO", stackTop() - 1);
+                addInstruction("LD", stackTop() - 1);
+                addInstruction("XORI", 1);
+                addInstruction("STO", stackTop() - 1);
 
-                    addInstruction("LD", stackTop());
-                    addInstruction("XORI", 1);
-                    addInstruction("STO", stackTop());
+                addInstruction("LD", stackTop());
+                addInstruction("XORI", 1);
+                addInstruction("STO", stackTop());
 
-                    addInstruction("LD", stackTop() - 1);
-                    addInstruction(instructionName, stackTop());
+                addInstruction("LD", stackTop() - 1);
+                addInstruction(instructionName, stackTop());
 
-                    stackSize -= 3;
-                    addInstruction("STO", stackTop());
-                    break;
-                }
+                stackSize -= 3;
+                addInstruction("STO", stackTop());
+            } else {
+                addInstruction("LD", stackTop() - 1);
+                addInstruction("SUB", stackTop());
+                addInstruction("STO", stackTop());
 
-                default: {
-                    addInstruction("LD", stackTop() - 1);
-                    addInstruction("SUB", stackTop());
-                    addInstruction("STO", stackTop());
-
+                switch (operation.type) {
                     case GREATER: // $n == 0 && $z == 0
-                        //pushIsNegative();
-                        //pushIsZero();
+                        pushIsNegative(stackTop());
+                        pushIsZero(stackTop() - 1);
 
-                        addInstruction("LD", "n");
+                        addInstruction("LD", stackTop() - 1);
                         addInstruction("XORI", 1);
+                        addInstruction("STO", stackTop() - 1);
 
-                        stackSize += 1;
+                        addInstruction("LD", stackTop());
+                        addInstruction("XORI", 1);
+                        addInstruction("AND", stackTop() - 1);
+
+                        stackSize -= 3;
                         addInstruction("STO", stackTop());
-
-                        addInstruction("LD", "z");
-                        addInstruction("XORI", 1);
-                        addInstruction("AND", stackTop());
-                        stackSize -= 1;
                         break;
                     case SMALLER: // $n == 1
-                        //pushIsNegative();
-
-                        addInstruction("LD", "n");
+                        stackSize -= 2;
+                        pushIsNegative(stackTop() + 2);
                         break;
                     case GREATER_EQ: // $n == 0 || $z == 1
-                        //pushIsNegative();
-                        //pushIsZero();
+                        pushIsNegative(stackTop());
+                        pushIsZero(stackTop() - 1);
 
-                        addInstruction("LD", "n");
+                        addInstruction("LD", stackTop() - 1);
                         addInstruction("XORI", 1);
+                        addInstruction("STO", stackTop() - 1);
 
-                        stackSize += 1;
+                        addInstruction("LD", stackTop());
+                        addInstruction("OR", stackTop() - 1);
+
+                        stackSize -= 3;
                         addInstruction("STO", stackTop());
-
-                        addInstruction("LD", "z");
-                        addInstruction("OR", stackTop());
-                        stackSize -= 1;
                         break;
                     case SMALLER_EQ: // $n == 1 || $z == 1
-                        //pushIsNegative();
-                        //pushIsZero();
+                        pushIsNegative(stackTop());
+                        pushIsZero(stackTop() - 1);
 
-                        addInstruction("LD", "n");
-                        addInstruction("OR", "z");
+                        addInstruction("LD", stackTop() - 1);
+                        addInstruction("OR", stackTop());
+
+                        stackSize -= 3;
+                        addInstruction("STO", stackTop());
                         break;
                     case EQUAL: // $z == 1
-                        //pushIsZero();
-
-                        addInstruction("LD", "z");
+                        stackSize -= 2;
+                        pushIsZero(stackTop() + 2);
                         break;
                     case DIFFERENT: // $z == 0
-                        //pushIsZero();
+                        stackSize -= 2;
+                        pushIsZero(stackTop() + 2);
 
-                        addInstruction("LD", "z");
+                        addInstruction("LD", stackTop());
                         addInstruction("XORI", 1);
+                        addInstruction("STO", stackTop());
                         break;
-                }
-
-                stackSize -= 2;
-                addInstruction("STO", stackTop());
+                    }
             }
 
             break;

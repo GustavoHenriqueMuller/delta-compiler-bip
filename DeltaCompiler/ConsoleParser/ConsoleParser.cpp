@@ -9,8 +9,8 @@ void ConsoleParser::parse(int argc, char** argv) {
 
         syntaxString += "Syntax: delta [options] [filepath].\n";
         syntaxString += "[options]\n";
-        syntaxString += "-watch: Prints Bhaskara (IDE) information in stdout;\n";
-        syntaxString += "-debug: Prints debugging information in stdout;\n\n";
+        syntaxString += "-watch: Prints Bhaskara (IDE) information in console;\n";
+        syntaxString += "-debug: Prints debugging information in console;\n\n";
         syntaxString += "[filepath]: Relative or absolute path of .delta file to be compiled.";
 
         throw std::runtime_error(syntaxString);

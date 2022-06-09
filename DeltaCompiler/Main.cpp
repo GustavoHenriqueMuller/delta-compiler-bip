@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
     Logger logger;
     Generator generator;
 	
-	try {
+    try {
         Lexico* lexico = new Lexico(stream);
         Sintatico* sintatico = new Sintatico();
         Semantico* semantico = new Semantico(logger, generator, consoleParser);

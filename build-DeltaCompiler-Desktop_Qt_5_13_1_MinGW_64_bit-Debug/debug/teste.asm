@@ -1,22 +1,25 @@
 .data
 	a_1: 0
+	b_1: 0, 0, 0, 0, 0
 
 .text
 	LDI 4
 	STO 1000
 	LD 1000
 	STO a_1
-	LDI 3
-	STO 1000
-	LD 1000
-	STO 1001
 	LD a_1
 	STO 1000
-	LD 1000
-	OR 1001
-	STO 1000
-	LD 1000
-	STO a_1
 	LDI 0
-	STO 1000
+	STO 1001
+	LD a_1
+	STO 1002
+	LD 1001
+	ADD 1002
+	STO 1001
+	LD 1001
+	STO $indr
+	LDV b_1
+	STO 1001
+	LDI 0
+	STO 1002
 	HLT 0

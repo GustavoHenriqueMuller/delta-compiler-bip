@@ -481,7 +481,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 93: { // Validating expression of while
+        case 93: { // Checking expression of while
             generator.addBranchIfFalse("while_final");
             break;
         }
@@ -498,7 +498,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 96: { // Validating expression of do-while
+        case 96: { // Checking expression of do-while
             generator.addBranchIfTrue("do_while_inicio");
             break;
         }
@@ -509,7 +509,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 98: { // Validating expression of for
+        case 98: { // Checking expression of for
             generator.addBranchIfFalse("for_final");
             break;
         }

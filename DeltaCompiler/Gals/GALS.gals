@@ -86,8 +86,8 @@ BIT_AND: &
 BIT_OR: \|
 BIT_XOR: \^
 BIT_NOT: ~
-BIT_RS: >>
 BIT_LS: <<
+BIT_RS: >>
 
 LSP : \(
 RSP : \)

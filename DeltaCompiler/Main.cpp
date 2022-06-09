@@ -10,11 +10,10 @@
 
 #include <iostream>
 
-// AGORA: Mais tipos de assign
+// AGORA: Operadores unários
 
 // TODO: Criar nova ação que é que nem essa 9, mas em vez de adicionar um identifier na stack, adiciona o endereço dele.
 // TODO: Fazer assigns serem expressões (talvez?)
-// TODO: Operadores unários
 
 int main(int argc, char **argv) {
     ConsoleParser consoleParser;

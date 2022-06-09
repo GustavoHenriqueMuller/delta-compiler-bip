@@ -32,9 +32,6 @@ void Generator::addIdentifier(const Symbol &symbol) {
 void Generator::addArrayIdentifier(const Symbol &symbol) {
     addInstruction("LD", stackTop());
     addInstruction("STO", "$indr");
-    stackSize -= 1;
-
-    stackSize += 1;
     addInstruction("LDV", getFullIdentifier(symbol));
     addInstruction("STO", stackTop());
 }
@@ -143,7 +140,22 @@ void Generator::addBinaryOperation(const Operation &operation) {
 }
 
 void Generator::addUnaryOperation(const Operation &operation) {
-    // TODO
+    switch (operation.type) {
+        case INCREMENT_RIGHT:
+            break;
+        case DECREMENT_RIGHT:
+            break;
+        case MINUS_INVERSION:
+            break;
+        case BIT_NOT:
+            break;
+        case NOT:
+            break;
+        case INCREMENT_LEFT:
+            break;
+        case DECREMENT_LEFT:
+            break;
+    }
 }
 
 void Generator::addLabel(const std::string &label) {

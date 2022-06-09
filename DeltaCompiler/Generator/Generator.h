@@ -14,8 +14,10 @@ public:
     void addImmediate(int immediate);
     void addIdentifier(const Symbol &symbol);
     void addArrayIdentifier(const Symbol &symbol);
+
     void addBinaryOperation(const Operation &operation);
     void addUnaryOperation(const Operation &operation);
+
     void addLabel(const std::string &label);
     void addJump(const std::string &label);
     void addBranchIfFalse(const std::string &label);

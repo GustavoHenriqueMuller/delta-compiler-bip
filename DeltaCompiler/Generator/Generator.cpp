@@ -137,7 +137,6 @@ void Generator::addBinaryOperation(const Operation &operation) {
                         break;
                     }
             }
-
             break;
         }
     }

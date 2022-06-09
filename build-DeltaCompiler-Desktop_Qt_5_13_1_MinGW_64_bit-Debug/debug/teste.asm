@@ -1,13 +1,38 @@
 .data
-	a_1: 0, 0, 0, 0, 0
+	a_1: 0
 
 .text
-	LDI 0
+	LDI 5
 	STO 1000
 	LD 1000
-	STO $indr
-	LDV a_1
+	STO a_1
+while_inicio:
+	LD a_1
 	STO 1000
-	LDI 0
+	LDI 10
 	STO 1001
+	LD 1000
+	SUB 1001
+	STO 1001
+	LD 1001
+	SRL 10
+	ANDI 1
+	STO 1000
+	LD 1000
+	BEQ while_final
+	LDI 1
+	STO 1000
+	LD 1000
+	STO 1001
+	LD a_1
+	STO 1000
+	LD 1000
+	ADD 1001
+	STO 1000
+	LD 1000
+	STO a_1
+	JMP while_inicio
+while_final:
+	LDI 0
+	STO 1000
 	HLT 0

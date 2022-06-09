@@ -16,6 +16,9 @@ public:
     void addArrayIdentifier(const Symbol &symbol);
     void addBinaryOperation(const Operation &operation);
     void addUnaryOperation(const Operation &operation);
+    void addLabel(const std::string &label);
+    void addJump(const std::string &label);
+    void addBranchIfFalse(const std::string &label);
 
     void attributeTo(const Symbol &symbol, OperationType attributionType);
     void attributeToArray(const Symbol &symbol, OperationType attributionType);

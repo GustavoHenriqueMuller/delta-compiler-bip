@@ -75,11 +75,6 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 9: {
             Symbol* symbol = getSymbolByName(identifierNames.top());
 
-            // TODO: Criar nova ação que é que nem essa 9, mas em vez de adicionar um identifier na stack, adiciona o endereço dele.
-            // TODO: Criar nova ação que é que nem essa 9, mas em vez de adicionar um identifier na stack, adiciona o endereço dele.
-            // TODO: Criar nova ação que é que nem essa 9, mas em vez de adicionar um identifier na stack, adiciona o endereço dele.
-            // TODO: Criar nova ação que é que nem essa 9, mas em vez de adicionar um identifier na stack, adiciona o endereço dele.
-
             if (symbol->type.isArray) {
                 generator.addArrayIdentifier(*symbol);
             } else {
@@ -453,6 +448,23 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 83: { // Input
             generator.addInput();
             expressions.push(Expression(INT));
+            break;
+        }
+
+        /// CODE GENERATION OF STRUCTURES
+        case 84: { // Creating start label of while
+            generator.addLabel("while_inicio");
+            break;
+        }
+
+        case 85: { // Validating expression
+            generator.addBranchIfFalse("while_final");
+            break;
+        }
+
+        case 86: { // Creating end label of while
+            generator.addJump("while_inicio");
+            generator.addLabel("while_final");
             break;
         }
     }

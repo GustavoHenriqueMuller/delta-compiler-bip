@@ -193,7 +193,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <statement> ::= <if_stmt> | <while_stmt> | <do_while_stmt> END | <for_stmt> | <declaration_stmt> END | <attribution_stmt> END | <return_stmt> END | <exp> END | <when_stmt>;
 
 <if_stmt> ::= <if> | <if> <else> | <if> <else_if_list> | <if> <else_if_list> <else>;
-<while_stmt> ::= WHILE LSP <exp> #68 RSP #49 <scope> #50;
+<while_stmt> ::= WHILE #84 LSP <exp> #68 #85 RSP #49 <scope> #86 #50;
 <do_while_stmt> ::= DO #49 <scope> #50 WHILE LSP <exp> #69 RSP;
 
 <for_stmt> ::= FOR #49 LSP <for_left> END <exp> #70 END <exp> RSP <scope> #50;

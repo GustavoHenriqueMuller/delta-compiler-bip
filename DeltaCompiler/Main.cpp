@@ -10,6 +10,7 @@
 
 #include <iostream>
 
+// TODO: Criar nova ação que é que nem essa 9, mas em vez de adicionar um identifier na stack, adiciona o endereço dele.
 // TODO: Mais tipos de assign
 // TODO: Operadores unários
 

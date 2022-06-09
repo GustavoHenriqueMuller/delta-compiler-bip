@@ -146,6 +146,21 @@ void Generator::addUnaryOperation(const Operation &operation) {
     // TODO
 }
 
+void Generator::addLabel(const std::string &label) {
+    textSection += label + ":\n";
+}
+
+void Generator::addJump(const std::string &label) {
+    addInstruction("JMP", label);
+}
+
+void Generator::addBranchIfFalse(const std::string &label) {
+    addInstruction("LD", stackTop());
+    addInstruction("BEQ", label);
+
+    stackSize -= 1;
+}
+
 void Generator::attributeTo(const Symbol &symbol, OperationType attributionType) {
     if (attributionType != ATTRIBUTION) {
         stackSize += 1;

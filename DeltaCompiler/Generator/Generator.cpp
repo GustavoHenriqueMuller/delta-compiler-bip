@@ -10,7 +10,7 @@ std::string Generator::getCode() {
     result += "\n";
     result += ".text\n";
     result += textSection;
-    result += "\tHLT 0\n";
+    result += "\tHLT 0";
 
     return result;
 }

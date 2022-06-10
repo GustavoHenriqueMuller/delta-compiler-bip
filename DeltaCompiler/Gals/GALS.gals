@@ -198,7 +198,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 
 // Statements
 <statement_list> ::= <statement> <statement_list> | <statement>;
-<statement> ::= <if_stmt> | <while_stmt> | <do_while_stmt> END | <for_stmt> | <declaration_stmt> END | <assignment_stmt> END | <return_stmt> END | <exp> END | <when_stmt>;
+<statement> ::= <if_stmt> | <while_stmt> | <do_while_stmt> END | <for_stmt> | <declaration_stmt> END | <assignment_stmt> END | <return_stmt> END | <when_stmt>;
 
 <if_stmt> ::= <if> #104 | <if> <else> #104 | <if> <else_if_list> #104 | <if> <else_if_list> <else> #104;
 <while_stmt> ::= WHILE #92 LSP <exp> #76 #93 RSP #57 <scope> #94 #58;

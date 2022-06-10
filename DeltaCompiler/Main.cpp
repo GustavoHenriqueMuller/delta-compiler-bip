@@ -12,7 +12,6 @@
 
 // AGORA: Operadores unários
 
-// TODO: Criar nova ação que é que nem essa 9, mas em vez de adicionar um identifier na stack, adiciona o endereço dele.
 // TODO: Fazer assigns serem expressões (talvez?)
 // TODO: Fazer when-is
 

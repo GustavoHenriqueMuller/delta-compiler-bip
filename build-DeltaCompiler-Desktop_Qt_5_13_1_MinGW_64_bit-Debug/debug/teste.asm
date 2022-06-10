@@ -1,66 +1,8 @@
 .data
-	i_1: 0
 
 .text
-	LDI 5
+	LDI 1
 	STO 1000
-	LD 1000
-	STO i_1
-	LD i_1
-	STO 1000
-	LDI 10
-	STO 1001
-	LD 1000
-	SUB 1001
-	STO 1001
-	LD 1001
-	SRL 10
-	ANDI 1
-	STO 1000
-	LD 1000
-	BEQ if_end_0
-	LD i_1
-	STO 1000
-	LDI 8
-	STO 1001
-	LD 1000
-	SUB 1001
-	STO 1001
-	LD 1001
-	SRL 10
-	ANDI 1
-	STO 1002
-	LD 1001
-	SRL 10
-	ANDI 1
-	STO 1003
-	LD 1001
-	NOT 0
-	ADDI 1
-	SRL 10
-	ANDI 1
-	OR 1003
-	XORI 1
-	STO 1003
-	LD 1002
-	XORI 1
-	STO 1002
-	LD 1003
-	XORI 1
-	AND 1002
-	STO 1000
-	LD 1000
-	BEQ if_end_1
-	LDI 9
-	STO 1000
-	LD 1000
-	STO $out_port
-	JMP if_stmt_end_1
-if_end_1:
-if_stmt_end_1:
-	JMP if_stmt_end_0
-if_end_0:
-if_stmt_end_0:
 	LDI 0
-	STO 1000
+	STO 1001
 	HLT 0

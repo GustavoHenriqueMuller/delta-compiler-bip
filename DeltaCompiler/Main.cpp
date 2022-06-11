@@ -10,10 +10,8 @@
 
 #include <iostream>
 
-// AGORA: Operadores unários
+// AGORA: Fazer assigns serem expressões
 
-// TODO: Fazer assigns serem expressões
-// TODO: Transformar identifierNames em symbols
 // TODO: Adicionar literais double
 // TODO: Fazer when-is
 

@@ -12,7 +12,7 @@
 
 // AGORA: Operadores unários
 
-// TODO: Fazer assigns serem expressões (talvez?)
+// TODO: Fazer assigns serem expressões (talvez?), corrigir stack quando uma exp não é usada
 // TODO: Fazer when-is
 
 int main(int argc, char **argv) {

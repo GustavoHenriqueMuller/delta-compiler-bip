@@ -4,6 +4,13 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
     TokenId tokenId = token->getId();
     std::string lexeme = token->getLexeme();
 
+    if (action == 106) {
+        isDelayingActions = false;
+    } else if (isDelayingActions) {
+        delayedActions.push_back(Action(action, *token));
+        return;
+    }
+
     if (consoleParser.getDebug()) {
         std::cout << "Action: " << action << "\tToken: "  << tokenId << "\tLexeme: " << lexeme << std::endl;
     }
@@ -551,13 +558,13 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         case 102: { // Checking expression for else if
-            generator.addBranchIfFalse("else_if_end_" + std::to_string(elseIfIds.top()));
+            generator.addBranchIfFalse("else_if_end_" + std::to_string(elseIfIds.top()) + "_end_" + std::to_string(structureIds.top()));
             break;
         }
 
         case 103: { // Adds label at end of else if
             generator.addJump("if_stmt_end_" + std::to_string(structureIds.top()));
-            generator.addLabel("else_if_end_" + std::to_string(elseIfIds.top()));
+            generator.addLabel("else_if_end_" + std::to_string(elseIfIds.top()) + "_end_" + std::to_string(structureIds.top()));
 
             elseIfIds.top() += 1;
             break;
@@ -568,6 +575,25 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
             structureIds.pop();
             elseIfIds.pop();
+            break;
+        }
+
+        /// DELAYING ACTIONS
+        case 105: { // Starts delaying actions
+            isDelayingActions = true;
+            break;
+        }
+
+        case 106: { // Stops delaying actions (implemented at start of executeAction)
+            break;
+        }
+
+        case 107: { // Executes delayed actions
+            for (const Action &action : delayedActions) {
+                executeAction(action.action, &action.token);
+            }
+
+            delayedActions.clear();
             break;
         }
     }

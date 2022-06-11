@@ -31,6 +31,7 @@ HEADERS += \
     Logger/Errors.h \
     Logger/Logger.h \
     Logger/Warnings.h \
+    Model/Action.h \
     Model/Expression.h \
     Model/Operation.h \
     Model/OperationManager.h \

@@ -11,6 +11,7 @@
 #include "../Model/Symbol.h"
 #include "../Model/Expression.h"
 #include "../Model/Operation.h"
+#include "../Model/Action.h"
 #include "../Model/OperationManager.h"
 #include "../Logger/Errors.h"
 #include "../Logger/Logger.h"
@@ -72,6 +73,10 @@ private:
     std::stack<int> structureIds;
     std::stack<int> elseIfIds;
     int currentStructureId = 0;
+
+    // Delaying actions
+    std::vector<Action> delayedActions;
+    bool isDelayingActions = false;
 };
 
 #endif

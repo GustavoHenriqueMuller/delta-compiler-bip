@@ -1,26 +1,31 @@
 .data
-	i_1: 0
+	a_1: 0
+	b_1: 0
+	c_1: 0
+	d_1: 0
+	f_1: 0
 
 .text
-	LDI 0
+	LDI 5
 	STO 1000
 	LD 1000
-	STO i_1
-while_start_0:
-	LDI 1
+	STO a_1
+	LDI 10
 	STO 1000
 	LD 1000
-	BEQ while_end_0
-	LD i_1
+	STO b_1
+	LDI 15
 	STO 1000
 	LD 1000
-	STO $out_port
-	LD i_1
-	STO 999
+	STO c_1
+	LDI 20
+	STO 1000
+	LD 1000
+	STO d_1
+	LD a_1
+	STO 1000
 	ADDI 1
-	STO i_1
-	JMP while_start_0
-while_end_0:
-	LDI 0
-	STO 999
+	STO a_1
+	LD 1000
+	STO f_1
 	HLT 0

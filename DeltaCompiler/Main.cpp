@@ -10,7 +10,6 @@
 
 #include <iostream>
 
-// TODO: Refazer sistema de const
 // TODO: Fazer when-is
 // TODO: Adicionar literais double
 

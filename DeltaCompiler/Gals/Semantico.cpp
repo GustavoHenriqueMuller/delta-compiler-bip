@@ -130,14 +130,15 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                     generator.addMutableUnaryOperation(operations.top(), *symbol);
                 }
 
-                expressions.push(Expression(identifierTypes.top()));
-                identifierNames.pop();
-                identifierTypes.pop();
+                expressions.push(Expression(symbol->type));
             } else {
                 generator.addUnaryOperation(operations.top());
             }
 
             doUnaryOperation();
+
+            identifierNames.pop();
+            identifierTypes.pop();
             break;
         }
 
@@ -630,6 +631,7 @@ void Semantico::doAssignment() {
     }
 
     symbol->isInitialized = true;
+    expressions.pop();
 }
 
 void Semantico::doOperation() {

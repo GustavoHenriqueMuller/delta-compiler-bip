@@ -162,6 +162,8 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <exp9>
 <exp10>
 <exp11>
+<exp12>
+<exp13>
 
 <type>
 <type_primitive>
@@ -198,7 +200,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 
 // Statements
 <statement_list> ::= <statement> <statement_list> | <statement>;
-<statement> ::= <if_stmt> | <while_stmt> | <do_while_stmt> END | <for_stmt> | <declaration_stmt> END | <assignment_stmt> END | <return_stmt> END | <exp> #108 END | <when_stmt>;
+<statement> ::= <if_stmt> | <while_stmt> | <do_while_stmt> END | <for_stmt> | <assignment_stmt> END | <declaration_stmt> END | <return_stmt> END | <when_stmt> | <exp> #108 END;
 
 <if_stmt> ::= <if> #104 | <if> <else> #104 | <if> <else_if_list> #104 | <if> <else_if_list> <else> #104;
 <while_stmt> ::= WHILE #92 LSP <exp> #76 #93 RSP #57 <scope> #94 #58;
@@ -236,8 +238,10 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <exp7>  ::= <exp7> <op_arit_low> <exp8> #17 | <exp8>;
 <exp8>  ::= <exp8> <op_arit_high> <exp9> #18 | <exp9>;
 <exp9>  ::= <left_value> <op_unary_right_mutable> #19 | <exp10>;
-<exp10> ::= <op_unary_left> <left_value> #9 #20 | <op_unary_left_mutable> <left_value> #20 | <op_unary_left> <right_value> #20 | <exp11>;
-<exp11> ::= <literal> | <left_value> #9 | <function_call> | LSP <exp> RSP;
+<exp10> ::= <op_unary_left> <left_value> #9 #20 | <exp11>;
+<exp11> ::= <op_unary_left_mutable> <left_value> #20 | <exp12>;
+<exp12> ::= <op_unary_left> <right_value> #20 | <exp13>;
+<exp13> ::= <left_value> #9 | <right_value>;
 
 <type> ::= <modifier_list> <type_primitive> | <modifier_list> <type_primitive> LSB <int_literal> #68 RSB;
 <type_primitive> ::= VAR_INT #61 | VAR_FLOAT #62 | VAR_DOUBLE #63 | VAR_STRING #64 | VAR_CHAR #65 | VAR_BOOLEAN #66 | VAR_VOID #67;

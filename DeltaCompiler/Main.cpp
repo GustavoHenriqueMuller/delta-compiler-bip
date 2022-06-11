@@ -10,11 +10,11 @@
 
 #include <iostream>
 
-// AGORA: Fazer assigns serem expressões
-
 // TODO: Refazer sistema de const
-// TODO: Adicionar literais double
 // TODO: Fazer when-is
+// TODO: Adicionar literais double
+
+// TODO: Fazer assigns serem expressões
 
 int main(int argc, char **argv) {
     ConsoleParser consoleParser;

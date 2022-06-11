@@ -136,7 +136,8 @@ OperationType getLeftUnaryOperationTypeFromTokenId(TokenId tokenId) {
 
 OperationType getAssignmentOperationTypeFromTokenId(TokenId tokenId) {
     switch (tokenId) {
-
+        case t_ASSIGNMENT:
+            return ASSIGNMENT;
         case t_INCREMENT_ASSIGNMENT:
             return INCREMENT_ASSIGNMENT;
         case t_DECREMENT_ASSIGNMENT:

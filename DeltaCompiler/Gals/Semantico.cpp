@@ -630,7 +630,6 @@ void Semantico::doAssignment() {
     }
 
     symbol->isInitialized = true;
-    expressions.pop();
 }
 
 void Semantico::doOperation() {

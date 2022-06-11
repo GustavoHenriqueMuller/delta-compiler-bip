@@ -1,6 +1,11 @@
 
 int main() {
-	int[5] a;
-		
+	int i = 0;
+	
+	while (true) {
+		print(i);
+		i++;
+	}
+
 	return 0;
 }

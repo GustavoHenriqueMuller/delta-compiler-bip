@@ -18,6 +18,8 @@ public:
 
     void addBinaryOperation(const Operation &operation);
     void addUnaryOperation(const Operation &operation);
+    void addMutableUnaryOperation(const Operation &operation, const Symbol &symbol);
+    void addMutableUnaryOperationOnArray(const Operation &operation, const Symbol &symbol);
 
     void addLabel(const std::string &label);
     void addJump(const std::string &label);

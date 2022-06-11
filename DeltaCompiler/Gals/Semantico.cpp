@@ -118,10 +118,28 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
         /// DOING UNARY OPERATION
         case 19:
-        case 20:
-            generator.addUnaryOperation(operations.top());
+        case 20: {
+            OperationCategory category = operations.top().getOperationCategory();
+
+            if (category == CATEGORY_UNARY_LEFT_MUTABLE || category == CATEGORY_UNARY_RIGHT_MUTABLE) {
+                Symbol* symbol = getSymbolByName(identifierNames.top());
+
+                if (symbol->type.isArray) {
+                    generator.addMutableUnaryOperationOnArray(operations.top(), *symbol);
+                } else {
+                    generator.addMutableUnaryOperation(operations.top(), *symbol);
+                }
+
+                expressions.push(Expression(identifierTypes.top()));
+                identifierNames.pop();
+                identifierTypes.pop();
+            } else {
+                generator.addUnaryOperation(operations.top());
+            }
+
             doUnaryOperation();
             break;
+        }
 
         /// READING BINARY OPERATOR
         case 21:

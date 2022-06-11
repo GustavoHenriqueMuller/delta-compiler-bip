@@ -145,19 +145,100 @@ void Generator::addBinaryOperation(const Operation &operation) {
 
 void Generator::addUnaryOperation(const Operation &operation) {
     switch (operation.type) {
-        case INCREMENT_RIGHT:
-            break;
-        case DECREMENT_RIGHT:
-            break;
         case MINUS_INVERSION:
+            addInstruction("LD", stackTop());
+            addInstruction("NOT");
+            addInstruction("ADDI", 1);
+            addInstruction("STO", stackTop());
             break;
         case BIT_NOT:
+            addInstruction("LD", stackTop());
+            addInstruction("NOT");
+            addInstruction("STO", stackTop());
             break;
         case NOT:
+            pushIsZero(stackTop());
+
+            stackSize -= 1;
+            addInstruction("STO", stackTop());
+            break;
+    }
+}
+
+void Generator::addMutableUnaryOperation(const Operation &operation, const Symbol &symbol) {
+    switch (operation.type) {
+        case INCREMENT_RIGHT:
+            addInstruction("LD", getFullIdentifier(symbol));
+
+            stackSize += 1;
+            addInstruction("STO", stackTop());
+            addInstruction("ADDI", 1);
+            addInstruction("STO", getFullIdentifier(symbol));
+            break;
+        case DECREMENT_RIGHT:
+            addInstruction("LD", getFullIdentifier(symbol));
+
+            stackSize += 1;
+            addInstruction("STO", stackTop());
+            addInstruction("SUBI", 1);
+            addInstruction("STO", getFullIdentifier(symbol));
             break;
         case INCREMENT_LEFT:
+            addInstruction("LD", getFullIdentifier(symbol));
+            addInstruction("ADDI", 1);
+
+            stackSize += 1;
+            addInstruction("STO", stackTop());
+            addInstruction("STO", getFullIdentifier(symbol));
             break;
         case DECREMENT_LEFT:
+            addInstruction("LD", getFullIdentifier(symbol));
+            addInstruction("SUBI", 1);
+
+            stackSize += 1;
+            addInstruction("STO", stackTop());
+            addInstruction("STO", getFullIdentifier(symbol));
+            break;
+    }
+}
+
+void Generator::addMutableUnaryOperationOnArray(const Operation &operation, const Symbol &symbol) {
+    addInstruction("LD", stackTop());
+    addInstruction("STO", "$indr");
+    stackSize -= 1;
+
+    switch (operation.type) {
+        case INCREMENT_RIGHT:
+            addInstruction("LD", getFullIdentifier(symbol));
+
+            stackSize += 1;
+            addInstruction("STOV", stackTop());
+            addInstruction("ADDI", 1);
+            addInstruction("STOV", getFullIdentifier(symbol));
+            break;
+        case DECREMENT_RIGHT:
+            addInstruction("LD", getFullIdentifier(symbol));
+
+            stackSize += 1;
+            addInstruction("STOV", stackTop());
+            addInstruction("SUBI", 1);
+            addInstruction("STOV", getFullIdentifier(symbol));
+            break;
+        case INCREMENT_LEFT:
+            addInstruction("LD", getFullIdentifier(symbol));
+            addInstruction("ADDI", 1);
+
+            stackSize += 1;
+            addInstruction("STOV", stackTop());
+            addInstruction("STOV", getFullIdentifier(symbol));
+            break;
+        case DECREMENT_LEFT:
+            addInstruction("LD", getFullIdentifier(symbol));
+            addInstruction("SUBI", 1);
+
+            stackSize += 1;
+            addInstruction("STOV", stackTop());
+            addInstruction("STOV", getFullIdentifier(symbol));
             break;
     }
 }

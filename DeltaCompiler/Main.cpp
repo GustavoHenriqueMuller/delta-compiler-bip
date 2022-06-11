@@ -12,8 +12,9 @@
 
 // AGORA: Operadores unários
 
+// TODO: Fazer assigns serem expressões
+// TODO: Transformar identifierNames em symbols
 // TODO: Adicionar literais double
-// TODO: Fazer assigns serem expressões (talvez?), corrigir stack quando uma exp não é usada
 // TODO: Fazer when-is
 
 int main(int argc, char **argv) {

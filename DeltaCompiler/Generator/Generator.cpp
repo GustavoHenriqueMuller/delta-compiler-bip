@@ -36,6 +36,10 @@ void Generator::addArrayIdentifier(const Symbol &symbol) {
     addInstruction("STO", stackTop());
 }
 
+void Generator::popStack() {
+    stackSize -= 1;
+}
+
 void Generator::addBinaryOperation(const Operation &operation) {
     switch (operation.getOperationCategory()) {
         case CATEGORY_ARIT_HIGH:

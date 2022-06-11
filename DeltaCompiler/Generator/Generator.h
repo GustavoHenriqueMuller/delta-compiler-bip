@@ -14,6 +14,7 @@ public:
     void addImmediate(int immediate);
     void addIdentifier(const Symbol &symbol);
     void addArrayIdentifier(const Symbol &symbol);
+    void popStack();
 
     void addBinaryOperation(const Operation &operation);
     void addUnaryOperation(const Operation &operation);

@@ -598,6 +598,13 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             delayedActions.clear();
             break;
         }
+
+        /// POPPING USELESS EXPRESSIONS
+        case 108: {
+            expressions.pop();
+            generator.popStack();
+            break;
+        }
     }
 }
 

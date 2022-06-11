@@ -134,6 +134,32 @@ OperationType getLeftUnaryOperationTypeFromTokenId(TokenId tokenId) {
     }
 }
 
+OperationType getAssignmentOperationTypeFromTokenId(TokenId tokenId) {
+    switch (tokenId) {
+
+        case t_INCREMENT_ASSIGNMENT:
+            return INCREMENT_ASSIGNMENT;
+        case t_DECREMENT_ASSIGNMENT:
+            return DECREMENT_ASSIGNMENT;
+        case t_MULTIPLICATION_ASSIGNMENT:
+            return MULTIPLICATION_ASSIGNMENT;
+        case t_DIVSION_ASSIGNMENT:
+            return DIVISION_ASSIGNMENT;
+        case t_MOD_ASSIGNMENT:
+            return MOD_ASSIGNMENT;
+        case t_BIT_OR_ASSIGNMENT:
+            return DECREMENT_ASSIGNMENT;
+        case t_BIT_XOR_ASSIGNMENT:
+            return BIT_XOR_ASSIGNMENT;
+        case t_BIT_AND_ASSIGNMENT:
+            return BIT_AND_ASSIGNMENT;
+        case t_BIT_LS_ASSIGNMENT:
+            return BIT_LS_ASSIGNMENT;
+        case t_BIT_RS_ASSIGNMENT:
+            return BIT_RS_ASSIGNMENT;
+    }
+}
+
 Operation getBinaryOperationFromAssignmentType(OperationType attributionType) {
     switch (attributionType) {
         case INCREMENT_ASSIGNMENT:

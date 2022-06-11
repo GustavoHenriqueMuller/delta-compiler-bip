@@ -80,6 +80,7 @@ public:
 OperationType getOperationTypeFromTokenId(TokenId tokenId);
 OperationType getRightUnaryOperationTypeFromTokenId(TokenId tokenId);
 OperationType getLeftUnaryOperationTypeFromTokenId(TokenId tokenId);
+OperationType getAssignmentOperationTypeFromTokenId(TokenId tokenId);
 Operation getBinaryOperationFromAssignmentType(OperationType attributionType);
 
 #endif // OPERATION_H

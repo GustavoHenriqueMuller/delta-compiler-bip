@@ -12,6 +12,7 @@
 
 // AGORA: Fazer assigns serem expressões
 
+// TODO: Refazer sistema de const
 // TODO: Adicionar literais double
 // TODO: Fazer when-is
 

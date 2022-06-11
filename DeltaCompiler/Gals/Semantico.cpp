@@ -180,38 +180,19 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
         /// READING ASSIGNMENT OPERATORS
         case 46:
-            assignmentOperation = Operation(ASSIGNMENT, lexeme);
-            break;
         case 47:
-            assignmentOperation = Operation(INCREMENT_ASSIGNMENT, lexeme);
-            break;
         case 48:
-            assignmentOperation = Operation(DECREMENT_ASSIGNMENT, lexeme);
-            break;
         case 49:
-            assignmentOperation = Operation(MULTIPLICATION_ASSIGNMENT, lexeme);
-            break;
         case 50:
-            assignmentOperation = Operation(DIVISION_ASSIGNMENT, lexeme);
-            break;
         case 51:
-            assignmentOperation = Operation(MOD_ASSIGNMENT, lexeme);
-            break;
         case 52:
-            assignmentOperation = Operation(BIT_OR_ASSIGNMENT, lexeme);
-            break;
         case 53:
-            assignmentOperation = Operation(BIT_XOR_ASSIGNMENT, lexeme);
-            break;
         case 54:
-            assignmentOperation = Operation(BIT_AND_ASSIGNMENT, lexeme);
-            break;
         case 55:
-            assignmentOperation = Operation(BIT_LS_ASSIGNMENT, lexeme);
+        case 56: {
+            assignmentOperation = Operation(getAssignmentOperationTypeFromTokenId(tokenId), lexeme);
             break;
-        case 56:
-            assignmentOperation = Operation(BIT_RS_ASSIGNMENT, lexeme);
-            break;
+        }
 
         /// CREATING/DELETING SCOPES
         case 57: // Creating scope

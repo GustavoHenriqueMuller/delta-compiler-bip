@@ -12,6 +12,7 @@
 
 // AGORA: Operadores unários
 
+// TODO: Adicionar literais double
 // TODO: Fazer assigns serem expressões (talvez?), corrigir stack quando uma exp não é usada
 // TODO: Fazer when-is
 
@@ -41,7 +42,7 @@ int main(int argc, char **argv) {
 
         std::string asmFilePath = FileManager::getAsmFilePath(consoleParser.getFilePath());
 
-        if (consoleParser.getDebug()) {
+        if (consoleParser.isDebug()) {
             Utils::printBar();
             std::cout << sourceCode << std::endl;
             Utils::printBar();
@@ -49,7 +50,7 @@ int main(int argc, char **argv) {
             Utils::printBar();
         }
 
-        if (consoleParser.getWatch()) {
+        if (consoleParser.isWatch()) {
             std::cout << "[SCOPES]: " << semantico->getScopesJson() << std::endl;
             std::cout << "[ASM_PATH]: " << asmFilePath << std::endl << std::endl;
         }

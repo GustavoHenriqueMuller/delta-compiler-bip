@@ -20,7 +20,6 @@ for_start_0:
 	STO 1000
 	LD 1000
 	BEQ for_end_0
-	
 	LD i_2
 	STO 1000
 	LD 1000

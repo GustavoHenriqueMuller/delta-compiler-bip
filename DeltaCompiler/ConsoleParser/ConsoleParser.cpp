@@ -42,10 +42,10 @@ std::string ConsoleParser::getFilePath() {
     return this->filePath;
 }
 
-bool ConsoleParser::getWatch() {
+bool ConsoleParser::isWatch() {
     return this->watch;
 }
 
-bool ConsoleParser::getDebug() {
+bool ConsoleParser::isDebug() {
     return this->debug;
 }

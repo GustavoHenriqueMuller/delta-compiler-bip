@@ -6,12 +6,14 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
     if (action == 106) {
         isDelayingActions = false;
-    } else if (isDelayingActions) {
+    }
+
+    if (isDelayingActions) {
         delayedActions.push_back(Action(action, *token));
         return;
     }
 
-    if (consoleParser.getDebug()) {
+    if (consoleParser.isDebug()) {
         std::cout << "Action: " << action << "\tToken: "  << tokenId << "\tLexeme: " << lexeme << std::endl;
     }
 

@@ -9,8 +9,8 @@ public:
     void parse(int argc, char** argv);
 
     std::string getFilePath();
-    bool getWatch();
-    bool getDebug();
+    bool isWatch();
+    bool isDebug();
 
 private:
     std::string filePath = "";

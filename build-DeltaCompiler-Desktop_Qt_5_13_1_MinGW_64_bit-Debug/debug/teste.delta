@@ -1,4 +1,16 @@
 
 void main() {
-	const int a = 5, b = 10, c = 15, d = 20, f = a++;
+	int a = 8;
+	
+	when (a) {
+		is (5) {
+			print(50);
+		}
+		is (8) {
+			print(100);
+		}
+		default {
+			print(200);
+		}
+	}
 }

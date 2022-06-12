@@ -112,27 +112,27 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 16:
         case 17:
         case 18:
-            generator.addBinaryOperation(operations.top());
+            generator.addBinaryOperation(operations.top().type);
             doOperation();
             break;
 
         /// DOING UNARY OPERATION
         case 19:
         case 20: {
-            OperationCategory category = operations.top().getOperationCategory();
+            OperationCategory category = getOperationCategory(operations.top().type);
 
             if (category == CATEGORY_UNARY_LEFT_MUTABLE || category == CATEGORY_UNARY_RIGHT_MUTABLE) {
                 Symbol* symbol = getSymbolByName(identifierNames.top());
 
                 if (symbol->type.isArray) {
-                    generator.addMutableUnaryOperationOnArray(operations.top(), *symbol);
+                    generator.addMutableUnaryOperationOnArray(operations.top().type, *symbol);
                 } else {
-                    generator.addMutableUnaryOperation(operations.top(), *symbol);
+                    generator.addMutableUnaryOperation(operations.top().type, *symbol);
                 }
 
                 expressions.push(Expression(symbol->type));
             } else {
-                generator.addUnaryOperation(operations.top());
+                generator.addUnaryOperation(operations.top().type);
             }
 
             doUnaryOperation();
@@ -349,6 +349,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 throw InvalidExpressionForBlockError(expression.type, "is", whenExpressionTypes.top());
             }
 
+            expressions.pop();
             break;
         }
 
@@ -615,6 +616,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
         /// CODE GENERATION OF "WHEN IS"
         case 109: { // // Checking expression for "is"
+            generator.addBinaryOperation(EQUAL);
             generator.addBranchIfFalse("when_is_" + std::to_string(whenIsIds.top()) + "_end_" + std::to_string(structureIds.top()));
             break;
         }
@@ -635,7 +637,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 112: { // Starts when-is statement
+        case 112: { // Starts "is" statement
             whenIsIds.push(0);
             structureIds.push(currentStructureId);
             currentStructureId++;
@@ -702,7 +704,7 @@ void Semantico::doUnaryOperation() {
         throw IncompatibleUnaryOperationTypeError(operation.lexeme, expression.type);
     }
 
-    OperationCategory category = operation.getOperationCategory();
+    OperationCategory category = getOperationCategory(operation.type);
 
     if ((category == CATEGORY_UNARY_LEFT_MUTABLE || category == CATEGORY_UNARY_RIGHT_MUTABLE) && expression.type.isConst) {
         throw ConstMutationError(identifierNames.top());

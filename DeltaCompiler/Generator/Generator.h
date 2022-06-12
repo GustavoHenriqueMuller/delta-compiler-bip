@@ -16,18 +16,18 @@ public:
     void addArrayIdentifier(const Symbol &symbol);
     void popStack();
 
-    void addBinaryOperation(const Operation &operation);
-    void addUnaryOperation(const Operation &operation);
-    void addMutableUnaryOperation(const Operation &operation, const Symbol &symbol);
-    void addMutableUnaryOperationOnArray(const Operation &operation, const Symbol &symbol);
+    void addBinaryOperation(const OperationType &operationType);
+    void addUnaryOperation(const OperationType &operationType);
+    void addMutableUnaryOperation(const OperationType &operationType, const Symbol &symbol);
+    void addMutableUnaryOperationOnArray(const OperationType &operationType, const Symbol &symbol);
 
     void addLabel(const std::string &label);
     void addJump(const std::string &label);
     void addBranchIfFalse(const std::string &label);
     void addBranchIfTrue(const std::string &label);
 
-    void assignTo(const Symbol &symbol, OperationType assignmentType);
-    void assignToArray(const Symbol &symbol, OperationType assignmentType);
+    void assignTo(const Symbol &symbol, const OperationType &assignmentType);
+    void assignToArray(const Symbol &symbol, const OperationType &assignmentType);
     void addIdentifierDeclaration(const Symbol &symbol);
     void addArrayIdentifierDeclaration(const Symbol &symbol);
     void addPrint();
@@ -36,7 +36,7 @@ public:
 private:
     void pushIsNegative(int address);
     void pushIsZero(int address);
-    std::string getInstructionNameFromOperation(const Operation &operation);
+    std::string getInstructionNameFromOperation(const OperationType &operationType);
     std::string getFullIdentifier(const Symbol &symbol);
     void addToDataSection(std::string string);
     void addInstruction(std::string instruction, std::string parameter);

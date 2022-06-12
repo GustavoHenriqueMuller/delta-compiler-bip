@@ -71,16 +71,16 @@ class Operation {
 public:
     Operation() {}
     Operation(OperationType type, std::string lexeme): type(type), lexeme(lexeme) {}
-    OperationCategory getOperationCategory() const;
 
     OperationType type;
     std::string lexeme;
 };
 
-OperationType getOperationTypeFromTokenId(TokenId tokenId);
-OperationType getRightUnaryOperationTypeFromTokenId(TokenId tokenId);
-OperationType getLeftUnaryOperationTypeFromTokenId(TokenId tokenId);
-OperationType getAssignmentOperationTypeFromTokenId(TokenId tokenId);
-Operation getBinaryOperationFromAssignmentType(OperationType attributionType);
+OperationType getOperationTypeFromTokenId(const TokenId &tokenId);
+OperationType getRightUnaryOperationTypeFromTokenId(const TokenId &tokenId);
+OperationType getLeftUnaryOperationTypeFromTokenId(const TokenId &tokenId);
+OperationType getAssignmentOperationTypeFromTokenId(const TokenId &tokenId);
+Operation getBinaryOperationFromAssignmentType(const OperationType &attributionType);
+OperationCategory getOperationCategory(const OperationType &operationType);
 
 #endif // OPERATION_H

@@ -11,8 +11,6 @@
 #include <iostream>
 
 // TODO: Terminar when-is
-// TODO: Geração de código deve vir antes!
-// TODO: Adicionar literais double
 
 // TODO: Fazer assigns serem expressões
 

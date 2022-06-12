@@ -40,12 +40,12 @@ void Generator::popStack() {
     stackSize -= 1;
 }
 
-void Generator::addBinaryOperation(const Operation &operation) {
-    switch (operation.getOperationCategory()) {
+void Generator::addBinaryOperation(const OperationType &operationType) {
+    switch (getOperationCategory(operationType)) {
         case CATEGORY_ARIT_HIGH:
         case CATEGORY_ARIT_LOW:
         case CATEGORY_BIT: {
-            std::string instructionName = getInstructionNameFromOperation(operation);
+            std::string instructionName = getInstructionNameFromOperation(operationType);
 
             addInstruction("LD", stackTop() - 1);
             addInstruction(instructionName, stackTop());
@@ -57,8 +57,8 @@ void Generator::addBinaryOperation(const Operation &operation) {
         }
 
         case CATEGORY_RELATIONAL: {
-            if (operation.type == OR || operation.type == AND) {
-                std::string instructionName = getInstructionNameFromOperation(operation);
+            if (operationType == OR || operationType == AND) {
+                std::string instructionName = getInstructionNameFromOperation(operationType);
                 pushIsZero(stackTop() - 1);
                 pushIsZero(stackTop() - 1);
 
@@ -80,7 +80,7 @@ void Generator::addBinaryOperation(const Operation &operation) {
                 addInstruction("SUB", stackTop());
                 addInstruction("STO", stackTop());
 
-                switch (operation.type) {
+                switch (operationType) {
                     case GREATER: // $n == 0 && $z == 0
                         pushIsNegative(stackTop());
                         pushIsZero(stackTop() - 1);
@@ -143,8 +143,8 @@ void Generator::addBinaryOperation(const Operation &operation) {
     }
 }
 
-void Generator::addUnaryOperation(const Operation &operation) {
-    switch (operation.type) {
+void Generator::addUnaryOperation(const OperationType &operationType) {
+    switch (operationType) {
         case MINUS_INVERSION:
             addInstruction("LD", stackTop());
             addInstruction("NOT");
@@ -165,8 +165,8 @@ void Generator::addUnaryOperation(const Operation &operation) {
     }
 }
 
-void Generator::addMutableUnaryOperation(const Operation &operation, const Symbol &symbol) {
-    switch (operation.type) {
+void Generator::addMutableUnaryOperation(const OperationType &operationType, const Symbol &symbol) {
+    switch (operationType) {
         case INCREMENT_RIGHT:
             addInstruction("LD", getFullIdentifier(symbol));
 
@@ -202,12 +202,12 @@ void Generator::addMutableUnaryOperation(const Operation &operation, const Symbo
     }
 }
 
-void Generator::addMutableUnaryOperationOnArray(const Operation &operation, const Symbol &symbol) {
+void Generator::addMutableUnaryOperationOnArray(const OperationType &operationType, const Symbol &symbol) {
     addInstruction("LD", stackTop());
     addInstruction("STO", "$indr");
     stackSize -= 1;
 
-    switch (operation.type) {
+    switch (operationType) {
         case INCREMENT_RIGHT:
             addInstruction("LD", getFullIdentifier(symbol));
 
@@ -265,7 +265,7 @@ void Generator::addBranchIfTrue(const std::string &label) {
     stackSize -= 1;
 }
 
-void Generator::assignTo(const Symbol &symbol, OperationType assignmentOperation) {
+void Generator::assignTo(const Symbol &symbol, const OperationType &assignmentOperation) {
     if (assignmentOperation != ASSIGNMENT) {
         stackSize += 1;
         addInstruction("LD", stackTop() - 1);
@@ -274,7 +274,7 @@ void Generator::assignTo(const Symbol &symbol, OperationType assignmentOperation
         addInstruction("LD", getFullIdentifier(symbol));
         addInstruction("STO", stackTop() - 1);
 
-        addBinaryOperation(getBinaryOperationFromAssignmentType(assignmentOperation));
+        addBinaryOperation(getBinaryOperationFromAssignmentType(assignmentOperation).type);
     }
 
     addInstruction("LD", stackTop());
@@ -282,7 +282,7 @@ void Generator::assignTo(const Symbol &symbol, OperationType assignmentOperation
     stackSize -= 1;
 }
 
-void Generator::assignToArray(const Symbol &symbol, OperationType assignmentOperation) {
+void Generator::assignToArray(const Symbol &symbol, const OperationType &assignmentOperation) {
     if (assignmentOperation != ASSIGNMENT) {
         addInstruction("LD", stackTop());
 
@@ -294,7 +294,7 @@ void Generator::assignToArray(const Symbol &symbol, OperationType assignmentOper
         addInstruction("LDV", getFullIdentifier(symbol));
         addInstruction("STO", stackTop() - 1);
 
-        addBinaryOperation(getBinaryOperationFromAssignmentType(assignmentOperation));
+        addBinaryOperation(getBinaryOperationFromAssignmentType(assignmentOperation).type);
     }
 
     addInstruction("LD", stackTop() - 1);
@@ -369,8 +369,8 @@ void Generator::pushIsZero(int address) {
     addInstruction("STO", stackTop());
 }
 
-std::string Generator::getInstructionNameFromOperation(const Operation &operation) {
-    switch (operation.type) {
+std::string Generator::getInstructionNameFromOperation(const OperationType &operationType) {
+    switch (operationType) {
         case ADDITION:
             return "ADD";
         case SUBTRACTION:

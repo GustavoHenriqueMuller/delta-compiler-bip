@@ -37,7 +37,7 @@ AssignmentResult OperationManager::ASSIGNMENT_TABLE[7][7] = {
 };
 
 Primitive OperationManager::checkBinaryOperation(Type type1, Type type2, Operation operation) {
-    OperationCategory category = operation.getOperationCategory();
+    OperationCategory category = getOperationCategory(operation.type);
     int operationIndex;
 
     switch (category) {

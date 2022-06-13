@@ -2,15 +2,5 @@
 void main() {
 	int a = 8;
 	
-	when (a) {
-		is (6) {
-			print(50);
-		}
-		is (5) {
-			print(100);
-		}
-		default {
-			print(200);
-		}
-	}
+	print(a + 12);
 }

@@ -191,40 +191,40 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 
 // Scopes and functions
 <scope> ::= LSC RSC | LSC <statement_list> RSC;
-<function> ::= <function_prototype> #88 #84 <scope> #58;
-<function_prototype> ::= <type> ID #82 LSP RSP | <type> ID #82 LSP <function_prototype_argument_list> RSP;
-<function_prototype_argument_list> ::= <type> ID #83 COMMA <function_prototype_argument_list> | <type> ID #83;
+<function> ::= <function_prototype> #105 #101 <scope> #58;
+<function_prototype> ::= <type> ID #99 LSP RSP | <type> ID #99 LSP <function_prototype_argument_list> RSP;
+<function_prototype_argument_list> ::= <type> ID #100 COMMA <function_prototype_argument_list> | <type> ID #100;
 
-<function_call> ::= ID #85 LSP RSP #87 | ID #85 LSP <function_call_argument_list> RSP #87 | PRINT LSP <exp> RSP #90 | INPUT LSP RSP #91;
-<function_call_argument_list> ::= <exp> #86 COMMA <function_call_argument_list> | <exp> #86;
+<function_call> ::= ID #102 LSP RSP #104 | ID #102 LSP <function_call_argument_list> RSP #104 | PRINT LSP <exp> RSP #107 | INPUT LSP RSP #108;
+<function_call_argument_list> ::= <exp> #103 COMMA <function_call_argument_list> | <exp> #103;
 
 // Statements
 <statement_list> ::= <statement> <statement_list> | <statement>;
-<statement> ::= <if_stmt> | <while_stmt> | <do_while_stmt> END | <for_stmt> | <assignment_stmt> END | <declaration_stmt> END | <return_stmt> END | <when_stmt> | <exp> #108 END;
+<statement> ::= <if_stmt> | <while_stmt> | <do_while_stmt> END | <for_stmt> | <assignment_stmt> END | <declaration_stmt> END | <return_stmt> END | <when_stmt> | <exp> #112 END;
 
-<if_stmt> ::= <if> #104 | <if> <else> #104 | <if> <else_if_list> #104 | <if> <else_if_list> <else> #104;
-<while_stmt> ::= WHILE #92 LSP <exp> #76 #93 RSP #57 <scope> #94 #58;
-<do_while_stmt> ::= DO #95 #49 <scope> #58 WHILE LSP <exp> #96 #77 RSP;
+<if_stmt> ::= <if> #93 | <if> <else> #93 | <if> <else_if_list> #93 | <if> <else_if_list> <else> #93;
+<while_stmt> ::= WHILE #81 LSP <exp> #76 #99 RSP #57 <scope> #100 #58;
+<do_while_stmt> ::= DO #84 #49 <scope> #58 WHILE LSP <exp> #85 #77 RSP;
 
-<for_stmt> ::= FOR #57 LSP <for_left> END #97 <exp> #78 #98 END #105 <exp> #106 RSP <scope> #107 #99 #58;
+<for_stmt> ::= FOR #57 LSP <for_left> END #86 <exp> #78 #87 END #109 <exp> #110 RSP <scope> #111 #88 #58;
 <for_left> ::= <exp> | <declaration_stmt> | <assignment_stmt>;
 
-<when_stmt> ::= WHEN LSP <exp> #79 RSP LSC #112 <is_list> RSC #108 #110;
+<when_stmt> ::= WHEN LSP <exp> #79 RSP LSC #97 <is_list> RSC #112 #95;
 
 <declaration_stmt> ::= <type> <declaration_stmt_id_list> #70;
 <declaration_stmt_id_list> ::= ID #69 COMMA <declaration_stmt_id_list> | ID #69 ASSIGNMENT #46 <exp> #71 COMMA <declaration_stmt_id_list> | ID #69 | ID #69 ASSIGNMENT #46 <exp> #71;
 
 <assignment_stmt> ::= <left_value> #72 <op_assignment> <exp> #71 #73;
-<return_stmt> ::= RETURN <exp> #89;
+<return_stmt> ::= RETURN <exp> #106;
 
 // Structure
-<if> ::= IF LSP <exp> #74 #100 RSP #57 <scope> #101 #58;
+<if> ::= IF LSP <exp> #74 #89 RSP #57 <scope> #90 #58;
 <else_if_list> ::= <else_if> <else_if_list> | <else_if>;
-<else_if> ::= ELSEIF LSP <exp> #102 #75 RSP #57 <scope> #103 #58;
+<else_if> ::= ELSEIF LSP <exp> #91 #75 RSP #57 <scope> #92 #58;
 <else> ::= ELSE #57 <scope> #58;
 
 <is_list> ::= <is> | <is> <is_list> | <default>;
-<is> ::= IS LSP #113 <exp> #109 #80 RSP <scope> #111;
+<is> ::= IS LSP #98 <exp> #94 #80 RSP <scope> #96;
 <default> ::= DEFAULT <scope>;
 
 // Expressions

@@ -8,63 +8,11 @@
 	STO a_1
 	LD a_1
 	STO 1000
-	LD 1000
-	STO 1001
-	LDI 6
-	STO 1002
-	LD 1001
-	SUB 1002
-	STO 1002
-	LD 1002
-	SRL 10
-	ANDI 1
-	STO 1001
-	LD 1002
-	NOT 0
-	ADDI 1
-	SRL 10
-	ANDI 1
-	OR 1001
-	XORI 1
-	STO 1001
-	LD 1001
-	BEQ when_is_0_end_0
-	LDI 50
-	STO 1001
-	LD 1001
-	STO $out_port
-	JMP when_end_0
-when_is_0_end_0:
-	LD 999
-	STO 1000
-	LDI 5
+	LDI 12
 	STO 1001
 	LD 1000
-	SUB 1001
-	STO 1001
-	LD 1001
-	SRL 10
-	ANDI 1
-	STO 1000
-	LD 1001
-	NOT 0
-	ADDI 1
-	SRL 10
-	ANDI 1
-	OR 1000
-	XORI 1
-	STO 1000
-	LD 1000
-	BEQ when_is_1_end_0
-	LDI 100
+	ADD 1001
 	STO 1000
 	LD 1000
 	STO $out_port
-	JMP when_end_0
-when_is_1_end_0:
-	LDI 200
-	STO 999
-	LD 999
-	STO $out_port
-when_end_0:
 	HLT 0

@@ -43,10 +43,10 @@ Primitive OperationManager::checkBinaryOperation(Type type1, Type type2, Operati
     switch (category) {
         case CATEGORY_ARIT_LOW: {
             switch (operation.type) {
-                case ADDITION:
+                case OP_ADDITION:
                     operationIndex = 0;
                     break;
-                case SUBTRACTION:
+                case OP_SUBTRACTION:
                     operationIndex = 1;
                     break;
             }
@@ -54,13 +54,13 @@ Primitive OperationManager::checkBinaryOperation(Type type1, Type type2, Operati
         }
         case CATEGORY_ARIT_HIGH: {
             switch (operation.type) {
-                case MULTIPLICATION:
+                case OP_MULTIPLICATION:
                     operationIndex = 2;
                     break;
-                case DIVISION:
+                case OP_DIVISION:
                     operationIndex = 3;
                     break;
-                case MOD:
+                case OP_MOD:
                     operationIndex = 4;
                     break;
             }
@@ -95,7 +95,7 @@ AssignmentResult OperationManager::checkAssignment(Type type1, Type type2, Opera
     Type rightType = type2;
     OperationType attributionType = operation.type;
 
-    if (attributionType == INCREMENT_ASSIGNMENT || attributionType == DECREMENT_ASSIGNMENT) {
+    if (attributionType == OP_INCREMENT_ASSIGNMENT || attributionType == OP_DECREMENT_ASSIGNMENT) {
         Primitive result = checkBinaryOperation(type1, type2, getBinaryOperationFromAssignmentType(attributionType));
 
         if (result == R_ERR) {

@@ -4,14 +4,14 @@
 #include <string>
 
 enum Primitive {
-    INT,
-    FLOAT,
-    DOUBLE,
-    STRING,
-    CHAR,
-    BOOLEAN,
-    VOID,
-    ERR
+    PRIMITIVE_INT,
+    PRIMITIVE_FLOAT,
+    PRIMITIVE_DOUBLE,
+    PRIMITIVE_STRING,
+    PRIMITIVE_CHAR,
+    PRIMITIVE_BOOLEAN,
+    PRIMITIVE_VOID,
+    PRIMITIVE_ERR
 };
 
 class Type {
@@ -34,22 +34,22 @@ public:
         }
 
         switch (primitive) {
-            case INT:
+            case PRIMITIVE_INT:
                 result += "int";
                 break;
-            case FLOAT:
+            case PRIMITIVE_FLOAT:
                 result += "float";
                 break;
-            case STRING:
+            case PRIMITIVE_STRING:
                 result += "string";
                 break;
-            case CHAR:
+            case PRIMITIVE_CHAR:
                 result += "char";
                 break;
-            case BOOLEAN:
+            case PRIMITIVE_BOOLEAN:
                 result += "boolean";
                 break;
-            case VOID:
+            case PRIMITIVE_VOID:
                 result += "void";
                 break;
         }

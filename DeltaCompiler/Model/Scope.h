@@ -12,7 +12,7 @@ public:
     int id;
     std::vector<Symbol> symbolList;
     bool hasReturned = false;
-    Type returnType = Type(VOID);
+    Type returnType = Type(PRIMITIVE_VOID);
 };
 
 #endif // SCOPE_H

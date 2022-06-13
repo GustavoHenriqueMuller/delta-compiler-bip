@@ -23,20 +23,20 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
         /// PUSHING LITERALS
         case 101: // Int
-            expressions.push(Expression(Type(INT)));
+            expressions.push(Expression(Type(PRIMITIVE_INT)));
             generator.addImmediate(Utils::lexemeToInt(lexeme));
             break;
         case 102: // Float
-            expressions.push(Expression(Type(FLOAT)));
+            expressions.push(Expression(Type(PRIMITIVE_FLOAT)));
             break;
         case 103: // String
-            expressions.push(Expression(Type(STRING)));
+            expressions.push(Expression(Type(PRIMITIVE_STRING)));
             break;
         case 104: // Char
-            expressions.push(Expression(Type(CHAR)));
+            expressions.push(Expression(Type(PRIMITIVE_CHAR)));
             break;
         case 105: // Bool
-            expressions.push(Expression(Type(BOOLEAN)));
+            expressions.push(Expression(Type(PRIMITIVE_BOOLEAN)));
             generator.addImmediate(Utils::lexemeToBoolean(lexeme));
             break;
 
@@ -74,7 +74,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 108: {
             Expression index = expressions.top();
 
-            if (index.type.primitive != INT) {
+            if (index.type.primitive != PRIMITIVE_INT) {
                 throw InvalidArrayIndexError(identifierNames.top(), index.type);
             }
 
@@ -215,25 +215,25 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
         /// DECLARATION - PRIMITIVES
         case 201:
-            leftType.primitive = INT;
+            leftType.primitive = PRIMITIVE_INT;
             break;
         case 202:
-            leftType.primitive = FLOAT;
+            leftType.primitive = PRIMITIVE_FLOAT;
             break;
         case 203:
-            leftType.primitive = DOUBLE;
+            leftType.primitive = PRIMITIVE_DOUBLE;
             break;
         case 204:
-            leftType.primitive = STRING;
+            leftType.primitive = PRIMITIVE_STRING;
             break;
         case 205:
-            leftType.primitive = CHAR;
+            leftType.primitive = PRIMITIVE_CHAR;
             break;
         case 206:
-            leftType.primitive = BOOLEAN;
+            leftType.primitive = PRIMITIVE_BOOLEAN;
             break;
         case 207:
-            leftType.primitive = VOID;
+            leftType.primitive = PRIMITIVE_VOID;
             break;
 
         /// DECLARATION
@@ -330,8 +330,8 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                     break;
             }
 
-            if (OperationManager::checkImplicitCast(expressions.top().type, Type(BOOLEAN)) == ATT_ER) {
-                throw InvalidExpressionForBlockError(expressions.top().type, blockName, Type(BOOLEAN));
+            if (OperationManager::checkImplicitCast(expressions.top().type, Type(PRIMITIVE_BOOLEAN)) == ATT_ER) {
+                throw InvalidExpressionForBlockError(expressions.top().type, blockName, Type(PRIMITIVE_BOOLEAN));
             }
 
             expressions.pop();
@@ -454,7 +454,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
         /// CODE GENERATION OF "WHEN IS"
         case 320: { // // Checking expression for "is"
-            generator.addBinaryOperation(EQUAL);
+            generator.addBinaryOperation(OP_EQUAL);
             generator.addBranchIfFalse("when_is_" + std::to_string(whenIsIds.top()) + "_end_" + std::to_string(structureIds.top()));
             break;
         }
@@ -611,19 +611,19 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         /// INPUT AND OUTPUT
         case 408: { // Print
             if (expressions.top().type.isArray) {
-                throw InvalidFunctionParameterError("print", 0, Type(VOID), expressions.top().type);
+                throw InvalidFunctionParameterError("print", 0, Type(PRIMITIVE_VOID), expressions.top().type);
             }
 
             generator.addPrint();
 
             expressions.pop();
-            expressions.push(Expression(VOID));
+            expressions.push(Expression(PRIMITIVE_VOID));
             break;
         }
 
         case 409: { // Input
             generator.addInput();
-            expressions.push(Expression(INT));
+            expressions.push(Expression(PRIMITIVE_INT));
             break;
         }
 
@@ -651,7 +651,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
         /// POPPING EXPRESSIONS
         case 503: {
-            if (expressions.top().type.primitive != VOID) {
+            if (expressions.top().type.primitive != PRIMITIVE_VOID) {
                 generator.popStack();
             }
 
@@ -699,7 +699,7 @@ void Semantico::doOperation() {
 
     Type resultType = OperationManager::checkBinaryOperation(a.type, b.type, operation);
 
-    if (resultType.primitive == ERR) {
+    if (resultType.primitive == PRIMITIVE_ERR) {
         throw IncompatibleOperationTypesError(operation, a.type, b.type);
     } else {
         expressions.push(Expression(resultType));
@@ -715,7 +715,7 @@ void Semantico::doUnaryOperation() {
 
     Type resultType = OperationManager::checkUnaryOperation(expression.type, operation);
 
-    if (resultType.primitive == ERR) {
+    if (resultType.primitive == PRIMITIVE_ERR) {
         throw IncompatibleUnaryOperationTypeError(operation.lexeme, expression.type);
     }
 
@@ -774,7 +774,7 @@ int Semantico::getScopeId() {
 }
 
 void Semantico::popScope() {
-    if (!scopes.back().hasReturned && scopes.back().returnType.primitive != VOID) {
+    if (!scopes.back().hasReturned && scopes.back().returnType.primitive != PRIMITIVE_VOID) {
         throw MissingReturnStatementError(scopes.back().returnType);
     }
 

@@ -1,137 +1,33 @@
 .data
-	a_1: 0
-	b_3: 0
+	i_2: 0
 
 .text
-	LDI 8
-	STO 1000
-	LD 1000
-	STO a_1
-	LD a_1
-	STO 1000
-	LD 1000
-	STO 1001
 	LDI 5
-	STO 1002
-	LD 1001
-	SUB 1002
-	STO 1002
-	LD 1002
-	SRL 10
-	ANDI 1
-	STO 1001
-	LD 1002
-	NOT 0
-	ADDI 1
-	SRL 10
-	ANDI 1
-	OR 1001
-	XORI 1
-	STO 1001
-	LD 1001
-	BEQ when_is_0_end_0
-	LDI 50
-	STO 1001
-	LD 1001
-	STO $out_port
-	JMP when_end_0
-when_is_0_end_0:
+	STO 1000
 	LD 1000
+	STO i_2
+for_start_0:
+	LD i_2
+	STO 1000
+	LDI 7
 	STO 1001
-	LDI 8
-	STO 1002
+	LD 1000
+	SUB 1001
+	STO 1001
 	LD 1001
-	SUB 1002
-	STO 1002
-	LD 1002
 	SRL 10
 	ANDI 1
-	STO 1001
-	LD 1002
-	NOT 0
+	STO 1000
+	LD 1000
+	BEQ for_end_0
+	LD i_2
+	STO 1000
+	LD 1000
+	STO $out_port
+	LD i_2
+	STO 1000
 	ADDI 1
-	SRL 10
-	ANDI 1
-	OR 1001
-	XORI 1
-	STO 1001
-	LD 1001
-	BEQ when_is_1_end_0
-	LDI 100
-	STO 1001
-	LD 1001
-	STO $out_port
-	LDI 12
-	STO 1001
-	LD 1001
-	STO b_3
-	LD b_3
-	STO 1001
-	LDI 2
-	STO 1002
-	LD 1001
-	ADD 1002
-	STO 1001
-	LD 1001
-	STO 1002
-	LDI 10
-	STO 1003
-	LD 1002
-	SUB 1003
-	STO 1003
-	LD 1003
-	SRL 10
-	ANDI 1
-	STO 1002
-	LD 1003
-	NOT 0
-	ADDI 1
-	SRL 10
-	ANDI 1
-	OR 1002
-	XORI 1
-	STO 1002
-	LD 1002
-	BEQ when_is_0_end_1
-	LDI 500
-	STO 1002
-	LD 1002
-	STO $out_port
-	JMP when_end_1
-when_is_0_end_1:
-	LD 1001
-	STO 1002
-	LDI 14
-	STO 1003
-	LD 1002
-	SUB 1003
-	STO 1003
-	LD 1003
-	SRL 10
-	ANDI 1
-	STO 1002
-	LD 1003
-	NOT 0
-	ADDI 1
-	SRL 10
-	ANDI 1
-	OR 1002
-	XORI 1
-	STO 1002
-	LD 1002
-	BEQ when_is_1_end_1
-	LDI 123
-	STO 1002
-	LD 1002
-	STO $out_port
-	JMP when_end_1
-when_is_1_end_1:
-when_end_1:
-	JMP when_end_0
-when_is_1_end_0:
-	LDI 200
-	STO 1001
-	LD 1001
-	STO $out_port
-when_end_0:
+	STO i_2
+	JMP for_start_0
+for_end_0:
 	HLT 0

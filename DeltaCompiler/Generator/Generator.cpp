@@ -173,24 +173,32 @@ void Generator::addUnaryOperation(const OperationType &operationType) {
 }
 
 void Generator::addMutableUnaryOperation(const OperationType &operationType, const Symbol &symbol) {
-    addInstruction("LD", stackTop());
+    addInstruction("LD", getFullIdentifier(symbol));
 
     switch (operationType) {
         case OP_INCREMENT_RIGHT:
+            stackSize += 1;
+            addInstruction("STO", stackTop());
             addInstruction("ADDI", 1);
             addInstruction("STO", getFullIdentifier(symbol));
             break;
         case OP_DECREMENT_RIGHT:
+            stackSize += 1;
+            addInstruction("STO", stackTop());
             addInstruction("SUBI", 1);
             addInstruction("STO", getFullIdentifier(symbol));
             break;
         case OP_INCREMENT_LEFT:
             addInstruction("ADDI", 1);
+
+            stackSize += 1;
             addInstruction("STO", stackTop());
             addInstruction("STO", getFullIdentifier(symbol));
             break;
         case OP_DECREMENT_LEFT:
             addInstruction("SUBI", 1);
+
+            stackSize += 1;
             addInstruction("STO", stackTop());
             addInstruction("STO", getFullIdentifier(symbol));
             break;

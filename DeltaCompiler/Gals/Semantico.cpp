@@ -127,6 +127,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 logger.addWarning(ReadingIdentifierWithoutInitializationWarning(symbol->name));
             }
 
+            expressions.push(Expression(identifierTypes.top()));
             symbol->isUsed = true;
             break;
         }
@@ -156,7 +157,6 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 generator.addUnaryOperation(operations.top().type);
             }
 
-            expressions.push(identifierTypes.top());
             doUnaryOperation();
 
             identifierNames.pop();

@@ -173,36 +173,24 @@ void Generator::addUnaryOperation(const OperationType &operationType) {
 }
 
 void Generator::addMutableUnaryOperation(const OperationType &operationType, const Symbol &symbol) {
+    addInstruction("LD", stackTop());
+
     switch (operationType) {
         case OP_INCREMENT_RIGHT:
-            addInstruction("LD", getFullIdentifier(symbol));
-
-            stackSize += 1;
-            addInstruction("STO", stackTop());
             addInstruction("ADDI", 1);
             addInstruction("STO", getFullIdentifier(symbol));
             break;
         case OP_DECREMENT_RIGHT:
-            addInstruction("LD", getFullIdentifier(symbol));
-
-            stackSize += 1;
-            addInstruction("STO", stackTop());
             addInstruction("SUBI", 1);
             addInstruction("STO", getFullIdentifier(symbol));
             break;
         case OP_INCREMENT_LEFT:
-            addInstruction("LD", getFullIdentifier(symbol));
             addInstruction("ADDI", 1);
-
-            stackSize += 1;
             addInstruction("STO", stackTop());
             addInstruction("STO", getFullIdentifier(symbol));
             break;
         case OP_DECREMENT_LEFT:
-            addInstruction("LD", getFullIdentifier(symbol));
             addInstruction("SUBI", 1);
-
-            stackSize += 1;
             addInstruction("STO", stackTop());
             addInstruction("STO", getFullIdentifier(symbol));
             break;
@@ -212,38 +200,29 @@ void Generator::addMutableUnaryOperation(const OperationType &operationType, con
 void Generator::addMutableUnaryOperationOnArray(const OperationType &operationType, const Symbol &symbol) {
     addInstruction("LD", stackTop());
     addInstruction("STO", "$indr");
-    stackSize -= 1;
 
     switch (operationType) {
         case OP_INCREMENT_RIGHT:
-            addInstruction("LD", getFullIdentifier(symbol));
-
-            stackSize += 1;
-            addInstruction("STOV", stackTop());
+            addInstruction("LDV", getFullIdentifier(symbol));
+            addInstruction("STO", stackTop());
             addInstruction("ADDI", 1);
             addInstruction("STOV", getFullIdentifier(symbol));
             break;
         case OP_DECREMENT_RIGHT:
-            addInstruction("LD", getFullIdentifier(symbol));
-
-            stackSize += 1;
-            addInstruction("STOV", stackTop());
+            addInstruction("LDV", getFullIdentifier(symbol));
+            addInstruction("STO", stackTop());
             addInstruction("SUBI", 1);
             addInstruction("STOV", getFullIdentifier(symbol));
             break;
         case OP_INCREMENT_LEFT:
-            addInstruction("LD", getFullIdentifier(symbol));
+            addInstruction("LDV", getFullIdentifier(symbol));
             addInstruction("ADDI", 1);
-
-            stackSize += 1;
             addInstruction("STOV", stackTop());
             addInstruction("STOV", getFullIdentifier(symbol));
             break;
         case OP_DECREMENT_LEFT:
-            addInstruction("LD", getFullIdentifier(symbol));
+            addInstruction("LDV", getFullIdentifier(symbol));
             addInstruction("SUBI", 1);
-
-            stackSize += 1;
             addInstruction("STOV", stackTop());
             addInstruction("STOV", getFullIdentifier(symbol));
             break;

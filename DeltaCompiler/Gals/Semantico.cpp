@@ -98,10 +98,10 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             }
 
             expressions.push(Expression(identifierTypes.top()));
+            symbol->isUsed = true;
+
             identifierNames.pop();
             identifierTypes.pop();
-
-            symbol->isUsed = true;
             break;
         }
 
@@ -120,35 +120,51 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
 
         /// DOING UNARY OPERATION
-        case 119:
-        case 120: {
+        case 119: { // Reads identifier of mutable unary operation
+            Symbol* symbol = getSymbolByName(identifierNames.top());
+
+            if (!symbol->isInitialized) {
+                logger.addWarning(ReadingIdentifierWithoutInitializationWarning(symbol->name));
+            }
+
+            symbol->isUsed = true;
+            break;
+        }
+
+        case 120: // Applying unary operation on right-value
+            generator.addUnaryOperation(operations.top().type);
+            doUnaryOperation();
+            break;
+
+        case 121: { // Applying unary operation on left-value
             OperationCategory category = getOperationCategory(operations.top().type);
+            Symbol* symbol = getSymbolByName(identifierNames.top());
 
             if (category == CATEGORY_UNARY_LEFT_MUTABLE || category == CATEGORY_UNARY_RIGHT_MUTABLE) {
-                Symbol* symbol = getSymbolByName(identifierNames.top());
-
                 if (symbol->type.isArray) {
                     generator.addMutableUnaryOperationOnArray(operations.top().type, *symbol);
                 } else {
                     generator.addMutableUnaryOperation(operations.top().type, *symbol);
                 }
-
-                expressions.push(Expression(symbol->type));
-
-                doUnaryOperation();
-
-                identifierNames.pop();
-                identifierTypes.pop();
             } else {
+                if (symbol->type.isArray) {
+                    generator.addArrayIdentifier(*symbol);
+                } else {
+                    generator.addIdentifier(*symbol);
+                }
+
                 generator.addUnaryOperation(operations.top().type);
-                doUnaryOperation();
             }
 
+            expressions.push(identifierTypes.top());
+            doUnaryOperation();
+
+            identifierNames.pop();
+            identifierTypes.pop();
             break;
         }
 
         /// READING BINARY OPERATOR
-        case 121:
         case 122:
         case 123:
         case 124:
@@ -166,26 +182,26 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 136:
         case 137:
         case 138:
+        case 139:
             operations.push(Operation(getOperationTypeFromTokenId(tokenId), lexeme));
             break;
 
         /// READING RIGHT UNARY OPERATOR
-        case 139:
         case 140:
+        case 141:
             operations.push(Operation(getRightUnaryOperationTypeFromTokenId(tokenId), lexeme));
             break;
 
         /// READING LEFT UNARY OPERATOR
-        case 141:
         case 142:
         case 143:
         case 144:
         case 145:
+        case 146:
             operations.push(Operation(getLeftUnaryOperationTypeFromTokenId(tokenId), lexeme));
             break;
 
         /// READING ASSIGNMENT OPERATORS
-        case 146:
         case 147:
         case 148:
         case 149:
@@ -196,14 +212,15 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 154:
         case 155:
         case 156:
+        case 157:
             assignmentOperation = Operation(getAssignmentOperationTypeFromTokenId(tokenId), lexeme);
             break;
 
         /// CREATING/DELETING SCOPES
-        case 157:
+        case 158:
             scopes.push_back(Scope(getScopeId()));
             break;
-        case 158:
+        case 159:
             popScope();
             break;
 

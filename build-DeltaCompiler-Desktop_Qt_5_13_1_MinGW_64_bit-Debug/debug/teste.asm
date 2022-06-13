@@ -1,13 +1,18 @@
 .data
 	a_1: 0
+	b_1: 0
 
 .text
 	LDI 4
+	STO 1000
+	LD 1000
+	STO a_1
+	LD a_1
 	STO 1000
 	LD 1000
 	NOT 0
 	ADDI 1
 	STO 1000
 	LD 1000
-	STO a_1
+	STO b_1
 	HLT 0

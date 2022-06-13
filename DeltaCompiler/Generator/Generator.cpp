@@ -225,13 +225,13 @@ void Generator::addMutableUnaryOperationOnArray(const OperationType &operationTy
         case OP_INCREMENT_LEFT:
             addInstruction("LDV", getFullIdentifier(symbol));
             addInstruction("ADDI", 1);
-            addInstruction("STOV", stackTop());
+            addInstruction("STO", stackTop());
             addInstruction("STOV", getFullIdentifier(symbol));
             break;
         case OP_DECREMENT_LEFT:
             addInstruction("LDV", getFullIdentifier(symbol));
             addInstruction("SUBI", 1);
-            addInstruction("STOV", stackTop());
+            addInstruction("STO", stackTop());
             addInstruction("STOV", getFullIdentifier(symbol));
             break;
     }

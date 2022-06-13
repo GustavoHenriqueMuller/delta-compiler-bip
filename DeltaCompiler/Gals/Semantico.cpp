@@ -19,26 +19,26 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
     switch (action) {
         /// PUSHING LITERALS
-        case 1: // Int
+        case 101: // Int
             expressions.push(Expression(Type(INT)));
             generator.addImmediate(Utils::lexemeToInt(lexeme));
             break;
-        case 2: // Float
+        case 102: // Float
             expressions.push(Expression(Type(FLOAT)));
             break;
-        case 3: // String
+        case 103: // String
             expressions.push(Expression(Type(STRING)));
             break;
-        case 4: // Char
+        case 104: // Char
             expressions.push(Expression(Type(CHAR)));
             break;
-        case 5: // Bool
+        case 105: // Bool
             expressions.push(Expression(Type(BOOLEAN)));
             generator.addImmediate(Utils::lexemeToBoolean(lexeme));
             break;
 
         /// READING ID
-        case 6: {
+        case 106: {
             Symbol* symbol = getSymbolByName(lexeme);
 
             if (symbol == nullptr) {
@@ -51,7 +51,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// READING ID (ARRAY)
-        case 7: {
+        case 107: {
             Symbol* symbol = getSymbolByName(lexeme);
 
             if (symbol == nullptr) {
@@ -68,7 +68,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// READING INDEX (ARRAY)
-        case 8: {
+        case 108: {
             Expression index = expressions.top();
 
             if (index.type.primitive != INT) {
@@ -81,7 +81,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// PUSHING LEFT-VALUE AS EXPRESSION
-        case 9: {
+        case 109: {
             Symbol* symbol = getSymbolByName(identifierNames.top());
 
             if (symbol->type.isArray) {
@@ -103,22 +103,22 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// DOING BINARY OPERATION
-        case 10:
-        case 11:
-        case 12:
-        case 13:
-        case 14:
-        case 15:
-        case 16:
-        case 17:
-        case 18:
+        case 110:
+        case 111:
+        case 112:
+        case 113:
+        case 114:
+        case 115:
+        case 116:
+        case 117:
+        case 118:
             generator.addBinaryOperation(operations.top().type);
             doOperation();
             break;
 
         /// DOING UNARY OPERATION
-        case 19:
-        case 20: {
+        case 119:
+        case 120: {
             OperationCategory category = getOperationCategory(operations.top().type);
 
             if (category == CATEGORY_UNARY_LEFT_MUTABLE || category == CATEGORY_UNARY_RIGHT_MUTABLE) {
@@ -143,107 +143,107 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// READING BINARY OPERATOR
-        case 21:
-        case 22:
-        case 23:
-        case 24:
-        case 25:
-        case 26:
-        case 27:
-        case 28:
-        case 29:
-        case 30:
-        case 31:
-        case 32:
-        case 33:
-        case 34:
-        case 35:
-        case 36:
-        case 37:
-        case 38:
+        case 121:
+        case 122:
+        case 123:
+        case 124:
+        case 125:
+        case 126:
+        case 127:
+        case 128:
+        case 129:
+        case 130:
+        case 131:
+        case 132:
+        case 133:
+        case 134:
+        case 135:
+        case 136:
+        case 137:
+        case 138:
             operations.push(Operation(getOperationTypeFromTokenId(tokenId), lexeme));
             break;
 
         /// READING RIGHT UNARY OPERATOR
-        case 39:
-        case 40:
+        case 139:
+        case 140:
             operations.push(Operation(getRightUnaryOperationTypeFromTokenId(tokenId), lexeme));
             break;
 
         /// READING LEFT UNARY OPERATOR
-        case 41:
-        case 42:
-        case 43:
-        case 44:
-        case 45:
+        case 141:
+        case 142:
+        case 143:
+        case 144:
+        case 145:
             operations.push(Operation(getLeftUnaryOperationTypeFromTokenId(tokenId), lexeme));
             break;
 
         /// READING ASSIGNMENT OPERATORS
-        case 46:
-        case 47:
-        case 48:
-        case 49:
-        case 50:
-        case 51:
-        case 52:
-        case 53:
-        case 54:
-        case 55:
-        case 56: {
+        case 146:
+        case 147:
+        case 148:
+        case 149:
+        case 150:
+        case 151:
+        case 152:
+        case 153:
+        case 154:
+        case 155:
+        case 156: {
             assignmentOperation = Operation(getAssignmentOperationTypeFromTokenId(tokenId), lexeme);
             break;
         }
 
         /// CREATING/DELETING SCOPES
-        case 57: // Creating scope
+        case 157: // Creating scope
             scopes.push_back(Scope(getScopeId()));
             break;
-        case 58: // Deleting scope
+        case 158: // Deleting scope
             popScope();
             break;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// DECLARATION - MODIFIERS
-        case 59: // Cleaning type
+        case 200: // Cleaning type
             leftType = Type();
             break;
 
-        case 60: // Reading "const" modifier
+        case 201: // Reading "const" modifier
             leftType.isConst = true;
             break;
 
         /// DECLARATION - PRIMITIVES
-        case 61:
+        case 202:
             leftType.primitive = INT;
             break;
-        case 62:
+        case 203:
             leftType.primitive = FLOAT;
             break;
-        case 63:
+        case 204:
             leftType.primitive = DOUBLE;
             break;
-        case 64:
+        case 205:
             leftType.primitive = STRING;
             break;
-        case 65:
+        case 206:
             leftType.primitive = CHAR;
             break;
-        case 66:
+        case 207:
             leftType.primitive = BOOLEAN;
             break;
-        case 67:
+        case 208:
             leftType.primitive = VOID;
             break;
 
         /// DECLARATION
-        case 68: // Reading array type with size initializer
+        case 209: // Reading array type with size initializer
             leftType.isArray = true;
             leftType.arraySize = Utils::lexemeToInt(lexeme);
             break;
 
-        case 69: { // Reading id of declaration id list
+        case 210: { // Reading id of declaration id list
             Symbol* symbol = getSymbolByName(lexeme);
 
             if (symbol != nullptr) {
@@ -255,7 +255,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 70: { // Finishing declaration
+        case 211: { // Finishing declaration
             for (const std::string &name : leftIdentifierNames) {
                 Symbol* symbol = getSymbolByName(name);
 
@@ -278,7 +278,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// ASSIGNMENT
-        case 71: { // Assignment
+        case 212: { // Assignment
             Symbol* symbol = getSymbolByName(leftIdentifierNames.back());
 
             if (symbol->type.isArray) {
@@ -291,7 +291,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 72: // Gets left type of assignment outside of declaration
+        case 213: // Gets left type of assignment outside of declaration
             leftIdentifierNames.push_back(identifierNames.top());
             leftType = identifierTypes.top();
 
@@ -299,7 +299,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             identifierTypes.pop();
             break;
 
-        case 73: // Clears identifier names after assignment outside of declaration
+        case 214: // Clears identifier names after assignment outside of declaration
             leftIdentifierNames.pop_back();
             break;
 

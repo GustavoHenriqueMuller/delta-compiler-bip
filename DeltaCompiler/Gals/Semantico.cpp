@@ -120,26 +120,26 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
 
         /// DOING UNARY OPERATION
-        case 119: { // Reads identifier of mutable unary operation
+        case 119: // Applying unary operation on right-value
+            generator.addUnaryOperation(operations.top().type);
+            doUnaryOperation();
+            break;
+
+        case 120: { // Applying unary operation on left-value
             Symbol* symbol = getSymbolByName(identifierNames.top());
 
             if (!symbol->isInitialized) {
                 logger.addWarning(ReadingIdentifierWithoutInitializationWarning(symbol->name));
             }
 
+            if (identifierTypes.top().isArray) {
+                throw MissingArrayIndexError(symbol->name);
+            }
+
             expressions.push(Expression(identifierTypes.top()));
             symbol->isUsed = true;
-            break;
-        }
 
-        case 120: // Applying unary operation on right-value
-            generator.addUnaryOperation(operations.top().type);
-            doUnaryOperation();
-            break;
-
-        case 121: { // Applying unary operation on left-value
             OperationCategory category = getOperationCategory(operations.top().type);
-            Symbol* symbol = getSymbolByName(identifierNames.top());
 
             if (category == CATEGORY_UNARY_LEFT_MUTABLE || category == CATEGORY_UNARY_RIGHT_MUTABLE) {
                 if (symbol->type.isArray) {
@@ -165,6 +165,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// READING BINARY OPERATOR
+        case 121:
         case 122:
         case 123:
         case 124:
@@ -182,26 +183,26 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 136:
         case 137:
         case 138:
-        case 139:
             operations.push(Operation(getOperationTypeFromTokenId(tokenId), lexeme));
             break;
 
         /// READING RIGHT UNARY OPERATOR
+        case 139:
         case 140:
-        case 141:
             operations.push(Operation(getRightUnaryOperationTypeFromTokenId(tokenId), lexeme));
             break;
 
         /// READING LEFT UNARY OPERATOR
+        case 141:
         case 142:
         case 143:
         case 144:
         case 145:
-        case 146:
             operations.push(Operation(getLeftUnaryOperationTypeFromTokenId(tokenId), lexeme));
             break;
 
         /// READING ASSIGNMENT OPERATORS
+        case 146:
         case 147:
         case 148:
         case 149:
@@ -212,15 +213,14 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 154:
         case 155:
         case 156:
-        case 157:
             assignmentOperation = Operation(getAssignmentOperationTypeFromTokenId(tokenId), lexeme);
             break;
 
         /// CREATING/DELETING SCOPES
-        case 158:
+        case 157:
             scopes.push_back(Scope(getScopeId()));
             break;
-        case 159:
+        case 158:
             popScope();
             break;
 

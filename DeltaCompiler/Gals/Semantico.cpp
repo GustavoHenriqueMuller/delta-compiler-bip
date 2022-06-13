@@ -18,7 +18,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
     }
 
     switch (action) {
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // /////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Expressions
 
         /// PUSHING LITERALS
@@ -205,7 +205,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             popScope();
             break;
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // /////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Declaration and assignment
 
         /// DECLARATION - MODIFIERS
@@ -302,7 +302,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             leftIdentifierNames.pop_back();
             break;
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // /////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Statements and structure
 
         case 300: // Validating boolean expressions
@@ -341,7 +341,6 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         /// WHEN STATEMENT
         case 305: { // Reading type of expression in "when" block
             whenExpressionTypes.push(expressions.top().type);
-            expressions.pop();
             break;
         }
 
@@ -484,11 +483,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         case 324: { // Duplicates top of stack (expression in "when") for comparison in "is" statement
+            expressions.push(expressions.top());
             generator.duplicateStackTop();
             break;
         }
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // /////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Scopes and functions
 
         case 400: { // Reading function declaration identifier
@@ -627,10 +627,10 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // /////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Utilities
 
-        /// Delaying actions
+        /// DELAYING ACTIONS
         case 500: { // Starts delaying actions
             isDelayingActions = true;
             break;

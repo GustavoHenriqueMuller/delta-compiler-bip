@@ -1,6 +1,27 @@
-
 void main() {
 	int a = 8;
 	
-	print(a + 12);
+	when (a) {
+		is (5) {
+			print(50);
+		}
+		is (8) {
+			print(100);
+			
+			int b = 12;
+			
+			when (b + 2) {
+				is (10) {
+					print(500);
+				}
+				
+				is (14) {
+					print(123);
+				}
+			}
+		}
+		default {
+			print(200);
+		}
+	}
 }

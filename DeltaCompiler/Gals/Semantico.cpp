@@ -134,14 +134,16 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 }
 
                 expressions.push(Expression(symbol->type));
+
+                doUnaryOperation();
+
+                identifierNames.pop();
+                identifierTypes.pop();
             } else {
                 generator.addUnaryOperation(operations.top().type);
+                doUnaryOperation();
             }
 
-            doUnaryOperation();
-
-            identifierNames.pop();
-            identifierTypes.pop();
             break;
         }
 

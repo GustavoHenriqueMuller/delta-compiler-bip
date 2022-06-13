@@ -80,6 +80,8 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
             identifierTypes.top().isArray = false;
             identifierTypes.top().arraySize = 0;
+
+            expressions.pop();
             break;
         }
 
@@ -130,10 +132,6 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
             if (!symbol->isInitialized) {
                 logger.addWarning(ReadingIdentifierWithoutInitializationWarning(symbol->name));
-            }
-
-            if (identifierTypes.top().isArray) {
-                throw MissingArrayIndexError(symbol->name);
             }
 
             expressions.push(Expression(identifierTypes.top()));

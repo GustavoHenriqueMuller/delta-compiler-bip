@@ -1,9 +1,8 @@
 .data
 	a_1: 0, 0, 0, 0, 0
-	b_1: 0
 
 .text
-	LDI 2
+	LDI 0
 	STO 1000
 	LDI 4
 	STO 1001
@@ -11,16 +10,12 @@
 	STO $indr
 	LD 1001
 	STOV a_1
-	LDI 2
+	LDI 1
 	STO 1000
+	LDI 5
+	STO 1001
 	LD 1000
 	STO $indr
-	LDV a_1
-	STO 1000
-	LD 1000
-	NOT 0
-	ADDI 1
-	STO 1000
-	LD 1000
-	STO b_1
+	LD 1001
+	STOV a_1
 	HLT 0

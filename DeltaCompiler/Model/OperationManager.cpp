@@ -80,6 +80,10 @@ Primitive OperationManager::checkBinaryOperation(Type type1, Type type2, Operati
 }
 
 Primitive OperationManager::checkUnaryOperation(Type type1, Operation operation) {
+    if (type1.isArray) {
+        return PRIMITIVE_ERR;
+    }
+
     return (Primitive) OperationManager::UNARY_OPERATION_TABLE[type1.primitive][operation.type - 18];
 }
 

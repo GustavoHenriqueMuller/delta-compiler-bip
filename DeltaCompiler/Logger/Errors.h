@@ -88,13 +88,6 @@ public:
 };
 
 
-class MissingArrayIndexError : public SemanticError {
-public:
-    MissingArrayIndexError(const std::string &arrayName)
-      : SemanticError("Missing array index for accessing '" + arrayName + "'", -1) { }
-};
-
-
 class MissingConstInitializationError : public SemanticError {
 public:
     MissingConstInitializationError(const std::string &identifier)

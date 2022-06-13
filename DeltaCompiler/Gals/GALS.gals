@@ -209,7 +209,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <for_stmt> ::= FOR #57 LSP <for_left> END #97 <exp> #78 #98 END #105 <exp> #106 RSP <scope> #107 #99 #58;
 <for_left> ::= <exp> | <declaration_stmt> | <assignment_stmt>;
 
-<when_stmt> ::= WHEN LSP <exp> #79 RSP LSC #112 <is_list> RSC #81 #108 #110;
+<when_stmt> ::= WHEN LSP <exp> #79 RSP LSC #112 <is_list> RSC #108 #110;
 
 <declaration_stmt> ::= <type> <declaration_stmt_id_list> #70;
 <declaration_stmt_id_list> ::= ID #69 COMMA <declaration_stmt_id_list> | ID #69 ASSIGNMENT #46 <exp> #71 COMMA <declaration_stmt_id_list> | ID #69 | ID #69 ASSIGNMENT #46 <exp> #71;
@@ -224,7 +224,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <else> ::= ELSE #57 <scope> #58;
 
 <is_list> ::= <is> | <is> <is_list> | <default>;
-<is> ::= IS LSP <exp> #80 #109 #108 RSP <scope> #111;
+<is> ::= IS LSP #113 <exp> #109 #80 RSP <scope> #111;
 <default> ::= DEFAULT <scope>;
 
 // Expressions

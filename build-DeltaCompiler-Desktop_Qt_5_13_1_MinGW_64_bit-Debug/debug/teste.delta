@@ -3,10 +3,10 @@ void main() {
 	int a = 8;
 	
 	when (a) {
-		is (5) {
+		is (6) {
 			print(50);
 		}
-		is (8) {
+		is (5) {
 			print(100);
 		}
 		default {

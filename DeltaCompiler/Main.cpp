@@ -11,7 +11,7 @@
 #include <iostream>
 
 // TODO: Terminar when-is
-
+// TODO: Stack única para os gerador e analisador semãntico?
 // TODO: Fazer assigns serem expressões
 
 int main(int argc, char **argv) {

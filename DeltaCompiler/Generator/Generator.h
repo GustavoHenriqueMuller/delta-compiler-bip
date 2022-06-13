@@ -11,9 +11,10 @@ public:
     Generator() {}
     std::string getCode();
 
-    void addImmediate(int immediate);
+    void addImmediate(const int &immediate);
     void addIdentifier(const Symbol &symbol);
     void addArrayIdentifier(const Symbol &symbol);
+    void duplicateStackTop();
     void popStack();
 
     void addBinaryOperation(const OperationType &operationType);
@@ -34,14 +35,14 @@ public:
     void addInput();
 
 private:
-    void pushIsNegative(int address);
-    void pushIsZero(int address);
+    void pushIsNegative(const int &address);
+    void pushIsZero(const int &address);
     std::string getInstructionNameFromOperation(const OperationType &operationType);
     std::string getFullIdentifier(const Symbol &symbol);
-    void addToDataSection(std::string string);
-    void addInstruction(std::string instruction, std::string parameter);
-    void addInstruction(std::string instruction, int parameter);
-    void addInstruction(std::string instruction);
+    void addToDataSection(const std::string &string);
+    void addInstruction(const std::string &instruction, const std::string &parameter);
+    void addInstruction(const std::string &instruction, const int &parameter);
+    void addInstruction(const std::string &instruction);
     int stackTop();
 
     std::string dataSection;

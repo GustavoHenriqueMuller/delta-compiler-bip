@@ -15,7 +15,7 @@ std::string Generator::getCode() {
     return result;
 }
 
-void Generator::addImmediate(int immediate) {
+void Generator::addImmediate(const int &immediate) {
     stackSize += 1;
 
     addInstruction("LDI", immediate);
@@ -33,6 +33,13 @@ void Generator::addArrayIdentifier(const Symbol &symbol) {
     addInstruction("LD", stackTop());
     addInstruction("STO", "$indr");
     addInstruction("LDV", getFullIdentifier(symbol));
+    addInstruction("STO", stackTop());
+}
+
+void Generator::duplicateStackTop() {
+    addInstruction("LD", stackTop());
+
+    stackSize += 1;
     addInstruction("STO", stackTop());
 }
 
@@ -337,7 +344,7 @@ void Generator::addInput() {
     addInstruction("STO", stackTop());
 }
 
-void Generator::pushIsNegative(int address) {
+void Generator::pushIsNegative(const int &address) {
     addInstruction("LD", address);
     addInstruction("SRL", 10);
     addInstruction("ANDI", 1);
@@ -346,7 +353,7 @@ void Generator::pushIsNegative(int address) {
     addInstruction("STO", stackTop());
 }
 
-void Generator::pushIsZero(int address) {
+void Generator::pushIsZero(const int &address) {
     addInstruction("LD", address);
     addInstruction("SRL", 10);
     addInstruction("ANDI", 1);
@@ -394,19 +401,19 @@ std::string Generator::getFullIdentifier(const Symbol &symbol) {
     return symbol.name + "_" + std::to_string(symbol.scopeId);
 }
 
-void Generator::addToDataSection(std::string string) {
+void Generator::addToDataSection(const std::string &string) {
     dataSection += "\t" + string + "\n";
 }
 
-void Generator::addInstruction(std::string instruction, std::string parameter) {
+void Generator::addInstruction(const std::string &instruction, const std::string &parameter) {
     textSection += "\t" + instruction + " " + parameter + "\n";
 }
 
-void Generator::addInstruction(std::string instruction, int parameter) {
+void Generator::addInstruction(const std::string &instruction, const int &parameter) {
     textSection += "\t" + instruction + " " + std::to_string(parameter) + "\n";
 }
 
-void Generator::addInstruction(std::string instruction) {
+void Generator::addInstruction(const std::string &instruction) {
     textSection += "\t" + instruction + " 0\n";
 }
 

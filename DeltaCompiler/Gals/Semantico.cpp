@@ -353,9 +353,10 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 81: // End of "when" block
-            whenExpressionTypes.pop();
-            break;
+        // TODO: DELETAR
+        //case 81: // End of "when" block
+        //    whenExpressionTypes.pop();
+        //    break;
 
         /// FUNCTIONS
         case 82: { // Reading function declaration identifier
@@ -609,8 +610,11 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
         /// POPPING EXPRESSIONS
         case 108: {
+            if (expressions.top().type.primitive != VOID) {
+                generator.popStack();
+            }
+
             expressions.pop();
-            generator.popStack();
             break;
         }
 
@@ -637,10 +641,15 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 112: { // Starts "is" statement
+        case 112: { // Starts "when" statement
             whenIsIds.push(0);
             structureIds.push(currentStructureId);
             currentStructureId++;
+            break;
+        }
+
+        case 113: { // Duplicates top of stack (expression in "when") for comparison in "is" statement
+            generator.duplicateStackTop();
             break;
         }
     }

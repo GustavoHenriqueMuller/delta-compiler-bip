@@ -18,6 +18,9 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
     }
 
     switch (action) {
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Expressions
+
         /// PUSHING LITERALS
         case 101: // Int
             expressions.push(Expression(Type(INT)));
@@ -190,60 +193,56 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 153:
         case 154:
         case 155:
-        case 156: {
+        case 156:
             assignmentOperation = Operation(getAssignmentOperationTypeFromTokenId(tokenId), lexeme);
             break;
-        }
 
         /// CREATING/DELETING SCOPES
-        case 157: // Creating scope
+        case 157:
             scopes.push_back(Scope(getScopeId()));
             break;
-        case 158: // Deleting scope
+        case 158:
             popScope();
             break;
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Declaration and assignment
 
         /// DECLARATION - MODIFIERS
-        case 200: // Cleaning type
-            leftType = Type();
-            break;
-
-        case 201: // Reading "const" modifier
+        case 200: // Reading "const" modifier
             leftType.isConst = true;
             break;
 
         /// DECLARATION - PRIMITIVES
-        case 202:
+        case 201:
             leftType.primitive = INT;
             break;
-        case 203:
+        case 202:
             leftType.primitive = FLOAT;
             break;
-        case 204:
+        case 203:
             leftType.primitive = DOUBLE;
             break;
-        case 205:
+        case 204:
             leftType.primitive = STRING;
             break;
-        case 206:
+        case 205:
             leftType.primitive = CHAR;
             break;
-        case 207:
+        case 206:
             leftType.primitive = BOOLEAN;
             break;
-        case 208:
+        case 207:
             leftType.primitive = VOID;
             break;
 
         /// DECLARATION
-        case 209: // Reading array type with size initializer
+        case 208: // Reading array type with size initializer
             leftType.isArray = true;
             leftType.arraySize = Utils::lexemeToInt(lexeme);
             break;
 
-        case 210: { // Reading id of declaration id list
+        case 209: { // Reading id of declaration id list
             Symbol* symbol = getSymbolByName(lexeme);
 
             if (symbol != nullptr) {
@@ -255,7 +254,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 211: { // Finishing declaration
+        case 210: { // Finishing declaration
             for (const std::string &name : leftIdentifierNames) {
                 Symbol* symbol = getSymbolByName(name);
 
@@ -278,7 +277,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// ASSIGNMENT
-        case 212: { // Assignment
+        case 211: { // Assignment
             Symbol* symbol = getSymbolByName(leftIdentifierNames.back());
 
             if (symbol->type.isArray) {
@@ -291,7 +290,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 213: // Gets left type of assignment outside of declaration
+        case 212: // Gets left type of assignment outside of declaration
             leftIdentifierNames.push_back(identifierNames.top());
             leftType = identifierTypes.top();
 
@@ -299,13 +298,13 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             identifierTypes.pop();
             break;
 
-        case 214: // Clears identifier names after assignment outside of declaration
+        case 213: // Clears identifier names after assignment outside of declaration
             leftIdentifierNames.pop_back();
             break;
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Statements and structure
 
-        /// STATEMENTS AND STRUCTURE
         case 300: // Validating boolean expressions
         case 301:
         case 302:
@@ -489,10 +488,10 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Scopes and functions
 
-        /// FUNCTIONS
-        case 99: { // Reading function declaration identifier
+        case 400: { // Reading function declaration identifier
             Symbol* symbol = getSymbolByName(lexeme);
 
             if (symbol != nullptr) {
@@ -507,7 +506,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 100: { // Reading function declaration parameter identifier
+        case 401: { // Reading function declaration parameter identifier
             Symbol* function = getSymbolByName(functionName);
             function->parameters.push_back(Parameter(leftType, lexeme));
 
@@ -515,7 +514,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 101: { // Creating identifiers in function scope from function parameters
+        case 402: { // Creating identifiers in function scope from function parameters
             Symbol* function = getSymbolByName(functionName);
 
             for (const Parameter &parameter : function->parameters) {
@@ -531,7 +530,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 102: { // Reading function call identifier
+        case 403: { // Reading function call identifier
             Symbol* function = getSymbolByName(lexeme);
 
             if (function == nullptr) {
@@ -549,7 +548,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 103: { // Reading function call parameter
+        case 404: { // Reading function call parameter
             Symbol* function = getSymbolByName(functionName);
 
             if (amountFunctionParameters >= function->parameters.size()) {
@@ -570,7 +569,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 104: { // Finish function call
+        case 405: { // Finish function call
             Symbol* function = getSymbolByName(functionName);
 
             if (amountFunctionParameters != function->parameters.size()) {
@@ -584,17 +583,19 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 105: { // Create scope for function
+        case 406: { // Create scope for function
             Symbol* function = getSymbolByName(functionName);
             Scope scope = Scope(getScopeId());
 
             scope.returnType = function->type;
             scopes.push_back(scope);
+
+            leftType = Type();
             break;
         }
 
         /// RETURN STATEMENT
-        case 106: { // Check for type when returning from function
+        case 407: { // Check for type when returning from function
             Expression expression = expressions.top();
             AssignmentResult result = OperationManager::checkImplicitCast(expression.type, scopes.back().returnType);
 
@@ -608,7 +609,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// INPUT AND OUTPUT
-        case 107: { // Print
+        case 408: { // Print
             if (expressions.top().type.isArray) {
                 throw InvalidFunctionParameterError("print", 0, Type(VOID), expressions.top().type);
             }
@@ -620,23 +621,24 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 108: { // Input
+        case 409: { // Input
             generator.addInput();
             expressions.push(Expression(INT));
             break;
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Utilities
 
-        /// DELAYING ACTIONS
+        /// Delaying actions
         case 500: { // Starts delaying actions
             isDelayingActions = true;
             break;
-        } // ANTIGO 109
+        }
 
         case 501: { // Stops delaying actions (implemented at start of executeAction)
             break;
-        } // ANTIGO 110
+        }
 
         case 502: { // Executes delayed actions
             for (const Action &action : delayedActions) {
@@ -645,7 +647,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
             delayedActions.clear();
             break;
-        } // ANTIGO 111
+        }
 
         /// POPPING EXPRESSIONS
         case 503: {
@@ -655,7 +657,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
             expressions.pop();
             break;
-        } // ANTIGO 112
+        }
     }
 }
 

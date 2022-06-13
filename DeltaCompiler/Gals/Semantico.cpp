@@ -4,7 +4,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
     TokenId tokenId = token->getId();
     std::string lexeme = token->getLexeme();
 
-    if (action == 110) {
+    if (action == 501) {
         isDelayingActions = false;
     }
 
@@ -305,28 +305,28 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
-        /// IF, ELSEIF, WHILE, DO WHILE, FOR BLOCK
-        case 74: // Validating boolean expressions
-        case 75:
-        case 76:
-        case 77:
-        case 78: {
+        /// STATEMENTS AND STRUCTURE
+        case 300: // Validating boolean expressions
+        case 301:
+        case 302:
+        case 303:
+        case 304: {
             std::string blockName;
 
             switch (action) {
-                case 74:
+                case 300:
                     blockName = "if";
                     break;
-                case 75:
+                case 301:
                     blockName = "elseif";
                     break;
-                case 76:
+                case 302:
                     blockName = "while";
                     break;
-                case 77:
+                case 303:
                     blockName = "do while";
                     break;
-                case 78:
+                case 304:
                     blockName = "for";
                     break;
             }
@@ -340,13 +340,13 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// WHEN STATEMENT
-        case 79: { // Reading type of expression in "when" block
+        case 305: { // Reading type of expression in "when" block
             whenExpressionTypes.push(expressions.top().type);
             expressions.pop();
             break;
         }
 
-        case 80: { // Reading type of expression in "is" block
+        case 306: { // Reading type of expression in "is" block
             Expression expression = expressions.top();
             AssignmentResult result = OperationManager::checkImplicitCast(expression.type, whenExpressionTypes.top());
 
@@ -359,7 +359,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// CODE GENERATION OF "WHILE"
-        case 81: { // Creating start label of "while"
+        case 307: { // Creating start label of "while"
             generator.addLabel("while_start_" + std::to_string(currentStructureId));
 
             structureIds.push(currentStructureId);
@@ -367,12 +367,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 82: { // Checking expression of "while"
+        case 308: { // Checking expression of "while"
             generator.addBranchIfFalse("while_end_" + std::to_string(structureIds.top()));
             break;
         }
 
-        case 83: { // Creating end label of "while"
+        case 309: { // Creating end label of "while"
             generator.addJump("while_start_" + std::to_string(structureIds.top()));
             generator.addLabel("while_end_" + std::to_string(structureIds.top()));
 
@@ -381,7 +381,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// CODE GENERATION OF "DO WHILE"
-        case 84: { // Creating start label of "do while"
+        case 310: { // Creating start label of "do while"
             generator.addLabel("do_while_start_" + std::to_string(currentStructureId));
 
             structureIds.push(currentStructureId);
@@ -389,14 +389,14 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 85: { // Checking expression of "do while"
+        case 311: { // Checking expression of "do while"
             generator.addBranchIfTrue("do_while_start_" + std::to_string(structureIds.top()));
             structureIds.pop();
             break;
         }
 
         /// CODE GENERATION OF FOR
-        case 86: { // Creating start label of "for"
+        case 312: { // Creating start label of "for"
             generator.addLabel("for_start_" + std::to_string(currentStructureId));
 
             structureIds.push(currentStructureId);
@@ -404,12 +404,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 87: { // Checking expression of "for"
+        case 313: { // Checking expression of "for"
             generator.addBranchIfFalse("for_end_" + std::to_string(structureIds.top()));
             break;
         }
 
-        case 88: { // Creating end label of "for"
+        case 314: { // Creating end label of "for"
             generator.addJump("for_start_" + std::to_string(structureIds.top()));
             generator.addLabel("for_end_" + std::to_string(structureIds.top()));
 
@@ -418,7 +418,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// CODE GENERATION OF IF / ELSE IF / ELSE
-        case 89: { // Checking expression for "if"
+        case 315: { // Checking expression for "if"
             generator.addBranchIfFalse("if_end_" + std::to_string(currentStructureId));
 
             elseIfIds.push(0);
@@ -427,18 +427,18 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 90: { // Adds label at end of "if"
+        case 316: { // Adds label at end of "if"
             generator.addJump("if_stmt_end_" + std::to_string(structureIds.top()));
             generator.addLabel("if_end_" + std::to_string(structureIds.top()));
             break;
         }
 
-        case 91: { // Checking expression for "else if"
+        case 317: { // Checking expression for "else if"
             generator.addBranchIfFalse("else_if_" + std::to_string(elseIfIds.top()) + "_end_" + std::to_string(structureIds.top()));
             break;
         }
 
-        case 92: { // Adds label at end of "else if"
+        case 318: { // Adds label at end of "else if"
             generator.addJump("if_stmt_end_" + std::to_string(structureIds.top()));
             generator.addLabel("else_if_" + std::to_string(elseIfIds.top()) + "_end_" + std::to_string(structureIds.top()));
 
@@ -446,7 +446,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 93: { // Adds label for end of entire "if" statement
+        case 319: { // Adds label for end of entire "if" statement
             generator.addLabel("if_stmt_end_" + std::to_string(structureIds.top()));
 
             structureIds.pop();
@@ -455,13 +455,13 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// CODE GENERATION OF "WHEN IS"
-        case 94: { // // Checking expression for "is"
+        case 320: { // // Checking expression for "is"
             generator.addBinaryOperation(EQUAL);
             generator.addBranchIfFalse("when_is_" + std::to_string(whenIsIds.top()) + "_end_" + std::to_string(structureIds.top()));
             break;
         }
 
-        case 95: { // Adds label at end of "when"
+        case 321: { // Adds label at end of "when"
             generator.addLabel("when_end_" + std::to_string(structureIds.top()));
 
             structureIds.pop();
@@ -469,7 +469,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 96: { // Adds jump from end of "is" to end of "when" statement
+        case 322: { // Adds jump from end of "is" to end of "when" statement
             generator.addJump("when_end_" + std::to_string(structureIds.top()));
             generator.addLabel("when_is_" + std::to_string(whenIsIds.top()) + "_end_" + std::to_string(structureIds.top()));
 
@@ -477,14 +477,14 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 97: { // Starts "when" statement
+        case 323: { // Starts "when" statement
             whenIsIds.push(0);
             structureIds.push(currentStructureId);
             currentStructureId++;
             break;
         }
 
-        case 98: { // Duplicates top of stack (expression in "when") for comparison in "is" statement
+        case 324: { // Duplicates top of stack (expression in "when") for comparison in "is" statement
             generator.duplicateStackTop();
             break;
         }
@@ -629,33 +629,33 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// DELAYING ACTIONS
-        case 109: { // Starts delaying actions
+        case 500: { // Starts delaying actions
             isDelayingActions = true;
             break;
-        }
+        } // ANTIGO 109
 
-        case 110: { // Stops delaying actions (implemented at start of executeAction)
+        case 501: { // Stops delaying actions (implemented at start of executeAction)
             break;
-        }
+        } // ANTIGO 110
 
-        case 111: { // Executes delayed actions
+        case 502: { // Executes delayed actions
             for (const Action &action : delayedActions) {
                 executeAction(action.action, &action.token);
             }
 
             delayedActions.clear();
             break;
-        }
+        } // ANTIGO 111
 
         /// POPPING EXPRESSIONS
-        case 112: {
+        case 503: {
             if (expressions.top().type.primitive != VOID) {
                 generator.popStack();
             }
 
             expressions.pop();
             break;
-        }
+        } // ANTIGO 112
     }
 }
 

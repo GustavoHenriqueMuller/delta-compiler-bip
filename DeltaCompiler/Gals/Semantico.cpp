@@ -9,7 +9,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
     }
 
     if (isDelayingActions) {
-        delayedActions.push_back(Action(action, *token));
+        delayedActions.top().push_back(Action(action, *token));
         return;
     }
 
@@ -650,6 +650,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         /// DELAYING ACTIONS
         case 500: { // Starts delaying actions
             isDelayingActions = true;
+            delayedActions.push({});
             break;
         }
 
@@ -658,11 +659,11 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         case 502: { // Executes delayed actions
-            for (const Action &action : delayedActions) {
+            for (const Action &action : delayedActions.top()) {
                 executeAction(action.action, &action.token);
             }
 
-            delayedActions.clear();
+            delayedActions.pop();
             break;
         }
 

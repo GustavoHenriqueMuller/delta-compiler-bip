@@ -241,7 +241,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <while_stmt> ::= WHILE #307 LSP <exp> #308 #302 RSP #157 <scope> #309 #158;
 <do_while_stmt> ::= DO #310 #157 <scope> #158 WHILE LSP <exp> #311 #303 RSP;
 
-<for_stmt> ::= FOR #157 LSP <for_left> END #312 <exp> #313 #304 END #500 <exp> #501 RSP <scope> #502 #314 #158;
+<for_stmt> ::= FOR #157 LSP <for_left> END #312 <exp> #313 #304 END #500 <exp> #501 RSP <scope> #502 #503 #314 #158;
 <for_left> ::= <exp> | <declaration_stmt> | <assignment_stmt>;
 
 <when_stmt> ::= WHEN LSP <exp> #323 #305 RSP LSC <is_list> RSC #503 #321;

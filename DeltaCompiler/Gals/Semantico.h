@@ -76,7 +76,7 @@ private:
     int currentStructureId = 0;
 
     // Delaying actions
-    std::vector<Action> delayedActions;
+    std::stack<std::vector<Action>> delayedActions;
     bool isDelayingActions = false;
 };
 

@@ -1,4 +1,4 @@
-# DeltaCompiler
+# DeltaCompilerBIP
 Compiler for the Delta programming language to BIP assembly.
 
 Syntax: ```delta [options] [filepath]```

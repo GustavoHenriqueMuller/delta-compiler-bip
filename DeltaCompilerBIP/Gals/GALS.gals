@@ -266,9 +266,9 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 // Scopes and functions
 
 <scope> ::= LSC RSC | LSC <statement_list> RSC;
-<function> ::= <function_prototype> #406 #402 <scope> #158;
+<function> ::= <function_prototype> #403 #402 <scope> #158;
 <function_prototype> ::= <type> ID #400 LSP RSP | <type> ID #400 LSP <function_prototype_argument_list> RSP;
 <function_prototype_argument_list> ::= <type> ID #401 COMMA <function_prototype_argument_list> | <type> ID #401;
 
-<function_call> ::= ID #403 LSP RSP #405 | ID #403 LSP <function_call_argument_list> RSP #405 | PRINT LSP <exp> RSP #408 | INPUT LSP RSP #409;
-<function_call_argument_list> ::= <exp> #404 COMMA <function_call_argument_list> | <exp> #404;
+<function_call> ::= ID #404 LSP RSP #406 | ID #404 LSP <function_call_argument_list> RSP #406 | PRINT LSP <exp> RSP #408 | INPUT LSP RSP #409;
+<function_call_argument_list> ::= <exp> #405 COMMA <function_call_argument_list> | <exp> #405;

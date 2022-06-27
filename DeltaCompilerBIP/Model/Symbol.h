@@ -9,18 +9,19 @@
 
 class Symbol {
 public:
+    Symbol() {}
     Symbol(Type type, std::string name, int scopeId): type(type), name(name), scopeId(scopeId) {}
 
     Type type;
     std::string name;
-    const int scopeId;
+    int scopeId;
 
     bool isInitialized = false;
     bool isUsed = false;
     bool isInDeclaration = true;
 
     bool isFunction = false;
-    std::vector<Parameter> parameters;
+    std::vector<Symbol> parameters;
 };
 
 #endif // SYMBOL_H

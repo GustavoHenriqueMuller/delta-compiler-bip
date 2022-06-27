@@ -5,6 +5,8 @@
 #include "../Model/Operation.h"
 #include "../Gals/SemanticError.h"
 
+#include "vector"
+
 class ConstMutationError : public SemanticError {
 public:
     ConstMutationError(const std::string &identifier)
@@ -30,6 +32,28 @@ class IdentifierNotFoundError : public SemanticError {
 public:
     IdentifierNotFoundError(const std::string &identifier)
       : SemanticError("Identifier '" + identifier + "' not found", -1) { }
+};
+
+
+class FunctionIdentifierNotFoundError : public SemanticError {
+public:
+    FunctionIdentifierNotFoundError(const std::string &identifier, const std::vector<Type> &parameterTypes)
+      : SemanticError("Function identifier '" + identifier + "(" + parameterTypesToString(parameterTypes) + ")' not found", -1) {}
+
+private:
+    std::string parameterTypesToString(const std::vector<Type> &parameterTypes) {
+        std::string result = "";
+
+        for (int i = 0; i < parameterTypes.size(); i++) {
+            result += parameterTypes[i].toString();
+
+            if (i < parameterTypes.size() - 1) {
+                result += ", ";
+            }
+        }
+
+        return result;
+    }
 };
 
 
@@ -71,13 +95,6 @@ class InvalidFunctionParameterError : public SemanticError {
 public:
     InvalidFunctionParameterError(const std::string &functionName, int paramPos, const Type &paramType, const Type &givenType)
       : SemanticError("Expected '" + paramType.toString() + "' for function '" + functionName + "' at parameter " + std::to_string(paramPos) + ", got '" + givenType.toString() + "'", -1) { }
-};
-
-
-class InvalidFunctionParameterQuantityError : public SemanticError {
-public:
-    InvalidFunctionParameterQuantityError(const std::string &functionName, int paramQnt, int givenParamQnt)
-      : SemanticError("Expected " + std::to_string(paramQnt) + " parameters for function '" + functionName + "', got " + std::to_string(givenParamQnt), -1) { }
 };
 
 

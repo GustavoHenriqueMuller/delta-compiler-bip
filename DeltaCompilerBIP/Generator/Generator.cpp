@@ -1,4 +1,5 @@
 #include "Generator.h"
+#include "Utils/Utils.h"
 
 #include <fstream>
 
@@ -331,6 +332,14 @@ void Generator::addInput() {
     addInstruction("STO", stackTop());
 }
 
+void Generator::addCall(const Symbol &function) {
+    addInstruction("CALL", Utils::mangleFunctionName(function));
+}
+
+void Generator::addReturn() {
+    addInstruction("RETURN", 0);
+}
+
 void Generator::pushIsNegative(const int &address) {
     addInstruction("LD", address);
     addInstruction("SRL", 10);
@@ -385,7 +394,11 @@ std::string Generator::getInstructionNameFromOperation(const OperationType &oper
 }
 
 std::string Generator::getFullIdentifier(const Symbol &symbol) {
-    return symbol.name + "_" + std::to_string(symbol.scopeId);
+    if (symbol.isFunction) {
+        return Utils::mangleFunctionName(symbol);
+    } else {
+        return symbol.name + "_" + std::to_string(symbol.scopeId);
+    }
 }
 
 void Generator::addToDataSection(const std::string &string) {

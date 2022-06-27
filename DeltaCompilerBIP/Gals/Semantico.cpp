@@ -509,45 +509,44 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         // Scopes and functions
 
         case 400: { // Reading function declaration identifier
-            Symbol* symbol = getSymbolByName(lexeme);
+            functionDeclaration = Symbol(leftType, lexeme, scopes.back().id);
+            functionDeclaration.isFunction = true;
 
-            if (symbol != nullptr) {
-                throw DuplicateIdentifierError(lexeme);
-            }
-
-            Symbol function = Symbol(leftType, lexeme, scopes.back().id);
-            function.isFunction = true;
-            scopes.back().symbolList.push_back(function);
-
-            functionDeclarationName = lexeme;
+            leftType = Type();
             break;
         }
 
         case 401: { // Reading function declaration parameter identifier
-            Symbol* function = getSymbolByName(functionDeclarationName);
-            function->parameters.push_back(Parameter(leftType, lexeme));
+            functionDeclaration.parameters.push_back(Symbol(leftType, lexeme, scopes.back().id + 1));
 
             leftType = Type();
             break;
         }
 
         case 402: { // Creating identifiers in function scope from function parameters
-            Symbol* function = getSymbolByName(functionDeclarationName);
-
-            for (const Parameter &parameter : function->parameters) {
-                Symbol symbol = Symbol(parameter.type, parameter.name, scopes.back().id);
+            for (Symbol &symbol : functionDeclaration.parameters) {
                 symbol.isInDeclaration = false;
                 symbol.isInitialized = true;
-
                 scopes.back().symbolList.push_back(symbol);
             }
 
-            function->isInDeclaration = false;
-            functionDeclarationName.clear();
             break;
         }
 
-        case 403: { // Reading function call identifier
+        case 403: { // Create scope for function
+            // TODO: Ver se função já existe
+
+            scopes.back().symbolList.push_back(functionDeclaration);
+
+            Scope newFunctionScope = Scope(getScopeId());
+            newFunctionScope.returnType = functionDeclaration.type;
+            scopes.push_back(newFunctionScope);
+
+            generator.addLabel(Utils::mangleFunctionName(functionDeclaration));
+            break;
+        }
+
+        case 404: { // Reading function call identifier
             Symbol* function = getSymbolByName(lexeme);
 
             if (function == nullptr) {
@@ -559,56 +558,34 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             }
 
             function->isUsed = true;
-            functionDeclarationName = lexeme;
-
-            expressions.push(Expression(function->type));
-            amountFunctionParameters.push(0);
+            functionCallNames.push(lexeme);
+            functionCallParameterTypes.push({});
             break;
         }
 
-        case 404: { // Reading function call parameter
-            Symbol* function = getSymbolByName(functionDeclarationName);
-
-            if (amountFunctionParameters.top() >= function->parameters.size()) {
-                throw InvalidFunctionParameterQuantityError(function->name, function->parameters.size(), amountFunctionParameters.top() + 1);
-            }
-
-            Type functionParameterType = function->parameters[amountFunctionParameters.top()].type;
-            Expression expression = expressions.top();
-
-            AssignmentResult result = OperationManager::checkImplicitCast(functionParameterType, expression.type);
-
-            if (result == ATT_ER) {
-                throw InvalidFunctionParameterError(function->name, amountFunctionParameters.top() + 1, functionParameterType, expression.type);
-            }
-
-            amountFunctionParameters.top() += 1;
-            expressions.pop();
+        case 405: { // Reading function call parameter
+            functionCallParameterTypes.top().push_back(expressions.top().type);
             break;
         }
 
-        case 405: { // Finish function call
-            Symbol* function = getSymbolByName(functionDeclarationName);
+        case 406: { // Finish function call
+            Symbol* function = findAppropriateFunctionCall();
 
-            if (amountFunctionParameters.top() != function->parameters.size()) {
-                throw InvalidFunctionParameterQuantityError(function->name, function->parameters.size(), amountFunctionParameters.top());
+            if (function == nullptr) {
+                throw FunctionIdentifierNotFoundError(functionCallNames.top(), functionCallParameterTypes.top());
             }
 
+            for (int i = function->parameters.size() - 1; i >= 0; i--) {
+                generator.assignTo(function->parameters[i], OP_ASSIGNMENT);
+                expressions.pop();
+            }
+
+            Symbol functionCopy = *function;
+            generator.addCall(functionCopy);
             expressions.push(Expression(function->type));
 
-            amountFunctionParameters.pop();
-            functionDeclarationName.clear();
-            break;
-        }
-
-        case 406: { // Create scope for function
-            Symbol* function = getSymbolByName(functionDeclarationName);
-            Scope scope = Scope(getScopeId());
-
-            scope.returnType = function->type;
-            scopes.push_back(scope);
-
-            leftType = Type();
+            functionCallNames.pop();
+            functionCallParameterTypes.pop();
             break;
         }
 
@@ -622,12 +599,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             }
 
             scopes.back().hasReturned = true;
-
-            if (expressions.top().type.primitive != PRIMITIVE_VOID) {
-                generator.popStack();
-            }
-
-            expressions.pop();
+            generator.addReturn();
             break;
         }
 
@@ -764,6 +736,30 @@ Symbol* Semantico::getSymbolByName(const std::string &name) {
     return nullptr;
 }
 
+Symbol* Semantico::findAppropriateFunctionCall() {
+    for (Symbol &symbol : scopes.front().symbolList) {
+        if (isSymbolAppropriateForFunctionCall(symbol)) {
+            return &symbol;
+        }
+    }
+
+    return nullptr;
+}
+
+bool Semantico::isSymbolAppropriateForFunctionCall(const Symbol &symbol) {
+    if (!symbol.isFunction || symbol.name != functionCallNames.top()) {
+        return false;
+    }
+
+    for (int i = 0; i < symbol.parameters.size(); i++) {
+        if (OperationManager::checkImplicitCast(functionCallParameterTypes.top()[i], symbol.parameters[i].type) == ATT_ER) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 void Semantico::saveScope(const Scope &scope) {
     for (Symbol symbol : scope.symbolList) {
         jsonBuilder.open();
@@ -782,7 +778,7 @@ void Semantico::saveScope(const Scope &scope) {
         jsonBuilder.set("isFunction", symbol.isFunction);
 
         std::string parameters = "";
-        for (Parameter parameter : symbol.parameters)
+        for (const Symbol &parameter : symbol.parameters)
             parameters += parameter.type.toString() + " " + parameter.name + ", ";
 
         if (parameters.size() > 0)

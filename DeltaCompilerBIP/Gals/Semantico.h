@@ -34,7 +34,10 @@ private:
     void doAssignment();
     void doOperation();
     void doUnaryOperation();
+
     Symbol* getSymbolByName(const std::string &name);
+    Symbol* findAppropriateFunctionCall();
+    bool isSymbolAppropriateForFunctionCall(const Symbol &symbol);
 
     void saveScope(const Scope &scope);
     int getScopeId();
@@ -63,8 +66,9 @@ private:
     Operation assignmentOperation;
 
     // Functions
-    std::string functionDeclarationName;
-    std::stack<int> amountFunctionParameters;
+    Symbol functionDeclaration;
+    std::stack<std::string> functionCallNames;
+    std::stack<std::vector<Type>> functionCallParameterTypes;
 
     // "When-is" statement
     std::stack<Type> whenExpressionTypes;

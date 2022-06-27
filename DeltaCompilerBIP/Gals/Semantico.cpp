@@ -519,12 +519,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             function.isFunction = true;
             scopes.back().symbolList.push_back(function);
 
-            functionName = lexeme;
+            functionDeclarationName = lexeme;
             break;
         }
 
         case 401: { // Reading function declaration parameter identifier
-            Symbol* function = getSymbolByName(functionName);
+            Symbol* function = getSymbolByName(functionDeclarationName);
             function->parameters.push_back(Parameter(leftType, lexeme));
 
             leftType = Type();
@@ -532,7 +532,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         case 402: { // Creating identifiers in function scope from function parameters
-            Symbol* function = getSymbolByName(functionName);
+            Symbol* function = getSymbolByName(functionDeclarationName);
 
             for (const Parameter &parameter : function->parameters) {
                 Symbol symbol = Symbol(parameter.type, parameter.name, scopes.back().id);
@@ -543,7 +543,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             }
 
             function->isInDeclaration = false;
-            functionName.clear();
+            functionDeclarationName.clear();
             break;
         }
 
@@ -559,49 +559,50 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             }
 
             function->isUsed = true;
-            functionName = lexeme;
+            functionDeclarationName = lexeme;
 
             expressions.push(Expression(function->type));
+            amountFunctionParameters.push(0);
             break;
         }
 
         case 404: { // Reading function call parameter
-            Symbol* function = getSymbolByName(functionName);
+            Symbol* function = getSymbolByName(functionDeclarationName);
 
-            if (amountFunctionParameters >= function->parameters.size()) {
-                throw InvalidFunctionParameterQuantityError(function->name, function->parameters.size(), amountFunctionParameters + 1);
+            if (amountFunctionParameters.top() >= function->parameters.size()) {
+                throw InvalidFunctionParameterQuantityError(function->name, function->parameters.size(), amountFunctionParameters.top() + 1);
             }
 
-            Type functionParameterType = function->parameters[amountFunctionParameters].type;
+            Type functionParameterType = function->parameters[amountFunctionParameters.top()].type;
             Expression expression = expressions.top();
 
             AssignmentResult result = OperationManager::checkImplicitCast(functionParameterType, expression.type);
 
             if (result == ATT_ER) {
-                throw InvalidFunctionParameterError(function->name, amountFunctionParameters + 1, functionParameterType, expression.type);
+                throw InvalidFunctionParameterError(function->name, amountFunctionParameters.top() + 1, functionParameterType, expression.type);
             }
 
-            amountFunctionParameters++;
+            amountFunctionParameters.top() += 1;
             expressions.pop();
             break;
         }
 
         case 405: { // Finish function call
-            Symbol* function = getSymbolByName(functionName);
+            Symbol* function = getSymbolByName(functionDeclarationName);
 
-            if (amountFunctionParameters != function->parameters.size()) {
-                throw InvalidFunctionParameterQuantityError(function->name, function->parameters.size(), amountFunctionParameters);
+            if (amountFunctionParameters.top() != function->parameters.size()) {
+                throw InvalidFunctionParameterQuantityError(function->name, function->parameters.size(), amountFunctionParameters.top());
             }
 
             expressions.push(Expression(function->type));
 
-            amountFunctionParameters = 0;
-            functionName.clear();
+            amountFunctionParameters.pop();
+            functionDeclarationName.clear();
             break;
         }
 
         case 406: { // Create scope for function
-            Symbol* function = getSymbolByName(functionName);
+            Symbol* function = getSymbolByName(functionDeclarationName);
             Scope scope = Scope(getScopeId());
 
             scope.returnType = function->type;
@@ -621,6 +622,11 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             }
 
             scopes.back().hasReturned = true;
+
+            if (expressions.top().type.primitive != PRIMITIVE_VOID) {
+                generator.popStack();
+            }
+
             expressions.pop();
             break;
         }

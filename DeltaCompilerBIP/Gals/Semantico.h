@@ -63,8 +63,8 @@ private:
     Operation assignmentOperation;
 
     // Functions
-    std::string functionName;
-    unsigned int amountFunctionParameters = 0;
+    std::string functionDeclarationName;
+    std::stack<int> amountFunctionParameters;
 
     // "When-is" statement
     std::stack<Type> whenExpressionTypes;

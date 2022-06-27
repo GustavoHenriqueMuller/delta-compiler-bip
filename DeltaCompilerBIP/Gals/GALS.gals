@@ -250,7 +250,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 <declaration_stmt_id_list> ::= ID #209 | ID #209 COMMA <declaration_stmt_id_list> | ID #209 ASSIGNMENT #146 <exp> #211 | ID #209 ASSIGNMENT #146 <exp> #211 COMMA <declaration_stmt_id_list>;
 
 <assignment_stmt> ::= <left_value> #212 <op_assignment> <exp> #211 #213;
-<return_stmt> ::= RETURN <exp> #407;
+<return_stmt> ::= RETURN <exp> #407 #503;
 
 // Blocks
 <if> ::= IF LSP <exp> #315 #300 RSP #157 <scope> #316 #158;
@@ -266,7 +266,7 @@ ID : [a-zA-Z_$][a-zA-Z_0-9$]*
 // Scopes and functions
 
 <scope> ::= LSC RSC | LSC <statement_list> RSC;
-<function> ::= <function_prototype> #403 #402 <scope> #158;
+<function> ::= <function_prototype> #402 #403 <scope> #158;
 <function_prototype> ::= <type> ID #400 LSP RSP | <type> ID #400 LSP <function_prototype_argument_list> RSP;
 <function_prototype_argument_list> ::= <type> ID #401 COMMA <function_prototype_argument_list> | <type> ID #401;
 

@@ -523,17 +523,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 402: { // Creating identifiers in function scope from function parameters
-            for (Symbol &symbol : functionDeclaration.parameters) {
-                symbol.isInDeclaration = false;
-                symbol.isInitialized = true;
-                scopes.back().symbolList.push_back(symbol);
-            }
-
-            break;
-        }
-
-        case 403: { // Create scope for function
+        case 402: { // Create scope for function
             if (declaredFunctionAlreadyExists()) {
                 throw FunctionIdentifierAlreadyExistsError(functionDeclaration);
             }
@@ -545,6 +535,16 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             scopes.push_back(newFunctionScope);
 
             generator.addLabel(functionDeclaration.getMangledName());
+            break;
+        }
+
+        case 403: { // Creating identifiers in function scope from function parameters
+            for (Symbol &symbol : functionDeclaration.parameters) {
+                symbol.isInDeclaration = false;
+                symbol.isInitialized = true;
+                scopes.back().symbolList.push_back(symbol);
+            }
+
             break;
         }
 
@@ -740,7 +740,7 @@ Symbol* Semantico::findAppropriateFunctionCall() {
 }
 
 bool Semantico::isSymbolAppropriateForFunctionCall(const Symbol &symbol) {
-    if (!symbol.isFunction || symbol.name != functionCallNames.top()) {
+    if (!symbol.isFunction || symbol.name != functionCallNames.top() || symbol.parameters.size() != functionCallParameterTypes.top().size()) {
         return false;
     }
 
@@ -755,7 +755,7 @@ bool Semantico::isSymbolAppropriateForFunctionCall(const Symbol &symbol) {
 
 bool Semantico::declaredFunctionAlreadyExists() {
     for (const Symbol &symbol : scopes.front().symbolList) {
-        if (symbol.getMangledName() == functionDeclaration.getMangledName() ) {
+        if (symbol.getMangledName() == functionDeclaration.getMangledName()) {
             return true;
         }
     }

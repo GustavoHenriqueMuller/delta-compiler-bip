@@ -2,13 +2,13 @@ int soma(int a, int b) {
 	return a + b;
 }
 
-int soma(char c) {
-	return 1;
+int soma(int f) {
+	return f;
 }
 
 void main() {
 	int a = soma(2, 4);
-	int b = soma('f');
+	int b = soma(3);
 	
 	print(a + b);
 }

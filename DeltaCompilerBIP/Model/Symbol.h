@@ -12,6 +12,8 @@ public:
     Symbol() {}
     Symbol(Type type, std::string name, int scopeId): type(type), name(name), scopeId(scopeId) {}
 
+    std::string getMangledName() const;
+
     Type type;
     std::string name;
     int scopeId;

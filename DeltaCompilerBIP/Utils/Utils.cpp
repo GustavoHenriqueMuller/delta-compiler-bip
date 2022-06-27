@@ -17,17 +17,3 @@ int Utils::lexemeToInt(const std::string &lexeme) {
 bool Utils::lexemeToBoolean(const std::string &lexeme) {
     return lexeme == "true";
 }
-
-std::string Utils::mangleFunction(const Symbol &function) {
-    std::string parameterNames;
-
-    for (int i = 0; i < function.parameters.size(); i++) {
-        parameterNames += function.parameters[i].type.toString();
-
-        if (i < function.parameters.size() - 1) {
-            parameterNames += "_";
-        }
-    }
-
-    return function.type.toString() + "_" + function.name + (function.parameters.size() > 0 ? "_" : "") + parameterNames;
-}

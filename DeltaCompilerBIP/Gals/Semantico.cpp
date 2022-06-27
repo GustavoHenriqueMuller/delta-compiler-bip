@@ -534,7 +534,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         case 403: { // Create scope for function
-            if (declaredFunctionExists()) {
+            if (declaredFunctionAlreadyExists()) {
                 throw FunctionIdentifierAlreadyExistsError(functionDeclaration);
             }
 
@@ -544,7 +544,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             newFunctionScope.returnType = functionDeclaration.type;
             scopes.push_back(newFunctionScope);
 
-            generator.addLabel(Utils::mangleFunction(functionDeclaration));
+            generator.addLabel(functionDeclaration.getMangledName());
             break;
         }
 
@@ -753,9 +753,9 @@ bool Semantico::isSymbolAppropriateForFunctionCall(const Symbol &symbol) {
     return true;
 }
 
-bool Semantico::declaredFunctionExists() {
+bool Semantico::declaredFunctionAlreadyExists() {
     for (const Symbol &symbol : scopes.front().symbolList) {
-        if (symbol.isFunction && Utils::mangleFunction(symbol) == Utils::mangleFunction(functionDeclaration)) {
+        if (symbol.getMangledName() == functionDeclaration.getMangledName() ) {
             return true;
         }
     }

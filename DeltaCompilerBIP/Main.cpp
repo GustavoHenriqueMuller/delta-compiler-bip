@@ -11,6 +11,7 @@
 #include <iostream>
 
 // TODO: Consertar function copies (fazer getSymbolByName retornar ponteiros), se possível retirar ponteiros do projeto
+// TODO: Fazer um mangle name de qualquer coisa no utils, generator usa esse nome. Talvez fazer isso ser um método do simbolo.
 // TODO: Fazer assigns serem expressões
 
 int main(int argc, char **argv) {

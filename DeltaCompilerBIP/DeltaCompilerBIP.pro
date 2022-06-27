@@ -14,6 +14,7 @@ SOURCES += \
     Main.cpp \
     Model/Operation.cpp \
     Model/OperationManager.cpp \
+    Model/Symbol.cpp \
     Utils/Utils.cpp
 
 HEADERS += \

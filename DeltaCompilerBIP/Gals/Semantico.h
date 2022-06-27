@@ -39,7 +39,7 @@ private:
 
     Symbol* findAppropriateFunctionCall();
     bool isSymbolAppropriateForFunctionCall(const Symbol &symbol);
-    bool declaredFunctionExists();
+    bool declaredFunctionAlreadyExists();
 
     void saveScope(const Scope &scope);
     int getScopeId();

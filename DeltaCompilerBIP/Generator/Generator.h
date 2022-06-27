@@ -42,8 +42,6 @@ private:
     void pushIsZero(const int &address);
 
     std::string getInstructionNameFromOperation(const OperationType &operationType);
-    std::string getFullIdentifier(const Symbol &symbol);
-    std::string mangleFunctionName(const Symbol &symbol);
 
     void addToDataSection(const std::string &string);
     void addInstruction(const std::string &instruction, const std::string &parameter);

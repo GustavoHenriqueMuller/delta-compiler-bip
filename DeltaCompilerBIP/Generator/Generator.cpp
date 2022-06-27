@@ -26,14 +26,14 @@ void Generator::addImmediate(const int &immediate) {
 void Generator::addIdentifier(const Symbol &symbol) {
     stackSize += 1;
 
-    addInstruction("LD", getFullIdentifier(symbol));
+    addInstruction("LD", symbol.getMangledName());
     addInstruction("STO", stackTop());
 }
 
 void Generator::addArrayIdentifier(const Symbol &symbol) {
     addInstruction("LD", stackTop());
     addInstruction("STO", "$indr");
-    addInstruction("LDV", getFullIdentifier(symbol));
+    addInstruction("LDV", symbol.getMangledName());
     addInstruction("STO", stackTop());
 }
 
@@ -174,34 +174,34 @@ void Generator::addUnaryOperation(const OperationType &operationType) {
 }
 
 void Generator::addMutableUnaryOperation(const OperationType &operationType, const Symbol &symbol) {
-    addInstruction("LD", getFullIdentifier(symbol));
+    addInstruction("LD", symbol.getMangledName());
 
     switch (operationType) {
         case OP_INCREMENT_RIGHT:
             stackSize += 1;
             addInstruction("STO", stackTop());
             addInstruction("ADDI", 1);
-            addInstruction("STO", getFullIdentifier(symbol));
+            addInstruction("STO", symbol.getMangledName());
             break;
         case OP_DECREMENT_RIGHT:
             stackSize += 1;
             addInstruction("STO", stackTop());
             addInstruction("SUBI", 1);
-            addInstruction("STO", getFullIdentifier(symbol));
+            addInstruction("STO", symbol.getMangledName());
             break;
         case OP_INCREMENT_LEFT:
             addInstruction("ADDI", 1);
 
             stackSize += 1;
             addInstruction("STO", stackTop());
-            addInstruction("STO", getFullIdentifier(symbol));
+            addInstruction("STO", symbol.getMangledName());
             break;
         case OP_DECREMENT_LEFT:
             addInstruction("SUBI", 1);
 
             stackSize += 1;
             addInstruction("STO", stackTop());
-            addInstruction("STO", getFullIdentifier(symbol));
+            addInstruction("STO", symbol.getMangledName());
             break;
     }
 }
@@ -212,28 +212,28 @@ void Generator::addMutableUnaryOperationOnArray(const OperationType &operationTy
 
     switch (operationType) {
         case OP_INCREMENT_RIGHT:
-            addInstruction("LDV", getFullIdentifier(symbol));
+            addInstruction("LDV", symbol.getMangledName());
             addInstruction("STO", stackTop());
             addInstruction("ADDI", 1);
-            addInstruction("STOV", getFullIdentifier(symbol));
+            addInstruction("STOV", symbol.getMangledName());
             break;
         case OP_DECREMENT_RIGHT:
-            addInstruction("LDV", getFullIdentifier(symbol));
+            addInstruction("LDV", symbol.getMangledName());
             addInstruction("STO", stackTop());
             addInstruction("SUBI", 1);
-            addInstruction("STOV", getFullIdentifier(symbol));
+            addInstruction("STOV", symbol.getMangledName());
             break;
         case OP_INCREMENT_LEFT:
-            addInstruction("LDV", getFullIdentifier(symbol));
+            addInstruction("LDV", symbol.getMangledName());
             addInstruction("ADDI", 1);
             addInstruction("STO", stackTop());
-            addInstruction("STOV", getFullIdentifier(symbol));
+            addInstruction("STOV", symbol.getMangledName());
             break;
         case OP_DECREMENT_LEFT:
-            addInstruction("LDV", getFullIdentifier(symbol));
+            addInstruction("LDV", symbol.getMangledName());
             addInstruction("SUBI", 1);
             addInstruction("STO", stackTop());
-            addInstruction("STOV", getFullIdentifier(symbol));
+            addInstruction("STOV", symbol.getMangledName());
             break;
     }
 }
@@ -266,14 +266,14 @@ void Generator::assignTo(const Symbol &symbol, const OperationType &assignmentOp
         addInstruction("LD", stackTop() - 1);
         addInstruction("STO", stackTop());
 
-        addInstruction("LD", getFullIdentifier(symbol));
+        addInstruction("LD", symbol.getMangledName());
         addInstruction("STO", stackTop() - 1);
 
         addBinaryOperation(getBinaryOperationFromAssignmentType(assignmentOperation).type);
     }
 
     addInstruction("LD", stackTop());
-    addInstruction("STO", getFullIdentifier(symbol));
+    addInstruction("STO", symbol.getMangledName());
     stackSize -= 1;
 }
 
@@ -286,7 +286,7 @@ void Generator::assignToArray(const Symbol &symbol, const OperationType &assignm
 
         addInstruction("LD ", stackTop() - 2);
         addInstruction("STO", "$indr");
-        addInstruction("LDV", getFullIdentifier(symbol));
+        addInstruction("LDV", symbol.getMangledName());
         addInstruction("STO", stackTop() - 1);
 
         addBinaryOperation(getBinaryOperationFromAssignmentType(assignmentOperation).type);
@@ -296,12 +296,12 @@ void Generator::assignToArray(const Symbol &symbol, const OperationType &assignm
     addInstruction("STO", "$indr");
 
     addInstruction("LD", stackTop());
-    addInstruction("STOV", getFullIdentifier(symbol));
+    addInstruction("STOV", symbol.getMangledName());
     stackSize -= 2;
 }
 
 void Generator::addIdentifierDeclaration(const Symbol &symbol) {
-    addToDataSection(getFullIdentifier(symbol) + ": 0");
+    addToDataSection(symbol.getMangledName() + ": 0");
 }
 
 void Generator::addArrayIdentifierDeclaration(const Symbol &symbol) {
@@ -315,7 +315,7 @@ void Generator::addArrayIdentifierDeclaration(const Symbol &symbol) {
         }
     }
 
-    addToDataSection(getFullIdentifier(symbol) + ": " + value);
+    addToDataSection(symbol.getMangledName() + ": " + value);
 }
 
 void Generator::addPrint() {
@@ -333,7 +333,7 @@ void Generator::addInput() {
 }
 
 void Generator::addCall(const Symbol &function) {
-    addInstruction("CALL", Utils::mangleFunction(function));
+    addInstruction("CALL", function.getMangledName());
 }
 
 void Generator::addReturn() {
@@ -390,14 +390,6 @@ std::string Generator::getInstructionNameFromOperation(const OperationType &oper
             return "SLL";
         case OP_BIT_RS:
             return "SRL";
-    }
-}
-
-std::string Generator::getFullIdentifier(const Symbol &symbol) {
-    if (symbol.isFunction) {
-        return Utils::mangleFunction(symbol);
-    } else {
-        return symbol.name + "_" + std::to_string(symbol.scopeId);
     }
 }
 

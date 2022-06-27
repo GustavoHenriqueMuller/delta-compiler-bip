@@ -263,7 +263,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             Symbol* symbol = getSymbolByName(lexeme);
 
             if (symbol != nullptr) {
-                throw DuplicateIdentifierError(lexeme);
+                throw IdentifierAlreadyExistsError(lexeme);
             }
 
             leftIdentifierNames.push_back(lexeme);
@@ -534,7 +534,9 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         case 403: { // Create scope for function
-            // TODO: Ver se função já existe
+            if (declaredFunctionExists()) {
+                throw FunctionIdentifierAlreadyExistsError(functionDeclaration);
+            }
 
             scopes.back().symbolList.push_back(functionDeclaration);
 
@@ -542,22 +544,11 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             newFunctionScope.returnType = functionDeclaration.type;
             scopes.push_back(newFunctionScope);
 
-            generator.addLabel(Utils::mangleFunctionName(functionDeclaration));
+            generator.addLabel(Utils::mangleFunction(functionDeclaration));
             break;
         }
 
         case 404: { // Reading function call identifier
-            Symbol* function = getSymbolByName(lexeme);
-
-            if (function == nullptr) {
-                throw IdentifierNotFoundError(lexeme);
-            }
-
-            if (!function->isFunction) {
-                throw IdentifierIsNotAFunctionError(lexeme);
-            }
-
-            function->isUsed = true;
             functionCallNames.push(lexeme);
             functionCallParameterTypes.push({});
             break;
@@ -574,6 +565,8 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             if (function == nullptr) {
                 throw FunctionIdentifierNotFoundError(functionCallNames.top(), functionCallParameterTypes.top());
             }
+
+            function->isUsed = true;
 
             for (int i = function->parameters.size() - 1; i >= 0; i--) {
                 generator.assignTo(function->parameters[i], OP_ASSIGNMENT);
@@ -758,6 +751,16 @@ bool Semantico::isSymbolAppropriateForFunctionCall(const Symbol &symbol) {
     }
 
     return true;
+}
+
+bool Semantico::declaredFunctionExists() {
+    for (const Symbol &symbol : scopes.front().symbolList) {
+        if (symbol.isFunction && Utils::mangleFunction(symbol) == Utils::mangleFunction(functionDeclaration)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void Semantico::saveScope(const Scope &scope) {

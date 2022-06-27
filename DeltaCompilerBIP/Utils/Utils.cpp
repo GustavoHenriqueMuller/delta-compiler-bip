@@ -18,7 +18,7 @@ bool Utils::lexemeToBoolean(const std::string &lexeme) {
     return lexeme == "true";
 }
 
-std::string Utils::mangleFunctionName(const Symbol &function) {
+std::string Utils::mangleFunction(const Symbol &function) {
     std::string parameterNames;
 
     for (int i = 0; i < function.parameters.size(); i++) {

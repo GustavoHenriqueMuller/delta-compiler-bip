@@ -333,7 +333,7 @@ void Generator::addInput() {
 }
 
 void Generator::addCall(const Symbol &function) {
-    addInstruction("CALL", Utils::mangleFunctionName(function));
+    addInstruction("CALL", Utils::mangleFunction(function));
 }
 
 void Generator::addReturn() {
@@ -395,7 +395,7 @@ std::string Generator::getInstructionNameFromOperation(const OperationType &oper
 
 std::string Generator::getFullIdentifier(const Symbol &symbol) {
     if (symbol.isFunction) {
-        return Utils::mangleFunctionName(symbol);
+        return Utils::mangleFunction(symbol);
     } else {
         return symbol.name + "_" + std::to_string(symbol.scopeId);
     }

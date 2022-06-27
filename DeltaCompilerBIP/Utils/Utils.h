@@ -10,7 +10,7 @@ namespace Utils {
     void printBar();
     int lexemeToInt(const std::string &lexeme);
     bool lexemeToBoolean(const std::string &lexeme);
-    std::string mangleFunctionName(const Symbol &function);
+    std::string mangleFunction(const Symbol &function);
 }
 
 #endif // UTILS_H

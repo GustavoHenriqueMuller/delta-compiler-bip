@@ -36,8 +36,10 @@ private:
     void doUnaryOperation();
 
     Symbol* getSymbolByName(const std::string &name);
+
     Symbol* findAppropriateFunctionCall();
     bool isSymbolAppropriateForFunctionCall(const Symbol &symbol);
+    bool declaredFunctionExists();
 
     void saveScope(const Scope &scope);
     int getScopeId();

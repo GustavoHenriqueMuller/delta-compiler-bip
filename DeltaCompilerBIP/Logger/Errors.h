@@ -1,11 +1,40 @@
 #ifndef ERRORS_H
 #define ERRORS_H
 
+#include "../Model/Symbol.h"
 #include "../Model/Type.h"
 #include "../Model/Operation.h"
 #include "../Gals/SemanticError.h"
 
 #include "vector"
+
+static std::string parameterTypesToString(const std::vector<Type> &parameterTypes) {
+    std::string result = "";
+
+    for (int i = 0; i < parameterTypes.size(); i++) {
+        result += parameterTypes[i].toString();
+
+        if (i < parameterTypes.size() - 1) {
+            result += ", ";
+        }
+    }
+
+    return result;
+}
+
+static std::string parameterTypesToString(const Symbol &symbol) {
+    std::string result = "";
+
+    for (int i = 0; i < symbol.parameters.size(); i++) {
+        result += symbol.parameters[i].type.toString();
+
+        if (i < symbol.parameters.size() - 1) {
+            result += ", ";
+        }
+    }
+
+    return result;
+}
 
 class ConstMutationError : public SemanticError {
 public:
@@ -14,17 +43,17 @@ public:
 };
 
 
-class DuplicateIdentifierError : public SemanticError {
+class IdentifierAlreadyExistsError : public SemanticError {
 public:
-    DuplicateIdentifierError(const std::string &identifier)
+    IdentifierAlreadyExistsError(const std::string &identifier)
       : SemanticError("Identifier '" + identifier + "' already exists", -1) { }
 };
 
 
-class IdentifierIsNotAFunctionError : public SemanticError {
+class FunctionIdentifierAlreadyExistsError : public SemanticError {
 public:
-    IdentifierIsNotAFunctionError(const std::string &identifier)
-      : SemanticError("Identifier '" + identifier + "' cannot be called, because it is not a function", -1) { }
+    FunctionIdentifierAlreadyExistsError(const Symbol &symbol)
+      : SemanticError("Function identifier '" + symbol.name + "(" + parameterTypesToString(symbol) + ")' already exists", -1) { }
 };
 
 
@@ -39,21 +68,6 @@ class FunctionIdentifierNotFoundError : public SemanticError {
 public:
     FunctionIdentifierNotFoundError(const std::string &identifier, const std::vector<Type> &parameterTypes)
       : SemanticError("Function identifier '" + identifier + "(" + parameterTypesToString(parameterTypes) + ")' not found", -1) {}
-
-private:
-    std::string parameterTypesToString(const std::vector<Type> &parameterTypes) {
-        std::string result = "";
-
-        for (int i = 0; i < parameterTypes.size(); i++) {
-            result += parameterTypes[i].toString();
-
-            if (i < parameterTypes.size() - 1) {
-                result += ", ";
-            }
-        }
-
-        return result;
-    }
 };
 
 

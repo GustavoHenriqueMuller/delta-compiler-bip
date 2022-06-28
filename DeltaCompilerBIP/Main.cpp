@@ -10,6 +10,7 @@
 
 #include <iostream>
 
+// TODO: Adicionar checagem por entry point
 // TODO: Consertar function copies (fazer getSymbolByName retornar ponteiros), se possível retirar ponteiros do projeto
 // TODO: Fazer assigns serem expressões
 

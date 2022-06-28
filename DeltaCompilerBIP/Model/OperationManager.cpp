@@ -27,13 +27,13 @@ OperationManager::PrimitiveReduced OperationManager::UNARY_OPERATION_TABLE[7][7]
 
 AssignmentResult OperationManager::ASSIGNMENT_TABLE[7][7] = {
     //             INT    FLOAT  DOUBLE STRING CHAR   BOOL   VOID
-    /* INT     */ {ATT_OK,ATT_OK,ATT_OK,ATT_ER,ATT_ER,ATT_OK,ATT_ER},
-    /* DOUBLE  */ {ATT_PL,ATT_OK,ATT_OK,ATT_ER,ATT_ER,ATT_ER,ATT_ER},
-    /* FLOAT   */ {ATT_PL,ATT_OK,ATT_PL,ATT_ER,ATT_ER,ATT_ER,ATT_ER},
-    /* STRING  */ {ATT_ER,ATT_ER,ATT_ER,ATT_OK,ATT_ER,ATT_ER,ATT_ER},
-    /* CHAR    */ {ATT_ER,ATT_ER,ATT_ER,ATT_OK,ATT_OK,ATT_ER,ATT_ER},
-    /* BOOLEAN */ {ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_OK,ATT_ER},
-    /* VOID    */ {ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_OK}
+    /* INT     */ {ASSIGNMENT_OK,ASSIGNMENT_OK,ASSIGNMENT_OK,ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_OK,ASSIGNMENT_ER},
+    /* DOUBLE  */ {ASSIGNMENT_PL,ASSIGNMENT_OK,ASSIGNMENT_OK,ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_ER},
+    /* FLOAT   */ {ASSIGNMENT_PL,ASSIGNMENT_OK,ASSIGNMENT_PL,ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_ER},
+    /* STRING  */ {ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_OK,ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_ER},
+    /* CHAR    */ {ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_OK,ASSIGNMENT_OK,ASSIGNMENT_ER,ASSIGNMENT_ER},
+    /* BOOLEAN */ {ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_OK,ASSIGNMENT_ER},
+    /* VOID    */ {ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_ER,ASSIGNMENT_OK}
 };
 
 Primitive OperationManager::checkBinaryOperation(const Type& type1, const Type& type2, const Operation& operation) {
@@ -89,7 +89,7 @@ Primitive OperationManager::checkUnaryOperation(const Type& type1, const Operati
 
 AssignmentResult OperationManager::checkImplicitCast(const Type& type1, const Type& type2) {
     if (type1.isArray != type2.isArray || type1.arraySize != type2.arraySize) {
-        return ATT_ER;
+        return ASSIGNMENT_ER;
     }
 
     return OperationManager::ASSIGNMENT_TABLE[type1.primitive][type2.primitive];
@@ -103,7 +103,7 @@ AssignmentResult OperationManager::checkAssignment(const Type& type1, const Type
         Primitive result = checkBinaryOperation(type1, type2, getBinaryOperationFromAssignmentType(attributionType));
 
         if (result == R_ERR) {
-            return ATT_ER;
+            return ASSIGNMENT_ER;
         } else {
             rightType.primitive = result;
         }

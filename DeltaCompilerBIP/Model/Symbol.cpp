@@ -1,11 +1,16 @@
 #include "Symbol.h"
 
+#include <algorithm>
+
 std::string Symbol::getMangledName() const {
     if (isFunction) {
         std::string parameterNames;
 
         for (int i = 0; i < parameters.size(); i++) {
-            parameterNames += parameters[i].type.toString();
+            std::string typeString = parameters[i].type.toString();
+            std::replace(typeString.begin(), typeString.end(), ' ', '_');
+
+            parameterNames += typeString;
 
             if (i < parameters.size() - 1) {
                 parameterNames += "_";

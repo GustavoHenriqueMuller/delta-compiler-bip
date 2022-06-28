@@ -5,8 +5,8 @@
 
 enum AssignmentResult {
     ASSIGNMENT_OK,
-    ASSIGNMENT_ERROR,
-    ASSIGNMENT_PRECISION_LOSS
+    ASSIGNMENT_ER,
+    ASSIGNMENT_PL
 };
 
 class OperationManager {

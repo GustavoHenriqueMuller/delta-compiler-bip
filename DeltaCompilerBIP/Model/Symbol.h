@@ -6,8 +6,7 @@
 #include <string>
 #include <vector>
 
-class Symbol {
-public:
+struct Symbol {
     Symbol() {}
     Symbol(Type type, std::string name, int scopeId): type(type), name(name), scopeId(scopeId) {}
 
@@ -20,8 +19,8 @@ public:
     bool isInitialized = false;
     bool isUsed = false;
     bool isInDeclaration = true;
-
     bool isFunction = false;
+
     std::vector<Symbol> parameters;
 };
 

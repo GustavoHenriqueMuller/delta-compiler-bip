@@ -14,14 +14,7 @@ enum Primitive {
     PRIMITIVE_ERR
 };
 
-class Type {
-public:
-    Primitive primitive;
-    bool isArray = false;
-    bool isConst = false;
-
-    int arraySize = 0;
-
+struct Type {
     Type() {}
     Type(Primitive primitive): primitive (primitive) {}
     Type(Primitive primitive, bool isArray, bool isConst): primitive(primitive), isArray(isArray), isConst(isConst) {}
@@ -60,6 +53,12 @@ public:
 
         return result;
     }
+
+    Primitive primitive;
+    bool isArray = false;
+    bool isConst = false;
+
+    int arraySize = 0;
 };
 
 #endif

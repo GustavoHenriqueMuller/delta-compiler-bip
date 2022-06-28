@@ -5,8 +5,7 @@
 
 #include <string>
 
-class Expression {
-public:
+struct Expression {
     Expression(Type type): type(type) {}
 
     Type type;

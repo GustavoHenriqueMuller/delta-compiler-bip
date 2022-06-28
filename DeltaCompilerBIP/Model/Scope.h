@@ -5,11 +5,11 @@
 
 #include <vector>
 
-class Scope {
-public:
+struct Scope {
     Scope(int id): id(id) {}
+    Scope(int id, Type returnType): id(id), returnType(returnType) {}
 
-    int id;
+    const int id;
     std::vector<Symbol> symbolList;
     bool hasReturned = false;
     Type returnType = Type(PRIMITIVE_VOID);

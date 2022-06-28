@@ -11,7 +11,7 @@
 	CALL void_main
 	HLT 0
 
-int_soma_const int:
+int_soma_const_int:
 	LD f_1
 	STO 1000
 	RETURN 0
@@ -20,14 +20,14 @@ int_soma_int_int:
 	STO 1000
 	LD 1000
 	STO f_1
-	CALL int_soma_const int
+	CALL int_soma_const_int
 	LD 1000
 	STO pog1_2
 	LD b_2
 	STO 1000
 	LD 1000
 	STO f_1
-	CALL int_soma_const int
+	CALL int_soma_const_int
 	LD 1000
 	STO pog2_2
 	LD pog1_2
@@ -54,7 +54,7 @@ void_main:
 	STO 1000
 	LD 1000
 	STO f_1
-	CALL int_soma_const int
+	CALL int_soma_const_int
 	LD 1000
 	STO b_3
 	LD b_3

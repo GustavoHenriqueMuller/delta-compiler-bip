@@ -133,9 +133,9 @@ public:
 };
 
 
-class MissingEntryPoint : public SemanticError {
+class MissingEntryPointError : public SemanticError {
 public:
-    MissingEntryPoint()
+    MissingEntryPointError()
       : SemanticError("Missing entry point (void main function)") { }
 };
 

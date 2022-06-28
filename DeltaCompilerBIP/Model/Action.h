@@ -3,8 +3,7 @@
 
 #include "../Gals/Token.h"
 
-class Action {
-public:
+struct Action {
     Action(int action, Token token): action(action), token(token) {}
 
     int action;

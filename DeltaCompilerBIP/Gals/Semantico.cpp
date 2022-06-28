@@ -351,7 +351,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                     break;
             }
 
-            if (OperationManager::checkImplicitCast(expressions.top().type, Type(PRIMITIVE_BOOLEAN)) == ASSIGNMENT_ERROR) {
+            if (OperationManager::checkImplicitCast(expressions.top().type, Type(PRIMITIVE_BOOLEAN)) == ASSIGNMENT_ER) {
                 throw InvalidExpressionForBlockError(expressions.top().type, blockName, Type(PRIMITIVE_BOOLEAN));
             }
 
@@ -369,7 +369,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             Expression expression = expressions.top();
             AssignmentResult result = OperationManager::checkImplicitCast(expression.type, whenExpressionTypes.top());
 
-            if (result == ASSIGNMENT_ERROR) {
+            if (result == ASSIGNMENT_ER) {
                 throw InvalidExpressionForBlockError(expression.type, "is", whenExpressionTypes.top());
             }
 
@@ -526,17 +526,16 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         case 402: { // Create scope for function
-            if (declaredFunctionAlreadyExists()) {
+            std::string mangledName = functionDeclaration.getMangledName();
+
+            if (functionExists(mangledName)) {
                 throw FunctionIdentifierAlreadyExistsError(functionDeclaration);
             }
 
             scopes.back().symbolList.push_back(functionDeclaration);
+            scopes.push_back(Scope(getScopeId(), functionDeclaration.type));
 
-            Scope newFunctionScope = Scope(getScopeId());
-            newFunctionScope.returnType = functionDeclaration.type;
-            scopes.push_back(newFunctionScope);
-
-            generator.addLabel(functionDeclaration.getMangledName());
+            generator.addLabel(mangledName);
             break;
         }
 
@@ -598,7 +597,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             Expression expression = expressions.top();
             AssignmentResult result = OperationManager::checkImplicitCast(expression.type, scopes.back().returnType);
 
-            if (result == ASSIGNMENT_ERROR) {
+            if (result == ASSIGNMENT_ER) {
                 throw InvalidFunctionReturnTypeError(expression.type, scopes.back().returnType);
             }
 
@@ -610,7 +609,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 408: { // Empty return statement
             AssignmentResult result = OperationManager::checkImplicitCast(Type(PRIMITIVE_VOID), scopes.back().returnType);
 
-            if (result == ASSIGNMENT_ERROR) {
+            if (result == ASSIGNMENT_ER) {
                 throw InvalidFunctionReturnTypeError(Type(PRIMITIVE_VOID), scopes.back().returnType);
             }
 
@@ -689,9 +688,9 @@ void Semantico::doAssignment() {
 
     AssignmentResult resultType = OperationManager::checkAssignment(expressionType, typeToAssign, assignmentOperation);
 
-    if (resultType == ASSIGNMENT_ERROR) {
+    if (resultType == ASSIGNMENT_ER) {
         throw IncompatibleAssignmentTypesError(symbol->name, expressionType, typeToAssign, assignmentOperation);
-    } else if (resultType == ASSIGNMENT_PRECISION_LOSS) {
+    } else if (resultType == ASSIGNMENT_PL) {
         logger.addWarning(PrecisionLossWarning(symbol->name, expressionType, typeToAssign));
     }
 
@@ -768,7 +767,7 @@ bool Semantico::isSymbolAppropriateForFunctionCall(const Symbol& symbol) {
     }
 
     for (int i = 0; i < symbol.parameters.size(); i++) {
-        if (OperationManager::checkImplicitCast(functionCallParameterTypes.top()[i], symbol.parameters[i].type) == ASSIGNMENT_ERROR) {
+        if (OperationManager::checkImplicitCast(functionCallParameterTypes.top()[i], symbol.parameters[i].type) == ASSIGNMENT_ER) {
             return false;
         }
     }
@@ -776,9 +775,9 @@ bool Semantico::isSymbolAppropriateForFunctionCall(const Symbol& symbol) {
     return true;
 }
 
-bool Semantico::declaredFunctionAlreadyExists() {
+bool Semantico::functionExists(const std::string &functionName) {
     for (const Symbol& symbol : scopes.front().symbolList) {
-        if (symbol.getMangledName() == functionDeclaration.getMangledName()) {
+        if (symbol.getMangledName() == functionName) {
             return true;
         }
     }
@@ -835,6 +834,10 @@ void Semantico::popScope() {
         if (!symbol.isUsed) {
             logger.addWarning(UnusedIdentifierWarning(symbol.name));
         }
+    }
+
+    if (scopes.size() == 1 && !functionExists("void_main")) {
+        throw MissingEntryPointError();
     }
 
     saveScope(scopes.back());

@@ -33,7 +33,7 @@ AssignmentResult OperationManager::ASSIGNMENT_TABLE[7][7] = {
     /* STRING  */ {ATT_ER,ATT_ER,ATT_ER,ATT_OK,ATT_ER,ATT_ER,ATT_ER},
     /* CHAR    */ {ATT_ER,ATT_ER,ATT_ER,ATT_OK,ATT_OK,ATT_ER,ATT_ER},
     /* BOOLEAN */ {ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_OK,ATT_ER},
-    /* VOID    */ {ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_ER}
+    /* VOID    */ {ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_OK}
 };
 
 Primitive OperationManager::checkBinaryOperation(const Type& type1, const Type& type2, const Operation& operation) {

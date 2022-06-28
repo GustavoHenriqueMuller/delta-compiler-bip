@@ -2,7 +2,6 @@
 #define SYMBOL_H
 
 #include "Type.h"
-#include "Parameter.h"
 
 #include <string>
 #include <vector>

@@ -36,7 +36,6 @@ HEADERS += \
     Model/Expression.h \
     Model/Operation.h \
     Model/OperationManager.h \
-    Model/Parameter.h \
     Model/Scope.h \
     Model/Symbol.h \
     Model/Type.h \

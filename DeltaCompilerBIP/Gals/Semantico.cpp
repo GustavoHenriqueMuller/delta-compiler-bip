@@ -517,7 +517,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         case 401: { // Reading function declaration parameter identifier
-            functionDeclaration.parameters.push_back(Symbol(leftType, lexeme, scopes.back().id + 1));
+            functionDeclaration.parameters.push_back(Symbol(leftType, lexeme, scopeCounter));
 
             leftType = Type();
             break;
@@ -822,7 +822,7 @@ int Semantico::getScopeId() {
 void Semantico::popScope() {
     if (!scopes.back().hasReturned) {
         if (scopes.back().returnType.primitive == PRIMITIVE_VOID) {
-            if (scopes.size() > 1) {
+            if (scopes.size() == 2) {
                 generator.addReturn();
             }
         } else {

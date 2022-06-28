@@ -76,11 +76,11 @@ public:
     std::string lexeme;
 };
 
-OperationType getOperationTypeFromTokenId(const TokenId &tokenId);
-OperationType getRightUnaryOperationTypeFromTokenId(const TokenId &tokenId);
-OperationType getLeftUnaryOperationTypeFromTokenId(const TokenId &tokenId);
-OperationType getAssignmentOperationTypeFromTokenId(const TokenId &tokenId);
-Operation getBinaryOperationFromAssignmentType(const OperationType &attributionType);
-OperationCategory getOperationCategory(const OperationType &operationType);
+OperationType getOperationTypeFromTokenId(const TokenId& tokenId);
+OperationType getRightUnaryOperationTypeFromTokenId(const TokenId& tokenId);
+OperationType getLeftUnaryOperationTypeFromTokenId(const TokenId& tokenId);
+OperationType getAssignmentOperationTypeFromTokenId(const TokenId& tokenId);
+Operation getBinaryOperationFromAssignmentType(const OperationType& attributionType);
+OperationCategory getOperationCategory(const OperationType& operationType);
 
 #endif // OPERATION_H

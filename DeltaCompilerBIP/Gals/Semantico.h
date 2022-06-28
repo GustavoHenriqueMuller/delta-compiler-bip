@@ -25,7 +25,7 @@
 
 class Semantico {
 public:
-    Semantico(Logger &logger, Generator &generator, ConsoleParser &consoleParser);
+    Semantico(Logger& logger, Generator& generator, ConsoleParser& consoleParser);
     void executeAction(int action, const Token *token) throw (SemanticError);
     void popScope();
     std::string getScopesJson();
@@ -35,13 +35,13 @@ private:
     void doOperation();
     void doUnaryOperation();
 
-    Symbol* getSymbolByName(const std::string &name);
+    Symbol* getSymbolByName(const std::string& name);
 
     Symbol* findAppropriateFunctionCall();
-    bool isSymbolAppropriateForFunctionCall(const Symbol &symbol);
+    bool isSymbolAppropriateForFunctionCall(const Symbol& symbol);
     bool declaredFunctionAlreadyExists();
 
-    void saveScope(const Scope &scope);
+    void saveScope(const Scope& scope);
     int getScopeId();
 
     // Logger and Generator

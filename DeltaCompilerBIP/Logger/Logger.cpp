@@ -1,6 +1,6 @@
 #include "Logger.h"
 
-void Logger::addWarning(const Warning &warning) {
+void Logger::addWarning(const Warning& warning) {
     warnings.push_back(warning);
 }
 
@@ -10,6 +10,6 @@ void Logger::logWarnings() {
     }
 }
 
-void Logger::logError(const AnalysisError &error) {
+void Logger::logError(const AnalysisError& error) {
     std::cout << "[ERROR]: " << error.getMessage() << std::endl;
 }

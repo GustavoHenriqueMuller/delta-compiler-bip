@@ -272,7 +272,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         case 210: { // Finishing declaration
-            for (const std::string &name : leftIdentifierNames) {
+            for (const std::string& name : leftIdentifierNames) {
                 Symbol* symbol = getSymbolByName(name);
 
                 if (symbol->type.isConst && !symbol->isInitialized) {
@@ -539,10 +539,17 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         case 403: { // Creating identifiers in function scope from function parameters
-            for (Symbol &symbol : functionDeclaration.parameters) {
+            for (Symbol& symbol : functionDeclaration.parameters) {
                 symbol.isInDeclaration = false;
                 symbol.isInitialized = true;
+
                 scopes.back().symbolList.push_back(symbol);
+
+                if (symbol.type.isArray) {
+                    generator.addArrayIdentifierDeclaration(symbol);
+                } else {
+                    generator.addIdentifierDeclaration(symbol);
+                }
             }
 
             break;
@@ -574,7 +581,10 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             }
 
             Symbol functionCopy = *function;
+
             generator.addCall(functionCopy);
+            generator.pushStack();
+
             expressions.push(Expression(function->type));
 
             functionCallNames.pop();
@@ -596,8 +606,20 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
+        case 408: { // Empty return statement
+            AssignmentResult result = OperationManager::checkImplicitCast(Type(PRIMITIVE_VOID), scopes.back().returnType);
+
+            if (result == ATT_ER) {
+                throw InvalidFunctionReturnTypeError(Type(PRIMITIVE_VOID), scopes.back().returnType);
+            }
+
+            scopes.back().hasReturned = true;
+            generator.addReturn();
+            break;
+        }
+
         /// INPUT AND OUTPUT
-        case 408: { // Print
+        case 409: { // Print
             if (expressions.top().type.isArray) {
                 throw InvalidFunctionParameterError("print", 0, Type(PRIMITIVE_VOID), expressions.top().type);
             }
@@ -609,7 +631,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         }
 
-        case 409: { // Input
+        case 410: { // Input
             generator.addInput();
             expressions.push(Expression(PRIMITIVE_INT));
             break;
@@ -630,7 +652,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         case 502: { // Executes delayed actions
-            for (const Action &action : delayedActions.top()) {
+            for (const Action& action : delayedActions.top()) {
                 executeAction(action.action, &action.token);
             }
 
@@ -717,9 +739,9 @@ void Semantico::doUnaryOperation() {
     expressions.push(Expression(resultType));
 }
 
-Symbol* Semantico::getSymbolByName(const std::string &name) {
-    for (Scope &scope : scopes) {
-        for (Symbol &symbol : scope.symbolList) {
+Symbol* Semantico::getSymbolByName(const std::string& name) {
+    for (Scope& scope : scopes) {
+        for (Symbol& symbol : scope.symbolList) {
             if (symbol.name == name) {
                 return &symbol;
             }
@@ -730,7 +752,7 @@ Symbol* Semantico::getSymbolByName(const std::string &name) {
 }
 
 Symbol* Semantico::findAppropriateFunctionCall() {
-    for (Symbol &symbol : scopes.front().symbolList) {
+    for (Symbol& symbol : scopes.front().symbolList) {
         if (isSymbolAppropriateForFunctionCall(symbol)) {
             return &symbol;
         }
@@ -739,7 +761,7 @@ Symbol* Semantico::findAppropriateFunctionCall() {
     return nullptr;
 }
 
-bool Semantico::isSymbolAppropriateForFunctionCall(const Symbol &symbol) {
+bool Semantico::isSymbolAppropriateForFunctionCall(const Symbol& symbol) {
     if (!symbol.isFunction || symbol.name != functionCallNames.top() || symbol.parameters.size() != functionCallParameterTypes.top().size()) {
         return false;
     }
@@ -754,7 +776,7 @@ bool Semantico::isSymbolAppropriateForFunctionCall(const Symbol &symbol) {
 }
 
 bool Semantico::declaredFunctionAlreadyExists() {
-    for (const Symbol &symbol : scopes.front().symbolList) {
+    for (const Symbol& symbol : scopes.front().symbolList) {
         if (symbol.getMangledName() == functionDeclaration.getMangledName()) {
             return true;
         }
@@ -763,7 +785,7 @@ bool Semantico::declaredFunctionAlreadyExists() {
     return false;
 }
 
-void Semantico::saveScope(const Scope &scope) {
+void Semantico::saveScope(const Scope& scope) {
     for (Symbol symbol : scope.symbolList) {
         jsonBuilder.open();
 
@@ -781,7 +803,8 @@ void Semantico::saveScope(const Scope &scope) {
         jsonBuilder.set("isFunction", symbol.isFunction);
 
         std::string parameters = "";
-        for (const Symbol &parameter : symbol.parameters)
+
+        for (const Symbol& parameter : symbol.parameters)
             parameters += parameter.type.toString() + " " + parameter.name + ", ";
 
         if (parameters.size() > 0)
@@ -797,11 +820,17 @@ int Semantico::getScopeId() {
 }
 
 void Semantico::popScope() {
-    if (!scopes.back().hasReturned && scopes.back().returnType.primitive != PRIMITIVE_VOID) {
-        throw MissingReturnStatementError(scopes.back().returnType);
+    if (!scopes.back().hasReturned) {
+        if (scopes.back().returnType.primitive == PRIMITIVE_VOID) {
+            if (scopes.size() > 1) {
+                generator.addReturn();
+            }
+        } else {
+            throw MissingReturnStatementError(scopes.back().returnType);
+        }
     }
 
-    for (const Symbol &symbol : scopes.back().symbolList) {
+    for (const Symbol& symbol : scopes.back().symbolList) {
         if (!symbol.isUsed) {
             logger.addWarning(UnusedIdentifierWarning(symbol.name));
         }
@@ -815,7 +844,7 @@ std::string Semantico::getScopesJson() {
     return jsonBuilder.build();
 }
 
-Semantico::Semantico(Logger &logger, Generator &generator, ConsoleParser &consoleParser):
+Semantico::Semantico(Logger& logger, Generator& generator, ConsoleParser& consoleParser):
     logger(logger), generator(generator), consoleParser(consoleParser)
 {
     scopes.push_back(Scope(getScopeId()));

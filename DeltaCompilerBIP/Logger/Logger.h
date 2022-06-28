@@ -12,9 +12,9 @@
 class Logger {
 public:
     Logger() {}
-    void addWarning(const Warning &warning);
+    void addWarning(const Warning& warning);
     void logWarnings();
-    void logError(const AnalysisError &logError);
+    void logError(const AnalysisError& logError);
 
 private:
     std::vector<Warning> warnings;

@@ -1,6 +1,6 @@
 #include "Operation.h"
 
-OperationType getOperationTypeFromTokenId(const TokenId &tokenId) {
+OperationType getOperationTypeFromTokenId(const TokenId& tokenId) {
     switch (tokenId) {
         // Arithmetic
         case t_PLUS:
@@ -46,7 +46,7 @@ OperationType getOperationTypeFromTokenId(const TokenId &tokenId) {
     }
 }
 
-OperationType getRightUnaryOperationTypeFromTokenId(const TokenId &tokenId) {
+OperationType getRightUnaryOperationTypeFromTokenId(const TokenId& tokenId) {
     switch (tokenId) {
         case t_INCREMENT:
             return OP_INCREMENT_RIGHT;
@@ -55,7 +55,7 @@ OperationType getRightUnaryOperationTypeFromTokenId(const TokenId &tokenId) {
     }
 }
 
-OperationType getLeftUnaryOperationTypeFromTokenId(const TokenId &tokenId) {
+OperationType getLeftUnaryOperationTypeFromTokenId(const TokenId& tokenId) {
     switch (tokenId) {
         case t_MINUS:
             return OP_MINUS_INVERSION;
@@ -70,7 +70,7 @@ OperationType getLeftUnaryOperationTypeFromTokenId(const TokenId &tokenId) {
     }
 }
 
-OperationType getAssignmentOperationTypeFromTokenId(const TokenId &tokenId) {
+OperationType getAssignmentOperationTypeFromTokenId(const TokenId& tokenId) {
     switch (tokenId) {
         case t_ASSIGNMENT:
             return OP_ASSIGNMENT;
@@ -97,7 +97,7 @@ OperationType getAssignmentOperationTypeFromTokenId(const TokenId &tokenId) {
     }
 }
 
-Operation getBinaryOperationFromAssignmentType(const OperationType &attributionType) {
+Operation getBinaryOperationFromAssignmentType(const OperationType& attributionType) {
     switch (attributionType) {
         case OP_INCREMENT_ASSIGNMENT:
             return Operation(OP_ADDITION, "+");
@@ -122,7 +122,7 @@ Operation getBinaryOperationFromAssignmentType(const OperationType &attributionT
     }
 }
 
-OperationCategory getOperationCategory(const OperationType &operationType) {
+OperationCategory getOperationCategory(const OperationType& operationType) {
     switch (operationType) {
         // Arit low
         case OP_ADDITION:

@@ -36,7 +36,7 @@ AssignmentResult OperationManager::ASSIGNMENT_TABLE[7][7] = {
     /* VOID    */ {ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_ER,ATT_ER}
 };
 
-Primitive OperationManager::checkBinaryOperation(Type type1, Type type2, Operation operation) {
+Primitive OperationManager::checkBinaryOperation(const Type& type1, const Type& type2, const Operation& operation) {
     OperationCategory category = getOperationCategory(operation.type);
     int operationIndex;
 
@@ -79,7 +79,7 @@ Primitive OperationManager::checkBinaryOperation(Type type1, Type type2, Operati
     return (Primitive) OperationManager::OPERATION_TABLE[type1.primitive][type2.primitive][operationIndex];
 }
 
-Primitive OperationManager::checkUnaryOperation(Type type1, Operation operation) {
+Primitive OperationManager::checkUnaryOperation(const Type& type1, const Operation& operation) {
     if (type1.isArray) {
         return PRIMITIVE_ERR;
     }
@@ -87,7 +87,7 @@ Primitive OperationManager::checkUnaryOperation(Type type1, Operation operation)
     return (Primitive) OperationManager::UNARY_OPERATION_TABLE[type1.primitive][operation.type - 18];
 }
 
-AssignmentResult OperationManager::checkImplicitCast(Type type1, Type type2) {
+AssignmentResult OperationManager::checkImplicitCast(const Type& type1, const Type& type2) {
     if (type1.isArray != type2.isArray || type1.arraySize != type2.arraySize) {
         return ATT_ER;
     }
@@ -95,7 +95,7 @@ AssignmentResult OperationManager::checkImplicitCast(Type type1, Type type2) {
     return OperationManager::ASSIGNMENT_TABLE[type1.primitive][type2.primitive];
 }
 
-AssignmentResult OperationManager::checkAssignment(Type type1, Type type2, Operation operation) {
+AssignmentResult OperationManager::checkAssignment(const Type& type1, const Type& type2, const Operation& operation) {
     Type rightType = type2;
     OperationType attributionType = operation.type;
 

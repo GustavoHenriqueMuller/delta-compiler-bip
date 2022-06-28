@@ -11,10 +11,10 @@ enum AssignmentResult {
 
 class OperationManager {
 public:
-    static Primitive checkBinaryOperation(Type type1, Type type2, Operation operation);
-    static Primitive checkUnaryOperation(Type type1, Operation operation);
-    static AssignmentResult checkImplicitCast(Type type1, Type type2);
-    static AssignmentResult checkAssignment(Type type1, Type type2, Operation operation);
+    static Primitive checkBinaryOperation(const Type& type1, const Type& type2, const Operation& operation);
+    static Primitive checkUnaryOperation(const Type& type1, const Operation& operation);
+    static AssignmentResult checkImplicitCast(const Type& type1, const Type& type2);
+    static AssignmentResult checkAssignment(const Type& type1, const Type& type2, const Operation& operation);
 
 private:
     enum PrimitiveReduced {

@@ -1,8 +1,14 @@
 .data
+	a_1: 0
+	b_1: 0
+	f_1: 0
 	a_3: 0
 	b_3: 0
 
 .text
+	jmp void_main
+	HLT 0
+
 int_soma_int_int:
 	LD a_1
 	STO 1000
@@ -26,22 +32,22 @@ void_main:
 	LD 1000
 	STO a_1
 	CALL int_soma_int_int
-	LD 999
+	LD 1000
 	STO a_3
 	LDI 3
-	STO 999
-	LD 999
+	STO 1000
+	LD 1000
 	STO f_1
 	CALL int_soma_int
-	LD 998
+	LD 1000
 	STO b_3
 	LD a_3
-	STO 998
+	STO 1000
 	LD b_3
-	STO 999
-	LD 998
-	ADD 999
-	STO 998
-	LD 998
+	STO 1001
+	LD 1000
+	ADD 1001
+	STO 1000
+	LD 1000
 	STO $out_port
-	HLT 0
+	RETURN 0

@@ -48,6 +48,10 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 throw IdentifierNotFoundError(lexeme);
             }
 
+            if (symbol->type.isArray) {
+                throw MissingArrayIndexError(lexeme);
+            }
+
             identifierNames.push(lexeme);
             identifierTypes.push(symbol->type);
             break;
@@ -347,7 +351,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                     break;
             }
 
-            if (OperationManager::checkImplicitCast(expressions.top().type, Type(PRIMITIVE_BOOLEAN)) == ATT_ER) {
+            if (OperationManager::checkImplicitCast(expressions.top().type, Type(PRIMITIVE_BOOLEAN)) == ASSIGNMENT_ERROR) {
                 throw InvalidExpressionForBlockError(expressions.top().type, blockName, Type(PRIMITIVE_BOOLEAN));
             }
 
@@ -365,7 +369,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             Expression expression = expressions.top();
             AssignmentResult result = OperationManager::checkImplicitCast(expression.type, whenExpressionTypes.top());
 
-            if (result == ATT_ER) {
+            if (result == ASSIGNMENT_ERROR) {
                 throw InvalidExpressionForBlockError(expression.type, "is", whenExpressionTypes.top());
             }
 
@@ -511,14 +515,12 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 400: { // Reading function declaration identifier
             functionDeclaration = Symbol(leftType, lexeme, scopes.back().id);
             functionDeclaration.isFunction = true;
-
             leftType = Type();
             break;
         }
 
         case 401: { // Reading function declaration parameter identifier
             functionDeclaration.parameters.push_back(Symbol(leftType, lexeme, scopeCounter));
-
             leftType = Type();
             break;
         }
@@ -573,8 +575,6 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
                 throw FunctionIdentifierNotFoundError(functionCallNames.top(), functionCallParameterTypes.top());
             }
 
-            function->isUsed = true;
-
             for (int i = function->parameters.size() - 1; i >= 0; i--) {
                 generator.assignTo(function->parameters[i], OP_ASSIGNMENT);
                 expressions.pop();
@@ -585,6 +585,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             generator.addCall(functionCopy);
             generator.pushStack();
 
+            function->isUsed = true;
             expressions.push(Expression(function->type));
 
             functionCallNames.pop();
@@ -593,11 +594,11 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         }
 
         /// RETURN STATEMENT
-        case 407: { // Check for type when returning from function
+        case 407: { // Return statement with expression
             Expression expression = expressions.top();
             AssignmentResult result = OperationManager::checkImplicitCast(expression.type, scopes.back().returnType);
 
-            if (result == ATT_ER) {
+            if (result == ASSIGNMENT_ERROR) {
                 throw InvalidFunctionReturnTypeError(expression.type, scopes.back().returnType);
             }
 
@@ -609,7 +610,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
         case 408: { // Empty return statement
             AssignmentResult result = OperationManager::checkImplicitCast(Type(PRIMITIVE_VOID), scopes.back().returnType);
 
-            if (result == ATT_ER) {
+            if (result == ASSIGNMENT_ERROR) {
                 throw InvalidFunctionReturnTypeError(Type(PRIMITIVE_VOID), scopes.back().returnType);
             }
 
@@ -688,9 +689,9 @@ void Semantico::doAssignment() {
 
     AssignmentResult resultType = OperationManager::checkAssignment(expressionType, typeToAssign, assignmentOperation);
 
-    if (resultType == ATT_ER) {
+    if (resultType == ASSIGNMENT_ERROR) {
         throw IncompatibleAssignmentTypesError(symbol->name, expressionType, typeToAssign, assignmentOperation);
-    } else if (resultType == ATT_PL) {
+    } else if (resultType == ASSIGNMENT_PRECISION_LOSS) {
         logger.addWarning(PrecisionLossWarning(symbol->name, expressionType, typeToAssign));
     }
 
@@ -767,7 +768,7 @@ bool Semantico::isSymbolAppropriateForFunctionCall(const Symbol& symbol) {
     }
 
     for (int i = 0; i < symbol.parameters.size(); i++) {
-        if (OperationManager::checkImplicitCast(functionCallParameterTypes.top()[i], symbol.parameters[i].type) == ATT_ER) {
+        if (OperationManager::checkImplicitCast(functionCallParameterTypes.top()[i], symbol.parameters[i].type) == ASSIGNMENT_ERROR) {
             return false;
         }
     }

@@ -1,4 +1,4 @@
-int soma(int f) {
+int soma(const int f) {
 	return f;
 }
 

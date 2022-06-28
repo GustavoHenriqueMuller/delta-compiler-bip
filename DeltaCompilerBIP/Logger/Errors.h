@@ -146,4 +146,11 @@ public:
       : SemanticError("Reading non-array identifier '" + identifier + "' as array", -1) { }
 };
 
+
+class MissingArrayIndexError : public SemanticError {
+public:
+    MissingArrayIndexError(const std::string& identifier)
+      : SemanticError("Missing index for accessing array '" + identifier + "'", -1) { }
+};
+
 #endif // ERRORS_H

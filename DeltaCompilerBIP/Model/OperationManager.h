@@ -4,9 +4,9 @@
 #include "Operation.h"
 
 enum AssignmentResult {
-    ATT_OK, // Ok
-    ATT_ER, // Error
-    ATT_PL  // Precision Loss
+    ASSIGNMENT_OK,
+    ASSIGNMENT_ERROR,
+    ASSIGNMENT_PRECISION_LOSS
 };
 
 class OperationManager {

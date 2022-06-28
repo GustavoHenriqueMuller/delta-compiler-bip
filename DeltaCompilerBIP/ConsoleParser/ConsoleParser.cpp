@@ -20,7 +20,7 @@ void ConsoleParser::parse(int argc, char** argv) {
     std::string extension = filePath.substr(filePath.find_last_of('.') + 1, filePath.size());
 
     if (extension != "delta") {
-        std::runtime_error("Error: File extension must be 'delta', got '" + extension + "'.");
+        throw std::runtime_error("Error: File extension must be 'delta', got '" + extension + "'.");
     }
 
     this->filePath = filePath;

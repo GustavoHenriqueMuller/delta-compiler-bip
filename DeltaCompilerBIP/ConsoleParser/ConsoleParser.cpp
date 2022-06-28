@@ -33,7 +33,7 @@ void ConsoleParser::parse(int argc, char** argv) {
         } else if (argument == "-debug") {
             this->debug = true;
         } else {
-            std::runtime_error("Error: Invalid argument '" + argument + "'.");
+            throw std::runtime_error("Error: Invalid argument '" + argument + "'.");
         }
     }
 }

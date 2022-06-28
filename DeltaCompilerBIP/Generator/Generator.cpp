@@ -92,7 +92,7 @@ void Generator::addBinaryOperation(const OperationType& operationType) {
                 addInstruction("STO", stackTop());
 
                 switch (operationType) {
-                    case OP_GREATER: // $n == 0& & $z == 0
+                    case OP_GREATER: // $n == 0 && $z == 0
                         pushIsNegative(stackTop());
                         pushIsZero(stackTop() - 1);
 

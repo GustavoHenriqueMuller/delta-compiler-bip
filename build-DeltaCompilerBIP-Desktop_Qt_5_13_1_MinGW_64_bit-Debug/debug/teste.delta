@@ -11,10 +11,12 @@ int soma(int a, int b) {
 
 void main() {
 	int a = soma(2, 4);
-	int b = soma(3);
+	int b = soma(3.0);
+	
+	const int c = 25;
 	
 	if (b > 2) {
-		print(2);
+		print(c);
 	}
 	
 	print(a + b);

@@ -575,6 +575,15 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             }
 
             for (int i = function->parameters.size() - 1; i >= 0; i--) {
+                Type& typeToAssign = function->parameters[i].type;
+                Type& typeExpression = functionCallParameterTypes.top()[i];
+
+                AssignmentResult result = OperationManager::checkImplicitCast(typeExpression, typeToAssign);
+
+                if (result == ASSIGNMENT_PL) {
+                    logger.addWarning(PrecisionLossWarning(function->parameters[i].name, typeExpression, typeToAssign));
+                }
+
                 generator.assignTo(function->parameters[i], OP_ASSIGNMENT);
                 expressions.pop();
             }

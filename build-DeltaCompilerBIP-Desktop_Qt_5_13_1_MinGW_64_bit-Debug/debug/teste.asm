@@ -4,9 +4,10 @@
 	b_2: 0
 	pog1_2: 0
 	pog2_2: 0
-	a_3: 0
-	b_3: 0
-	c_3: 0
+	i_3: 0
+	a_4: 0
+	b_4: 0
+	c_4: 0
 
 .text
 	CALL void_main
@@ -31,6 +32,34 @@ int_soma_int_int:
 	CALL int_soma_const_int
 	LD 1000
 	STO pog2_2
+	LDI 0
+	STO 1000
+	LD 1000
+	STO i_3
+for_start_0:
+	LD i_3
+	STO 1000
+	LDI 5
+	STO 1001
+	LD 1000
+	SUB 1001
+	STO 1001
+	LD 1001
+	SRL 10
+	ANDI 1
+	STO 1000
+	LD 1000
+	BEQ for_end_0
+	LD i_3
+	STO 1000
+	LD 1000
+	STO $out_port
+	LD i_3
+	STO 1000
+	ADDI 1
+	STO i_3
+	JMP for_start_0
+for_end_0:
 	LD pog1_2
 	STO 1000
 	LD pog2_2
@@ -50,62 +79,64 @@ void_main:
 	STO a_2
 	CALL int_soma_int_int
 	LD 1000
-	STO a_3
-	LD 999
+	STO a_4
+	LDI 3
+	STO 1000
+	LD 1000
 	STO f_1
 	CALL int_soma_const_int
-	LD 999
-	STO b_3
+	LD 1000
+	STO b_4
 	LDI 25
-	STO 999
-	LD 999
-	STO c_3
-	LD b_3
-	STO 999
-	LDI 2
-	STO 1000
-	LD 999
-	SUB 1000
 	STO 1000
 	LD 1000
-	SRL 10
-	ANDI 1
+	STO c_4
+	LD b_4
+	STO 1000
+	LDI 2
 	STO 1001
 	LD 1000
+	SUB 1001
+	STO 1001
+	LD 1001
 	SRL 10
 	ANDI 1
 	STO 1002
-	LD 1000
+	LD 1001
+	SRL 10
+	ANDI 1
+	STO 1003
+	LD 1001
 	NOT 0
 	ADDI 1
 	SRL 10
 	ANDI 1
-	OR 1002
+	OR 1003
 	XORI 1
-	STO 1002
-	LD 1001
-	XORI 1
-	STO 1001
+	STO 1003
 	LD 1002
 	XORI 1
-	AND 1001
-	STO 999
-	LD 999
-	BEQ if_end_0
-	LD c_3
-	STO 999
-	LD 999
-	STO $out_port
-	JMP if_stmt_end_0
-if_end_0:
-if_stmt_end_0:
-	LD a_3
-	STO 999
-	LD b_3
+	STO 1002
+	LD 1003
+	XORI 1
+	AND 1002
 	STO 1000
-	LD 999
-	ADD 1000
-	STO 999
-	LD 999
+	LD 1000
+	BEQ if_end_1
+	LD c_4
+	STO 1000
+	LD 1000
+	STO $out_port
+	JMP if_stmt_end_1
+if_end_1:
+if_stmt_end_1:
+	LD a_4
+	STO 1000
+	LD b_4
+	STO 1001
+	LD 1000
+	ADD 1001
+	STO 1000
+	LD 1000
 	STO $out_port
 	RETURN 0

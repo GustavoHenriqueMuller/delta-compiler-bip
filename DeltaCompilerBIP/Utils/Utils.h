@@ -1,7 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "Model/Symbol.h"
+#include "../Model/Symbol.h"
 
 #include <string>
 #include <iostream>

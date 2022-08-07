@@ -11,7 +11,7 @@ Syntax: ```delta [options] [filepath]```
 
 ## Features
 Variables and datatypes - Integer (int), Character (char), Boolean (bool) and Void (void):
-~~~java
+```java
 void main() {
   int a = 5;
   char b = 'x';
@@ -19,9 +19,9 @@ void main() {
   
   return;
 }
-~~~
+```
 Single-line and multi-line comments:
-~~~java
+```java
 void main() {
   // I'm a single-lined comment
   
@@ -33,9 +33,9 @@ void main() {
   
   return;
 }
-~~~
+```
 Expressions - Addition, subtraction, bit OR, bit XOR, bit AND, bit LS, bit RS (usable with assignment operator):
-~~~java
+```java
 void main() {
   int value = 4 + 4 - 2;
   int dividedByTwo = value << 2;
@@ -44,9 +44,9 @@ void main() {
   int incrementAssign = 4;
   incrementAssign += 2; // "incrementAssign" now contains 6
 }
-~~~
+```
 Unary operators:
-~~~java
+```java
 void main() {
   int unary = 0;
   unary--; // expression returns 0 and "unary" contains -1
@@ -62,9 +62,9 @@ void main() {
   
   return;
 }
-~~~
+```
 Single-dimension arrays for any datatype:
-~~~java
+```java
 void main() {
   int[3] array;
   array[0] = 10;
@@ -72,9 +72,9 @@ void main() {
     
   return;
 }
-~~~
+```
 Control structures: if, elseif, else, while, for, do while and when-is (switch-case statement):
-~~~java
+```java
 void main() {
   int[3] array;
   array[0] = 20;
@@ -99,8 +99,8 @@ void main() {
   
   return;
 }
-~~~
-~~~java
+```
+```java
 void main() {
   int number = 42;
   int choice = 0;
@@ -120,9 +120,9 @@ void main() {
   
   return;
 }
-~~~
+```
 Input and output:
-~~~java
+```java
 void main() {
   int a = 3;
   print(a); // prints 3
@@ -134,7 +134,7 @@ void main() {
   
   return;
 }
-~~~
+```
 Assembly generated for bubblesort:
 ```
 .data

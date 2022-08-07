@@ -5,9 +5,6 @@
 
 enum Primitive {
     PRIMITIVE_INT,
-    PRIMITIVE_FLOAT,
-    PRIMITIVE_DOUBLE,
-    PRIMITIVE_STRING,
     PRIMITIVE_CHAR,
     PRIMITIVE_BOOLEAN,
     PRIMITIVE_VOID,
@@ -29,12 +26,6 @@ struct Type {
         switch (primitive) {
             case PRIMITIVE_INT:
                 result += "int";
-                break;
-            case PRIMITIVE_FLOAT:
-                result += "float";
-                break;
-            case PRIMITIVE_STRING:
-                result += "string";
                 break;
             case PRIMITIVE_CHAR:
                 result += "char";

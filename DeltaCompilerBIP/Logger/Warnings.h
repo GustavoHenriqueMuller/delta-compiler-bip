@@ -33,10 +33,4 @@ public:
 };
 
 
-class PrecisionLossWarning : public Warning {
-public:
-    PrecisionLossWarning(const std::string& identifier, const Type& typeExpression, const Type& typeIdentifier)
-      : Warning("Precision loss while assigning '" + typeExpression.toString() + "' to '" + identifier + "' of type '" + typeIdentifier.toString() + "'", -1) { }
-};
-
 #endif // WARNINGS_H

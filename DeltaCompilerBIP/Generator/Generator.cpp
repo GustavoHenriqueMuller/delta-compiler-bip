@@ -52,8 +52,7 @@ void Generator::popStack(int amount) {
 
 void Generator::addBinaryOperation(const OperationType& operationType) {
     switch (getOperationCategory(operationType)) {
-        case CATEGORY_ARIT_HIGH:
-        case CATEGORY_ARIT_LOW:
+        case CATEGORY_ARIT:
         case CATEGORY_BIT: {
             std::string instructionName = getInstructionNameFromOperation(operationType);
 

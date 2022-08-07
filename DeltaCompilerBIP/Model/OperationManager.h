@@ -5,8 +5,7 @@
 
 enum AssignmentResult {
     ASSIGNMENT_OK,
-    ASSIGNMENT_ER,
-    ASSIGNMENT_PL
+    ASSIGNMENT_ER
 };
 
 class OperationManager {
@@ -19,18 +18,15 @@ public:
 private:
     enum PrimitiveReduced {
         R_INT,
-        R_FLO,
-        R_DOU,
-        R_STR,
         R_CHA,
         R_BOO,
         R_VOI,
         R_ERR
     };
 
-    static PrimitiveReduced OPERATION_TABLE[7][7][7];
-    static PrimitiveReduced UNARY_OPERATION_TABLE[7][7];
-    static AssignmentResult ASSIGNMENT_TABLE[7][7];
+    static PrimitiveReduced OPERATION_TABLE[4][4][4];
+    static PrimitiveReduced UNARY_OPERATION_TABLE[4][7];
+    static AssignmentResult ASSIGNMENT_TABLE[4][4];
 };
 
 #endif // OPERATION_MANAGER_H

@@ -7,12 +7,6 @@ OperationType getOperationTypeFromTokenId(const TokenId& tokenId) {
             return OP_ADDITION;
         case t_MINUS:
             return OP_SUBTRACTION;
-        case t_MULT:
-            return OP_MULTIPLICATION;
-        case t_DIV:
-            return OP_DIVISION;
-        case t_MOD:
-            return OP_MOD;
 
         // Relational
         case t_OR:
@@ -78,12 +72,6 @@ OperationType getAssignmentOperationTypeFromTokenId(const TokenId& tokenId) {
             return OP_INCREMENT_ASSIGNMENT;
         case t_DECREMENT_ASSIGNMENT:
             return OP_DECREMENT_ASSIGNMENT;
-        case t_MULTIPLICATION_ASSIGNMENT:
-            return OP_MULTIPLICATION_ASSIGNMENT;
-        case t_DIVSION_ASSIGNMENT:
-            return OP_DIVISION_ASSIGNMENT;
-        case t_MOD_ASSIGNMENT:
-            return OP_MOD_ASSIGNMENT;
         case t_BIT_OR_ASSIGNMENT:
             return OP_DECREMENT_ASSIGNMENT;
         case t_BIT_XOR_ASSIGNMENT:
@@ -103,12 +91,6 @@ Operation getBinaryOperationFromAssignmentType(const OperationType& attributionT
             return Operation(OP_ADDITION, "+");
         case OP_DECREMENT_ASSIGNMENT:
             return Operation(OP_SUBTRACTION, "-");
-        case OP_MULTIPLICATION_ASSIGNMENT:
-            return Operation(OP_MULTIPLICATION, "*");
-        case OP_DIVISION_ASSIGNMENT:
-            return Operation(OP_DIVISION, "/");
-        case OP_MOD_ASSIGNMENT:
-            return Operation(OP_MOD, "%");
         case OP_BIT_OR_ASSIGNMENT:
             return Operation(OP_BIT_OR, "|");
         case OP_BIT_XOR_ASSIGNMENT:
@@ -127,13 +109,7 @@ OperationCategory getOperationCategory(const OperationType& operationType) {
         // Arit low
         case OP_ADDITION:
         case OP_SUBTRACTION:
-            return CATEGORY_ARIT_LOW;
-
-        // Arit high
-        case OP_MULTIPLICATION:
-        case OP_DIVISION:
-        case OP_MOD:
-            return CATEGORY_ARIT_HIGH;
+            return CATEGORY_ARIT;
 
         // Relational
         case OP_OR:
@@ -174,9 +150,6 @@ OperationCategory getOperationCategory(const OperationType& operationType) {
         case OP_ASSIGNMENT:
         case OP_INCREMENT_ASSIGNMENT:
         case OP_DECREMENT_ASSIGNMENT:
-        case OP_MULTIPLICATION_ASSIGNMENT:
-        case OP_DIVISION_ASSIGNMENT:
-        case OP_MOD_ASSIGNMENT:
         case OP_BIT_OR_ASSIGNMENT:
         case OP_BIT_XOR_ASSIGNMENT:
         case OP_BIT_AND_ASSIGNMENT:

@@ -109,17 +109,13 @@ int n = input(); // takes integer number from user
 Assembly generated for bubblesort:
 ```
 .data
-	array_1: 0, 0, 0
-	i_2: 0
-	j_3: 0
-	temp_4: 0
-	i_5: 0
+	array_0: 0, 0, 0
+	i_1: 0
+	j_2: 0
+	temp_3: 0
+	i_4: 0
 
 .text
-	CALL void_main
-	HLT 0
-
-void_main:
 	LDI 0
 	STO 1000
 	LDI 20
@@ -127,7 +123,7 @@ void_main:
 	LD 1000
 	STO $indr
 	LD 1001
-	STOV array_1
+	STOV array_0
 	LDI 1
 	STO 1000
 	LDI 15
@@ -135,7 +131,7 @@ void_main:
 	LD 1000
 	STO $indr
 	LD 1001
-	STOV array_1
+	STOV array_0
 	LDI 2
 	STO 1000
 	LDI 10
@@ -143,13 +139,13 @@ void_main:
 	LD 1000
 	STO $indr
 	LD 1001
-	STOV array_1
+	STOV array_0
 	LDI 0
 	STO 1000
 	LD 1000
-	STO i_2
+	STO i_1
 for_start_0:
-	LD i_2
+	LD i_1
 	STO 1000
 	LDI 3
 	STO 1001
@@ -170,13 +166,13 @@ for_start_0:
 	LDI 0
 	STO 1000
 	LD 1000
-	STO j_3
+	STO j_2
 for_start_1:
-	LD j_3
+	LD j_2
 	STO 1000
 	LDI 3
 	STO 1001
-	LD i_2
+	LD i_1
 	STO 1002
 	LD 1001
 	SUB 1002
@@ -195,13 +191,13 @@ for_start_1:
 	STO 1000
 	LD 1000
 	BEQ for_end_1
-	LD j_3
+	LD j_2
 	STO 1000
 	LD 1000
 	STO $indr
-	LDV array_1
+	LDV array_0
 	STO 1000
-	LD j_3
+	LD j_2
 	STO 1001
 	LDI 1
 	STO 1002
@@ -210,7 +206,7 @@ for_start_1:
 	STO 1001
 	LD 1001
 	STO $indr
-	LDV array_1
+	LDV array_0
 	STO 1001
 	LD 1000
 	SUB 1001
@@ -240,17 +236,17 @@ for_start_1:
 	STO 1000
 	LD 1000
 	BEQ if_end_2
-	LD j_3
+	LD j_2
 	STO 1000
 	LD 1000
 	STO $indr
-	LDV array_1
+	LDV array_0
 	STO 1000
 	LD 1000
-	STO temp_4
-	LD j_3
+	STO temp_3
+	LD j_2
 	STO 1000
-	LD j_3
+	LD j_2
 	STO 1001
 	LDI 1
 	STO 1002
@@ -259,46 +255,46 @@ for_start_1:
 	STO 1001
 	LD 1001
 	STO $indr
-	LDV array_1
+	LDV array_0
 	STO 1001
 	LD 1000
 	STO $indr
 	LD 1001
-	STOV array_1
-	LD j_3
+	STOV array_0
+	LD j_2
 	STO 1000
 	LDI 1
 	STO 1001
 	LD 1000
 	ADD 1001
 	STO 1000
-	LD temp_4
+	LD temp_3
 	STO 1001
 	LD 1000
 	STO $indr
 	LD 1001
-	STOV array_1
+	STOV array_0
 	JMP if_stmt_end_2
 if_end_2:
 if_stmt_end_2:
-	LD j_3
+	LD j_2
 	STO 1000
 	ADDI 1
-	STO j_3
+	STO j_2
 	JMP for_start_1
 for_end_1:
-	LD i_2
+	LD i_1
 	STO 1000
 	ADDI 1
-	STO i_2
+	STO i_1
 	JMP for_start_0
 for_end_0:
 	LDI 0
 	STO 1000
 	LD 1000
-	STO i_5
+	STO i_4
 for_start_3:
-	LD i_5
+	LD i_4
 	STO 1000
 	LDI 3
 	STO 1001
@@ -311,19 +307,19 @@ for_start_3:
 	STO 1000
 	LD 1000
 	BEQ for_end_3
-	LD i_5
+	LD i_4
 	STO 1000
 	LD 1000
 	STO $indr
-	LDV array_1
+	LDV array_0
 	STO 1000
 	LD 1000
 	STO $out_port
-	LD i_5
+	LD i_4
 	STO 1000
 	ADDI 1
-	STO i_5
+	STO i_4
 	JMP for_start_3
 for_end_3:
-	RETURN 0
+	HLT 0
 ```

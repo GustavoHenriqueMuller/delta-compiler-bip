@@ -65,13 +65,13 @@ array[2] = 10;
 
 // Bubblesort
 for (int i = 0; i < 3 - 1; i++) {
-	for (int j = 0; j < 3 - i - 1; j++) {
-		if (array[j] > array[j + 1]) {
-			int temp = array[j];
-			array[j] = array[j + 1];
-			array[j + 1] = temp;
-		}
-	}
+  for (int j = 0; j < 3 - i - 1; j++) {
+    if (array[j] > array[j + 1]) {
+      int temp = array[j];
+      array[j] = array[j + 1];
+      array[j + 1] = temp;
+    }
+  }
 }
 
 // Print all elements
@@ -85,16 +85,16 @@ int choice = 0;
 
 // Guess the number
 while (true) {
-	choice = input();
+  choice = input();
 
-	if (choice > number) {
-		print(1); // lower!
-	} elseif (choice < number) {
-		print(2); // higher!
-	} else {
-		print(3); // you won!
-		return;
-	}
+  if (choice > number) {
+    print(1); // lower!
+  } elseif (choice < number) {
+    print(2); // higher!
+  } else {
+    print(3); // you won!
+    return;
+  }
 }
 ```
 Input and output:

@@ -76,7 +76,7 @@ for (int i = 0; i < 3 - 1; i++) {
 
 // Print all elements
 for (int i = 0; i < 3; i++) {
-	print(array[i]);
+  print(array[i]);
 }
 ```
 ```c

@@ -496,116 +496,9 @@ void Semantico::executeAction(int action, const Token* token) throw (SemanticErr
         }
 
         // /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Scopes and functions
+        // Input and output
 
-        case 400: { // Reading function declaration identifier
-            functionDeclaration = Symbol(leftType, lexeme, scopes.back().id);
-            functionDeclaration.isFunction = true;
-            leftType = Type();
-            break;
-        }
-
-        case 401: { // Reading function declaration parameter identifier
-            functionDeclaration.parameters.push_back(Symbol(leftType, lexeme, scopeCounter));
-            leftType = Type();
-            break;
-        }
-
-        case 402: { // Create scope for function
-            std::string mangledName = functionDeclaration.getMangledName();
-
-            if (functionExists(mangledName)) {
-                throw FunctionIdentifierAlreadyExistsError(functionDeclaration);
-            }
-
-            scopes.back().symbolList.push_back(functionDeclaration);
-            scopes.push_back(Scope(getScopeId(), functionDeclaration.type));
-
-            generator.addLabel(mangledName);
-            break;
-        }
-
-        case 403: { // Creating identifiers in function scope from function parameters
-            for (Symbol& symbol : functionDeclaration.parameters) {
-                symbol.isInDeclaration = false;
-                symbol.isInitialized = true;
-
-                scopes.back().symbolList.push_back(symbol);
-
-                if (symbol.type.isArray) {
-                    generator.addArrayIdentifierDeclaration(symbol);
-                } else {
-                    generator.addIdentifierDeclaration(symbol);
-                }
-            }
-
-            break;
-        }
-
-        case 404: { // Reading function call identifier
-            functionCallNames.push(lexeme);
-            functionCallParameterTypes.push({});
-            break;
-        }
-
-        case 405: { // Reading function call parameter
-            functionCallParameterTypes.top().push_back(expressions.top().type);
-            break;
-        }
-
-        case 406: { // Finish function call
-            Symbol* function = findAppropriateFunctionCall();
-
-            if (function == nullptr) {
-                throw FunctionIdentifierNotFoundError(functionCallNames.top(), functionCallParameterTypes.top());
-            }
-
-            for (int i = function->parameters.size() - 1; i >= 0; i--) {
-                generator.assignTo(function->parameters[i], OP_ASSIGNMENT);
-                expressions.pop();
-            }
-
-            Symbol functionCopy = *function;
-
-            generator.addCall(functionCopy);
-            generator.pushStack();
-
-            function->isUsed = true;
-            expressions.push(Expression(function->type));
-
-            functionCallNames.pop();
-            functionCallParameterTypes.pop();
-            break;
-        }
-
-        /// RETURN STATEMENT
-        case 407: { // Return statement with expression
-            Expression expression = expressions.top();
-            AssignmentResult result = OperationManager::checkImplicitCast(expression.type, scopes.back().returnType);
-
-            if (result == ASSIGNMENT_ER) {
-                throw InvalidFunctionReturnTypeError(expression.type, scopes.back().returnType);
-            }
-
-            scopes.back().hasReturned = true;
-            generator.addReturn();
-            break;
-        }
-
-        case 408: { // Empty return statement
-            AssignmentResult result = OperationManager::checkImplicitCast(Type(PRIMITIVE_VOID), scopes.back().returnType);
-
-            if (result == ASSIGNMENT_ER) {
-                throw InvalidFunctionReturnTypeError(Type(PRIMITIVE_VOID), scopes.back().returnType);
-            }
-
-            scopes.back().hasReturned = true;
-            generator.addReturn();
-            break;
-        }
-
-        /// INPUT AND OUTPUT
-        case 409: { // Print
+        case 400: { // Print
             if (expressions.top().type.isArray) {
                 throw InvalidFunctionParameterError("print", 0, Type(PRIMITIVE_VOID), expressions.top().type);
             }
@@ -617,7 +510,7 @@ void Semantico::executeAction(int action, const Token* token) throw (SemanticErr
             break;
         }
 
-        case 410: { // Input
+        case 401: { // Input
             generator.addInput();
             expressions.push(Expression(PRIMITIVE_INT));
             break;
@@ -735,40 +628,6 @@ Symbol* Semantico::getSymbolByName(const std::string& name) {
     return nullptr;
 }
 
-Symbol* Semantico::findAppropriateFunctionCall() {
-    for (Symbol& symbol : scopes.front().symbolList) {
-        if (isSymbolAppropriateForFunctionCall(symbol)) {
-            return &symbol;
-        }
-    }
-
-    return nullptr;
-}
-
-bool Semantico::isSymbolAppropriateForFunctionCall(const Symbol& symbol) {
-    if (!symbol.isFunction || symbol.name != functionCallNames.top() || symbol.parameters.size() != functionCallParameterTypes.top().size()) {
-        return false;
-    }
-
-    for (int i = 0; i < symbol.parameters.size(); i++) {
-        if (OperationManager::checkImplicitCast(functionCallParameterTypes.top()[i], symbol.parameters[i].type) == ASSIGNMENT_ER) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-bool Semantico::functionExists(const std::string &functionName) {
-    for (const Symbol& symbol : scopes.front().symbolList) {
-        if (symbol.getMangledName() == functionName) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 void Semantico::saveScope(const Scope& scope) {
     for (Symbol symbol : scope.symbolList) {
         jsonBuilder.open();
@@ -784,17 +643,7 @@ void Semantico::saveScope(const Scope& scope) {
         jsonBuilder.set("isInitialized", symbol.isInitialized);
         jsonBuilder.set("isUsed", symbol.isUsed);
         jsonBuilder.set("isInDeclaration", symbol.isInDeclaration);
-        jsonBuilder.set("isFunction", symbol.isFunction);
 
-        std::string parameters = "";
-
-        for (const Symbol& parameter : symbol.parameters)
-            parameters += parameter.type.toString() + " " + parameter.name + ", ";
-
-        if (parameters.size() > 0)
-            parameters.erase(parameters.begin() + parameters.size() - 2, parameters.end());
-
-        jsonBuilder.set("parameters", parameters);
         jsonBuilder.close();
     }
 }
@@ -809,13 +658,9 @@ void Semantico::popScope() {
     }
 
     for (const Symbol& symbol : scopes.back().symbolList) {
-        if (!symbol.isUsed && symbol.getMangledName() != "void_main") {
+        if (!symbol.isUsed) {
             logger.addWarning(UnusedIdentifierWarning(symbol.name));
         }
-    }
-
-    if (scopes.size() == 1 && !functionExists("void_main")) {
-        throw MissingEntryPointError();
     }
 
     saveScope(scopes.back());

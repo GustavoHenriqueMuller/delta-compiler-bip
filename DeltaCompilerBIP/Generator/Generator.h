@@ -35,9 +35,6 @@ public:
     void addPrint();
     void addInput();
 
-    void addCall(const Symbol& function);
-    void addReturn();
-
 private:
     void pushIsNegative(const int& address);
     void pushIsZero(const int& address);

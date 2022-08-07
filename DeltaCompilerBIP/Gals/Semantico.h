@@ -36,11 +36,6 @@ private:
     void doUnaryOperation();
 
     Symbol* getSymbolByName(const std::string& name);
-
-    Symbol* findAppropriateFunctionCall();
-    bool isSymbolAppropriateForFunctionCall(const Symbol& symbol);
-    bool functionExists(const std::string &functionName);
-
     void saveScope(const Scope& scope);
     int getScopeId();
 
@@ -66,11 +61,6 @@ private:
     std::vector<std::string> leftIdentifierNames;
     Type leftType;
     Operation assignmentOperation;
-
-    // Functions
-    Symbol functionDeclaration;
-    std::stack<std::string> functionCallNames;
-    std::stack<std::vector<Type>> functionCallParameterTypes;
 
     // "When-is" statement
     std::stack<Type> whenExpressionTypes;

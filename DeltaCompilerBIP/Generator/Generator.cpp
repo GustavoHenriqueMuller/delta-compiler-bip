@@ -10,9 +10,8 @@ std::string Generator::getCode() {
     result += dataSection;
     result += "\n";
     result += ".text\n";
-    result += "\tCALL void_main\n";
-    result += "\tHLT 0\n\n";
     result += textSection;
+    result += "\tHLT 0\n";
 
     return result;
 }
@@ -331,14 +330,6 @@ void Generator::addInput() {
 
     addInstruction("LD", "$in_port");
     addInstruction("STO", stackTop());
-}
-
-void Generator::addCall(const Symbol& function) {
-    addInstruction("CALL", function.getMangledName());
-}
-
-void Generator::addReturn() {
-    addInstruction("RETURN", 0);
 }
 
 void Generator::pushIsNegative(const int& address) {

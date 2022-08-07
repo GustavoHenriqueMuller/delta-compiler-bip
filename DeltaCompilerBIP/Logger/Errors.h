@@ -8,34 +8,6 @@
 
 #include "vector"
 
-static std::string parameterTypesToString(const std::vector<Type>& parameterTypes) {
-    std::string result = "";
-
-    for (int i = 0; i < parameterTypes.size(); i++) {
-        result += parameterTypes[i].toString();
-
-        if (i < parameterTypes.size() - 1) {
-            result += ", ";
-        }
-    }
-
-    return result;
-}
-
-static std::string parameterTypesToString(const Symbol& symbol) {
-    std::string result = "";
-
-    for (int i = 0; i < symbol.parameters.size(); i++) {
-        result += symbol.parameters[i].type.toString();
-
-        if (i < symbol.parameters.size() - 1) {
-            result += ", ";
-        }
-    }
-
-    return result;
-}
-
 class ConstMutationError : public SemanticError {
 public:
     ConstMutationError(const std::string& identifier)
@@ -50,24 +22,10 @@ public:
 };
 
 
-class FunctionIdentifierAlreadyExistsError : public SemanticError {
-public:
-    FunctionIdentifierAlreadyExistsError(const Symbol& symbol)
-      : SemanticError("Function identifier '" + symbol.name + "(" + parameterTypesToString(symbol) + ")' already exists", -1) { }
-};
-
-
 class IdentifierNotFoundError : public SemanticError {
 public:
     IdentifierNotFoundError(const std::string& identifier)
       : SemanticError("Identifier '" + identifier + "' not found", -1) { }
-};
-
-
-class FunctionIdentifierNotFoundError : public SemanticError {
-public:
-    FunctionIdentifierNotFoundError(const std::string& identifier, const std::vector<Type>& parameterTypes)
-      : SemanticError("Function identifier '" + identifier + "(" + parameterTypesToString(parameterTypes) + ")' not found", -1) {}
 };
 
 
@@ -130,13 +88,6 @@ class MissingReturnStatementError : public SemanticError {
 public:
     MissingReturnStatementError(const Type& type)
       : SemanticError("Missing return statement, expected '" + type.toString() + "' return") { }
-};
-
-
-class MissingEntryPointError : public SemanticError {
-public:
-    MissingEntryPointError()
-      : SemanticError("Missing entry point (void main function)") { }
 };
 
 

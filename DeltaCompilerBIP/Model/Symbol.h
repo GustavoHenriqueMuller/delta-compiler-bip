@@ -19,9 +19,6 @@ struct Symbol {
     bool isInitialized = false;
     bool isUsed = false;
     bool isInDeclaration = true;
-    bool isFunction = false;
-
-    std::vector<Symbol> parameters;
 };
 
 #endif // SYMBOL_H

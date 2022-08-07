@@ -81,9 +81,10 @@ for (int i = 0; i < 3; i++) {
 ```
 ```c
 int number = 42;
+bool quit = false;
 
 // Guess the number
-while (true) {
+while (!quit) {
   int choice = input();
 
   if (choice > number) {
@@ -92,7 +93,7 @@ while (true) {
     print(2); // higher!
   } else {
     print(3); // you won!
-    return;
+    quit = true;
   }
 }
 ```

@@ -13,3 +13,7 @@ void Logger::logWarnings() {
 void Logger::logError(const AnalysisError& error) {
     std::cout << "[ERROR]: " << error.getMessage() << std::endl;
 }
+
+void Logger::printBar() {
+    std::cout << std::string(40, '_') << std::endl << std::endl;
+}

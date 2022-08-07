@@ -9,8 +9,7 @@
 #include "ConsoleParser/ConsoleParser.h"
 
 #include <iostream>
-
-// TODO: Fazer assigns serem expressões
+#include <windows.h>
 
 int main(int argc, char **argv) {
     ConsoleParser consoleParser;
@@ -39,11 +38,11 @@ int main(int argc, char **argv) {
         std::string asmFilePath = FileManager::getAsmFilePath(consoleParser.getFilePath());
 
         if (consoleParser.isDebug()) {
-            Utils::printBar();
+            logger.printBar();
             std::cout << sourceCode << std::endl;
-            Utils::printBar();
+            logger.printBar();
             std::cout << generator.getCode() << std::endl;
-            Utils::printBar();
+            logger.printBar();
         }
 
         if (consoleParser.isWatch()) {

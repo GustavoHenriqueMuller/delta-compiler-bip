@@ -1,29 +1,11 @@
-int soma(const int f) {
-	return f;
-}
-
-int soma(int a, int b) {
-	int pog1 = soma(a);
-	int pog2 = soma(b);
-	
-	for (int i = 0; i < 5; i++) {
-		print(i);
-	}
-
-	return pog1 + pog2;
-}
-
 void main() {
-	int a = soma(2, 4);
-	int b = soma(3);
-	
-	const int c = 25;
-	
-	if (b > 2) {
-		print(c);
-	}
-	
-	print(a + b);
-	
-	return;
+  int a = 3;
+  print(a); // prints 3
+  
+  char c = 'f';
+  print(c); // prints 102 (ASCII equivalent)
+  
+  int n = input(); // takes integer number from user
+  
+  return;
 }

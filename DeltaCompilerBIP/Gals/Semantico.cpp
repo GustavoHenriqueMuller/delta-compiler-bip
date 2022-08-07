@@ -1,6 +1,6 @@
 #include "Semantico.h"
 
-void Semantico::executeAction(int action, const Token *token) throw (SemanticError) {
+void Semantico::executeAction(int action, const Token* token) throw (SemanticError) {
     TokenId tokenId = token->getId();
     std::string lexeme = token->getLexeme();
 
@@ -34,6 +34,7 @@ void Semantico::executeAction(int action, const Token *token) throw (SemanticErr
             break;
         case 104: // Char
             expressions.push(Expression(Type(PRIMITIVE_CHAR)));
+            generator.addImmediate(Utils::lexemeToChar(lexeme));
             break;
         case 105: // Bool
             expressions.push(Expression(Type(PRIMITIVE_BOOLEAN)));
@@ -829,18 +830,12 @@ int Semantico::getScopeId() {
 }
 
 void Semantico::popScope() {
-    if (!scopes.back().hasReturned) {
-        if (scopes.back().returnType.primitive == PRIMITIVE_VOID) {
-            if (scopes.size() == 2) {
-                generator.addReturn();
-            }
-        } else {
-            throw MissingReturnStatementError(scopes.back().returnType);
-        }
+    if (scopes.size() > 1 && !scopes.back().hasReturned && scopes.back().returnType.primitive != PRIMITIVE_VOID) {
+        throw MissingReturnStatementError(scopes.back().returnType);
     }
 
     for (const Symbol& symbol : scopes.back().symbolList) {
-        if (!symbol.isUsed) {
+        if (!symbol.isUsed && symbol.getMangledName() != "void_main") {
             logger.addWarning(UnusedIdentifierWarning(symbol.name));
         }
     }

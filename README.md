@@ -81,11 +81,10 @@ for (int i = 0; i < 3; i++) {
 ```
 ```c
 int number = 42;
-int choice = 0;
 
 // Guess the number
 while (true) {
-  choice = input();
+  int choice = input();
 
   if (choice > number) {
     print(1); // lower!

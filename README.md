@@ -11,7 +11,7 @@ Syntax: ```delta [options] [filepath]```
 
 ## Features
 Variables and datatypes - Integer (int), Character (char), Boolean (bool) and Void (void):
-~~~c
+~~~java
 void main() {
   int a = 5;
   char b = 'x';
@@ -21,7 +21,7 @@ void main() {
 }
 ~~~
 Single-line and multi-line comments:
-~~~c
+~~~java
 void main() {
   // I'm a single-lined comment
   
@@ -35,7 +35,7 @@ void main() {
 }
 ~~~
 Expressions - Addition, subtraction, bit OR, bit XOR, bit AND, bit LS, bit RS (usable with assignment operator):
-~~~c
+~~~java
 void main() {
   int value = 4 + 4 - 2;
   int dividedByTwo = value << 2;
@@ -46,7 +46,7 @@ void main() {
 }
 ~~~
 Unary operators:
-~~~c
+~~~java
 void main() {
   int unary = 0;
   unary--; // expression returns 0 and "unary" contains -1
@@ -64,7 +64,7 @@ void main() {
 }
 ~~~
 Single-dimension arrays for any datatype:
-~~~c
+~~~java
 void main() {
   int[3] array;
   array[0] = 10;
@@ -74,7 +74,7 @@ void main() {
 }
 ~~~
 Control structures: if, elseif, else, while, for, do while and when-is (switch-case statement):
-~~~c
+~~~java
 void main() {
   int[3] array;
   array[0] = 20;
@@ -100,7 +100,7 @@ void main() {
   return;
 }
 ~~~
-~~~c
+~~~java
 void main() {
   int number = 42;
   int choice = 0;
@@ -122,7 +122,7 @@ void main() {
 }
 ~~~
 Input and output:
-~~~c
+~~~java
 void main() {
   int a = 3;
   print(a); // prints 3
